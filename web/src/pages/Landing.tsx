@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
-import Logo from '../components/Logo.tsx'
+import CreditFileCard from '../components/CreditFileCard.tsx'
+import SiteNav from '../components/SiteNav.tsx'
+import { SAMPLES } from '../samples.ts'
 import {
   SPECIMEN_LINES,
   SPECIMEN_MATCHED,
@@ -7,15 +9,7 @@ import {
   SPECIMEN_TRUE_AMOUNTS,
   type SpecimenLine,
 } from '../specimen.ts'
-
-type Outcome = 'verified' | 'partial' | 'insufficient' | 'inconsistent'
-
-const OUTCOME_LABEL: Record<Outcome, string> = {
-  verified: 'Verified',
-  partial: 'Partially verified',
-  insufficient: 'Insufficient evidence',
-  inconsistent: 'Inconsistent',
-}
+import { ASSESSMENT_LABEL, ASSESSMENT_TONE } from '../types.ts'
 
 const KIND_LABEL: Record<SpecimenLine['kind'], string> = {
   sale: 'sale',
@@ -25,31 +19,12 @@ const KIND_LABEL: Record<SpecimenLine['kind'], string> = {
   other: '',
 }
 
-// The three demo businesses are fictional. Their full files open here once the officer app is live.
-const SAMPLES: { name: string; trade: string; evidence: string; finding: string; outcome: Outcome }[] =
-  [
-    {
-      name: 'Warung Bu Sari',
-      trade: 'Grocery stall, Bekasi',
-      evidence: 'Notebook, QRIS history, supplier receipts',
-      finding: 'The three sources agree once the cash-only Saturday market is explained.',
-      outcome: 'verified',
-    },
-    {
-      name: 'Penjahit Pak Joko',
-      trade: 'Tailor, Yogyakarta',
-      evidence: 'Notebook, fabric receipts, interview',
-      finding: 'No QRIS history, so the lower cash-flow estimate rests on receipts alone.',
-      outcome: 'partial',
-    },
-    {
-      name: 'Warung Makan Hendra',
-      trade: 'Food stall, Bandung',
-      evidence: 'Notebook, QRIS history, market receipts',
-      finding: 'The notebook claims about three times what QRIS and the stall’s purchases can support.',
-      outcome: 'inconsistent',
-    },
-  ]
+// What each sample file was built from; the outcome and findings come from the real analysis.
+const EVIDENCE_ON_FILE: Record<string, string> = {
+  'bu-sari': 'Notebook, QRIS history, supplier receipts',
+  'pak-joko': 'Notebook, fabric receipts; no QRIS',
+  'pak-hendra': 'Notebook, QRIS history, market receipts',
+}
 
 type Actor = 'Officer' | 'Gemini' | 'Code'
 
@@ -82,7 +57,6 @@ const STEPS: { title: string; actor: Actor; text: string }[] = [
 ]
 
 const rupiah = new Intl.NumberFormat('id-ID')
-
 function total(kind: SpecimenLine['kind']): number {
   return SPECIMEN_LINES.filter((line) => line.kind === kind).reduce(
     (sum, line) => sum + (line.rupiah ?? 0),
@@ -97,42 +71,65 @@ function isHeading(line: SpecimenLine): boolean {
 export default function Landing() {
   return (
     <>
-      <nav className="masthead" aria-label="Main">
-        <div className="container">
-          <Link to="/" className="brand">
-            <Logo />
-            LedgerLens
-          </Link>
-          <div className="nav-links">
-            <a href="#how">How it works</a>
-            <a href="#accuracy">Accuracy</a>
-            <a href="#safeguards">Safeguards</a>
-          </div>
-        </div>
-      </nav>
+      <SiteNav home />
 
       <main>
-        <header className="container hero">
-          <h1>Credit files for businesses that keep their books in a notebook.</h1>
-          <div className="hero-text">
-            <p className="lead">
-              Millions of Indonesia’s micro businesses (UMKM) run on a handwritten notebook, QRIS
-              payments (Indonesia’s national QR payments) and a drawer of receipts. LedgerLens reads
-              that evidence with Gemini, checks the sources against each other, and gives the credit
-              officer a file in which every figure points back to where it was written.
-            </p>
-            <p>
-              It is built for rural banks, cooperatives and microfinance lenders that can’t build
-              tools like this themselves. It is <strong>not a credit score</strong>: it verifies
-              evidence, says how strong it is, and never rejects anyone on its own.
-            </p>
-          </div>
-        </header>
+        <div className="hero-band">
+          <header className="container hero">
+            <div>
+              <h1>Credit files for businesses that keep their books in a notebook.</h1>
+              <p className="lead">
+                LedgerLens reads a micro business’s notebook, QRIS payments (Indonesia’s national QR
+                payments) and supplier receipts with Gemini, checks them against each other, and
+                gives the credit officer a file in which every figure points back to its evidence.
+              </p>
+              <p>
+                For rural banks, cooperatives and microfinance lenders. It is{' '}
+                <strong>not a credit score</strong>: it verifies evidence, says how strong it is,
+                and leaves every decision to a person.
+              </p>
+              <div className="hero-actions">
+                <Link className="button on-dark" to={`/samples/${SAMPLES[0].slug}`}>
+                  Open a sample credit file
+                </Link>
+                <a className="link-on-dark" href="#how">
+                  How a file is made
+                </a>
+              </div>
+            </div>
+            <CreditFileCard sample={SAMPLES[0]} />
+          </header>
+        </div>
+
+        <section className="proof" aria-label="What every file guarantees">
+          <ul className="container">
+            <li>
+              <strong>Every figure cited</strong>
+              Each amount links to the page, line or receipt it came from.
+            </li>
+            <li>
+              <strong>Arithmetic by code</strong>
+              Gemini reads and reasons; tested code does every calculation.
+            </li>
+            <li>
+              <strong>Four honest outcomes</strong>
+              Verified, partly verified, insufficient or inconsistent. Never a score.
+            </li>
+            <li>
+              <strong>On Google Cloud</strong>
+              Gemini, Firebase, Firestore and Cloud Run, with records in Jakarta.
+            </li>
+          </ul>
+        </section>
 
         <section className="container specimen" aria-labelledby="specimen-heading">
-          <h2 id="specimen-heading" className="visually-hidden">
-            A notebook page and what the reader made of it
-          </h2>
+          <div className="section-head">
+            <h2 id="specimen-heading">How a page is read</h2>
+            <p>
+              The reader copies what is written, exactly as written. Code turns it into rupiah and
+              adds it up, so the arithmetic can be checked line by line.
+            </p>
+          </div>
           <figure>
             <div className="specimen-grid">
               <img
@@ -216,13 +213,13 @@ export default function Landing() {
           </figure>
         </section>
 
-        <section className="container section" aria-labelledby="samples-heading">
+        <section id="samples" className="container section" aria-labelledby="samples-heading">
           <div className="section-head">
             <h2 id="samples-heading">Three sample files</h2>
             <p>
-              Every file ends in one of four outcomes: verified, partially verified, insufficient
-              evidence or inconsistent. A weak file sends the owner back to the lender’s usual
-              process, no worse off than today.
+              Three fictional businesses, each with two months of notebook pages, receipts and,
+              where they have it, QRIS history. These are the files LedgerLens produced from them,
+              unedited.
             </p>
           </div>
           <div className="table-scroll">
@@ -231,23 +228,28 @@ export default function Landing() {
                 <tr>
                   <th scope="col">Business</th>
                   <th scope="col">Evidence on file</th>
-                  <th scope="col">What the analyst found</th>
+                  <th scope="col">What the analyst concluded</th>
                   <th scope="col">Outcome</th>
                 </tr>
               </thead>
               <tbody>
                 {SAMPLES.map((sample) => (
-                  <tr key={sample.name}>
+                  <tr key={sample.slug}>
                     <th scope="row">
-                      {sample.name}
-                      <span className="sub">{sample.trade}</span>
-                    </th>
-                    <td data-label="Evidence on file">{sample.evidence}</td>
-                    <td data-label="What the analyst found">{sample.finding}</td>
-                    <td data-label="Outcome">
-                      <span className={`outcome ${sample.outcome}`}>
-                        {OUTCOME_LABEL[sample.outcome]}
+                      <Link to={`/samples/${sample.slug}`}>{sample.alias}</Link>
+                      <span className="sub">
+                        {sample.businessType}, {sample.city}
                       </span>
+                    </th>
+                    <td data-label="Evidence on file">{EVIDENCE_ON_FILE[sample.slug]}</td>
+                    <td data-label="What the analyst concluded">{sample.headline}</td>
+                    <td data-label="Outcome">
+                      <span className={`outcome ${ASSESSMENT_TONE[sample.assessment]}`}>
+                        {ASSESSMENT_LABEL[sample.assessment]}
+                      </span>
+                      <Link className="open-file" to={`/samples/${sample.slug}`}>
+                        Open file
+                      </Link>
                     </td>
                   </tr>
                 ))}
@@ -255,7 +257,8 @@ export default function Landing() {
             </table>
           </div>
           <p className="fine">
-            These businesses are fictional. Their full files open here once the officer app is live.
+            The businesses and their records are fictional, generated so that their true figures
+            are known.
           </p>
         </section>
 
@@ -287,6 +290,20 @@ export default function Landing() {
               are in the repository, so anyone can run it again.
             </p>
           </div>
+          <dl className="stats">
+            <div>
+              <dd>28 of 29</dd>
+              <dt>receipt totals read exactly from real photographed receipts (CORD dataset)</dt>
+            </div>
+            <div>
+              <dd>162 of 162</dd>
+              <dt>notebook amounts read exactly from photographed pages in eight handwriting fonts</dt>
+            </div>
+            <div>
+              <dd>3 of 3</dd>
+              <dt>sample files given the outcome their evidence supports, with every total read exactly</dt>
+            </div>
+          </dl>
           <div className="table-scroll">
             <table className="register">
               <thead>

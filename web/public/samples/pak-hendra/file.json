@@ -1,0 +1,2131 @@
+{
+ "slug": "pak-hendra",
+ "fileNumber": "LL-2610-0144",
+ "application": {
+  "alias": "Warung Makan Hendra",
+  "businessType": "Food stall (warung makan)",
+  "city": "Bandung",
+  "yearsOperating": 3,
+  "amount": 50000000,
+  "tenorMonths": 24
+ },
+ "evidence": [
+  {
+   "id": "notebook-2026-08-1",
+   "type": "ledger_page",
+   "image": "/samples/pak-hendra/notebook-2026-08-1.webp",
+   "capturedAt": "2026-10-06T09:32:00+00:00",
+   "reading": {
+    "label": "Notebook page 1",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": "Aug 1-10",
+      "description": "Aug 1-10",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 0.95
+     },
+     {
+      "line": 2,
+      "dateText": "1/8",
+      "description": "jual nasi",
+      "amountText": "1,7jt",
+      "amountRp": 1700000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 3,
+      "dateText": "2/8",
+      "description": "laku",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 4,
+      "dateText": "3/8",
+      "description": "laku",
+      "amountText": "1,4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 5,
+      "dateText": null,
+      "description": "kasbon Kang Asep",
+      "amountText": "15rb",
+      "amountRp": 15000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 6,
+      "dateText": "4/8",
+      "description": "laku",
+      "amountText": "1,7jt",
+      "amountRp": 1700000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 7,
+      "dateText": null,
+      "description": "beli beras + lauk",
+      "amountText": "2.3jt",
+      "amountRp": 2300000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 0.95
+     },
+     {
+      "line": 8,
+      "dateText": "5/8",
+      "description": "omzet",
+      "amountText": "1,7 jt",
+      "amountRp": 1700000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 9,
+      "dateText": null,
+      "description": "kasbon Kang Asep",
+      "amountText": "10rb",
+      "amountRp": 10000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 10,
+      "dateText": null,
+      "description": "bayar gas elpiji",
+      "amountText": "Rp 300.000",
+      "amountRp": 300000,
+      "crossedOutText": null,
+      "kind": "expense",
+      "confidence": 0.95
+     },
+     {
+      "line": 11,
+      "dateText": "6/8",
+      "description": "omzet",
+      "amountText": "1,4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 12,
+      "dateText": null,
+      "description": "kasbon Pak RT",
+      "amountText": "15 rb",
+      "amountRp": 15000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 13,
+      "dateText": "7/8",
+      "description": "laku",
+      "amountText": "1.6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 14,
+      "dateText": "8/8",
+      "description": "jual nasi",
+      "amountText": "1,3jt",
+      "amountRp": 1300000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 15,
+      "dateText": "9/8",
+      "description": "omzet",
+      "amountText": "1,3 jt",
+      "amountRp": 1300000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 16,
+      "dateText": "10/8",
+      "description": "jual nasi",
+      "amountText": "1.5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     }
+    ]
+   }
+  },
+  {
+   "id": "notebook-2026-08-2",
+   "type": "ledger_page",
+   "image": "/samples/pak-hendra/notebook-2026-08-2.webp",
+   "capturedAt": "2026-10-06T09:34:00+00:00",
+   "reading": {
+    "label": "Notebook page 2",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": null,
+      "description": "Aug 11-20",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 1.0
+     },
+     {
+      "line": 2,
+      "dateText": "11/8",
+      "description": "jual nasi",
+      "amountText": "1,5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 3,
+      "dateText": null,
+      "description": "belanja pasar",
+      "amountText": "2.000.000",
+      "amountRp": 2000000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 1.0
+     },
+     {
+      "line": 4,
+      "dateText": "12/8",
+      "description": "omzet",
+      "amountText": "1.7jt",
+      "amountRp": 1700000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 5,
+      "dateText": "13/8",
+      "description": "jual nasi",
+      "amountText": "1,3jt",
+      "amountRp": 1300000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 6,
+      "dateText": "14/8",
+      "description": "omzet",
+      "amountText": "1.4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 7,
+      "dateText": "15/8",
+      "description": "omzet",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 8,
+      "dateText": "16/8",
+      "description": "laku",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 9,
+      "dateText": null,
+      "description": "kasbon Kang Asep",
+      "amountText": "Rp 10.000",
+      "amountRp": 10000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 1.0
+     },
+     {
+      "line": 10,
+      "dateText": "17/8",
+      "description": "jual nasi",
+      "amountText": "1,4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 11,
+      "dateText": "18/8",
+      "description": "omzet",
+      "amountText": "1,4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 12,
+      "dateText": null,
+      "description": "belanja pasar",
+      "amountText": "2jt",
+      "amountRp": 2000000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 1.0
+     },
+     {
+      "line": 13,
+      "dateText": null,
+      "description": "kasbon Pak RT",
+      "amountText": "10.000",
+      "amountRp": 10000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 1.0
+     },
+     {
+      "line": 14,
+      "dateText": "19/8",
+      "description": "laku",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 15,
+      "dateText": "20/8",
+      "description": "omzet",
+      "amountText": "1,5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     }
+    ]
+   }
+  },
+  {
+   "id": "notebook-2026-08-3",
+   "type": "ledger_page",
+   "image": "/samples/pak-hendra/notebook-2026-08-3.webp",
+   "capturedAt": "2026-10-06T09:36:00+00:00",
+   "reading": {
+    "label": "Notebook page 3",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": "21-31",
+      "description": "Aug 21-31",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 0.95
+     },
+     {
+      "line": 2,
+      "dateText": "21/8",
+      "description": "21/8 laku",
+      "amountText": "1.4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 3,
+      "dateText": "22/8",
+      "description": "22/8 laku",
+      "amountText": "1.5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 4,
+      "dateText": "23/8",
+      "description": "23/8 jual nasi",
+      "amountText": "1.4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 5,
+      "dateText": "24/8",
+      "description": "24/8 omzet",
+      "amountText": "1,6 jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 6,
+      "dateText": "25/8",
+      "description": "25/8 jual nasi",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 7,
+      "dateText": null,
+      "description": "beli beras + lauk",
+      "amountText": "2,1jt",
+      "amountRp": 2100000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 0.95
+     },
+     {
+      "line": 8,
+      "dateText": null,
+      "description": "bayar gaji pegawai",
+      "amountText": "1,5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "expense",
+      "confidence": 0.95
+     },
+     {
+      "line": 9,
+      "dateText": "26/8",
+      "description": "26/8 laku",
+      "amountText": "1,3jt",
+      "amountRp": 1300000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 10,
+      "dateText": null,
+      "description": "kasbon Kang Asep",
+      "amountText": "15.000",
+      "amountRp": 15000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 11,
+      "dateText": "27/8",
+      "description": "27/8 jual nasi",
+      "amountText": "1,5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 12,
+      "dateText": "28/8",
+      "description": "28/8 omzet",
+      "amountText": "1,6 jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 13,
+      "dateText": "29/8",
+      "description": "29/8 jual nasi",
+      "amountText": "1,4 jt",
+      "amountRp": 1400000,
+      "crossedOutText": "1,4 jt",
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 14,
+      "dateText": "30/8",
+      "description": "30/8 jual nasi",
+      "amountText": "1,3 jt",
+      "amountRp": 1300000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 15,
+      "dateText": "31/8",
+      "description": "31/8 jual nasi",
+      "amountText": "1.4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     }
+    ]
+   }
+  },
+  {
+   "id": "receipt-2026-08-1",
+   "type": "receipt",
+   "image": "/samples/pak-hendra/receipt-2026-08-1.webp",
+   "capturedAt": "2026-10-06T09:38:00+00:00",
+   "reading": {
+    "label": "Receipt 1",
+    "legible": true,
+    "merchant": "PASAR KOSAMBI - KIOS BU IMAS",
+    "dateText": "4/8/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "beras 25kg",
+      "quantityText": "2 sak",
+      "amountText": "660.000",
+      "amountRp": 660000,
+      "confidence": 0.95
+     },
+     {
+      "name": "bawang",
+      "quantityText": "12 kg",
+      "amountText": "480.000",
+      "amountRp": 480000,
+      "confidence": 0.95
+     },
+     {
+      "name": "ayam",
+      "quantityText": "30 kg",
+      "amountText": "1.160.000",
+      "amountRp": 1160000,
+      "confidence": 0.95
+     }
+    ],
+    "itemsSumRp": 2300000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "2.300.000",
+    "totalRp": 2300000
+   }
+  },
+  {
+   "id": "receipt-2026-08-2",
+   "type": "receipt",
+   "image": "/samples/pak-hendra/receipt-2026-08-2.webp",
+   "capturedAt": "2026-10-06T09:40:00+00:00",
+   "reading": {
+    "label": "Receipt 2",
+    "legible": true,
+    "merchant": "PASAR KOSAMBI - KIOS BU IMAS",
+    "dateText": "11/8/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "2 sak beras 25kg",
+      "quantityText": "2",
+      "amountText": "660.000",
+      "amountRp": 660000,
+      "confidence": 0.95
+     },
+     {
+      "name": "14 kg bawang",
+      "quantityText": "14",
+      "amountText": "560.000",
+      "amountRp": 560000,
+      "confidence": 0.95
+     },
+     {
+      "name": "14 kg cabai",
+      "quantityText": "14",
+      "amountText": "780.000",
+      "amountRp": 780000,
+      "confidence": 0.95
+     }
+    ],
+    "itemsSumRp": 2000000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "2.000.000",
+    "totalRp": 2000000
+   }
+  },
+  {
+   "id": "receipt-2026-08-3",
+   "type": "receipt",
+   "image": "/samples/pak-hendra/receipt-2026-08-3.webp",
+   "capturedAt": "2026-10-06T09:42:00+00:00",
+   "reading": {
+    "label": "Receipt 3",
+    "legible": true,
+    "merchant": "AGEN BERAS CIANJUR",
+    "dateText": "18/8/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "20 kg ayam",
+      "quantityText": "20 kg",
+      "amountText": "760.000",
+      "amountRp": 760000,
+      "confidence": 0.95
+     },
+     {
+      "name": "1 sak beras 25kg",
+      "quantityText": "1 sak",
+      "amountText": "330.000",
+      "amountRp": 330000,
+      "confidence": 0.95
+     },
+     {
+      "name": "16 kg cabai",
+      "quantityText": "16 kg",
+      "amountText": "910.000",
+      "amountRp": 910000,
+      "confidence": 0.95
+     }
+    ],
+    "itemsSumRp": 2000000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "2.000.000",
+    "totalRp": 2000000
+   }
+  },
+  {
+   "id": "receipt-2026-08-4",
+   "type": "receipt",
+   "image": "/samples/pak-hendra/receipt-2026-08-4.webp",
+   "capturedAt": "2026-10-06T09:44:00+00:00",
+   "reading": {
+    "label": "Receipt 4",
+    "legible": true,
+    "merchant": "AGEN BERAS CIANJUR",
+    "dateText": "25/8/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "1 sak beras 25kg",
+      "quantityText": "1",
+      "amountText": "330.000",
+      "amountRp": 330000,
+      "confidence": 1.0
+     },
+     {
+      "name": "58 ikat sayur",
+      "quantityText": "58",
+      "amountText": "464.000",
+      "amountRp": 464000,
+      "confidence": 1.0
+     },
+     {
+      "name": "23 kg cabai",
+      "quantityText": "23",
+      "amountText": "1.306.000",
+      "amountRp": 1306000,
+      "confidence": 1.0
+     }
+    ],
+    "itemsSumRp": 2100000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "2.100.000",
+    "totalRp": 2100000
+   }
+  },
+  {
+   "id": "qris-2026-08",
+   "type": "qris_history",
+   "image": "/samples/pak-hendra/qris-2026-08.webp",
+   "capturedAt": "2026-10-06T09:46:00+00:00",
+   "reading": {
+    "label": "QRIS history 1",
+    "legible": true,
+    "appName": "Dompet Usaha",
+    "merchantName": "Warung Makan Hendra",
+    "isScreenshot": true,
+    "editingSigns": [],
+    "rows": [
+     {
+      "row": 1,
+      "dateText": "31 Aug 2026",
+      "timeText": "12:21",
+      "amountText": "+Rp2.500",
+      "amountRp": 2500,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 2,
+      "dateText": "31 Aug 2026",
+      "timeText": "11:36",
+      "amountText": "+Rp15.000",
+      "amountRp": 15000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 3,
+      "dateText": "31 Aug 2026",
+      "timeText": "11:00",
+      "amountText": "+Rp45.000",
+      "amountRp": 45000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 4,
+      "dateText": "31 Aug 2026",
+      "timeText": "10:10",
+      "amountText": "+Rp15.000",
+      "amountRp": 15000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 5,
+      "dateText": "31 Aug 2026",
+      "timeText": "09:57",
+      "amountText": "+Rp25.000",
+      "amountRp": 25000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 6,
+      "dateText": "31 Aug 2026",
+      "timeText": "09:08",
+      "amountText": "+Rp12.000",
+      "amountRp": 12000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 7,
+      "dateText": "31 Aug 2026",
+      "timeText": "08:34",
+      "amountText": "+Rp32.000",
+      "amountRp": 32000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 8,
+      "dateText": "31 Aug 2026",
+      "timeText": "08:06",
+      "amountText": "+Rp5.000",
+      "amountRp": 5000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 9,
+      "dateText": "31 Aug 2026",
+      "timeText": "07:41",
+      "amountText": "+Rp20.000",
+      "amountRp": 20000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 10,
+      "dateText": "31 Aug 2026",
+      "timeText": "07:14",
+      "amountText": "+Rp15.000",
+      "amountRp": 15000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     }
+    ],
+    "totals": [
+     {
+      "periodText": "August 2026",
+      "amountText": "Rp6.173.000",
+      "amountRp": 6173000,
+      "count": 291
+     }
+    ],
+    "rowsInSumRp": 186500,
+    "arithmeticProblems": []
+   }
+  },
+  {
+   "id": "notebook-2026-09-1",
+   "type": "ledger_page",
+   "image": "/samples/pak-hendra/notebook-2026-09-1.webp",
+   "capturedAt": "2026-10-06T09:48:00+00:00",
+   "reading": {
+    "label": "Notebook page 4",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": "Sep 1-10",
+      "description": "Sep 1-10",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 0.95
+     },
+     {
+      "line": 2,
+      "dateText": "1/9",
+      "description": "omzet",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.98
+     },
+     {
+      "line": 3,
+      "dateText": null,
+      "description": "kasbon Kang Asep",
+      "amountText": "25 rb",
+      "amountRp": 25000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.98
+     },
+     {
+      "line": 4,
+      "dateText": "2/9",
+      "description": "jual nasi",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.98
+     },
+     {
+      "line": 5,
+      "dateText": "3/9",
+      "description": "omzet",
+      "amountText": "1,6 jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.98
+     },
+     {
+      "line": 6,
+      "dateText": null,
+      "description": "beli beras + lauk",
+      "amountText": "2 jt",
+      "amountRp": 2000000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 0.98
+     },
+     {
+      "line": 7,
+      "dateText": null,
+      "description": "kasbon Kang Asep",
+      "amountText": "25rb",
+      "amountRp": 25000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.98
+     },
+     {
+      "line": 8,
+      "dateText": "4/9",
+      "description": "jual nasi",
+      "amountText": "1.5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.98
+     },
+     {
+      "line": 9,
+      "dateText": "5/9",
+      "description": "laku",
+      "amountText": "1,5 jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.98
+     },
+     {
+      "line": 10,
+      "dateText": null,
+      "description": "bayar gas elpiji",
+      "amountText": "300.000",
+      "amountRp": 300000,
+      "crossedOutText": null,
+      "kind": "expense",
+      "confidence": 0.98
+     },
+     {
+      "line": 11,
+      "dateText": "6/9",
+      "description": "laku",
+      "amountText": "1.3jt",
+      "amountRp": 1300000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.98
+     },
+     {
+      "line": 12,
+      "dateText": "7/9",
+      "description": "laku",
+      "amountText": "1.6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.98
+     },
+     {
+      "line": 13,
+      "dateText": "8/9",
+      "description": "omzet",
+      "amountText": "1,4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.98
+     },
+     {
+      "line": 14,
+      "dateText": null,
+      "description": "kasbon Pak RT",
+      "amountText": "15rb",
+      "amountRp": 15000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.98
+     },
+     {
+      "line": 15,
+      "dateText": "9/9",
+      "description": "jual nasi",
+      "amountText": "1,5 jt",
+      "amountRp": 1500000,
+      "crossedOutText": "1,8 jt",
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 16,
+      "dateText": "10/9",
+      "description": "omzet",
+      "amountText": "1.4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.98
+     },
+     {
+      "line": 17,
+      "dateText": null,
+      "description": "beli beras + lauk",
+      "amountText": "1,9jt",
+      "amountRp": 1900000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 0.98
+     }
+    ]
+   }
+  },
+  {
+   "id": "notebook-2026-09-2",
+   "type": "ledger_page",
+   "image": "/samples/pak-hendra/notebook-2026-09-2.webp",
+   "capturedAt": "2026-10-06T09:50:00+00:00",
+   "reading": {
+    "label": "Notebook page 5",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": "Sep 11-20",
+      "description": "Sep 11-20",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 0.95
+     },
+     {
+      "line": 2,
+      "dateText": "11/9",
+      "description": "11/9 omzet",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": "1,6jt",
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 3,
+      "dateText": null,
+      "description": "kasbon Kang Asep",
+      "amountText": "10 rb",
+      "amountRp": 10000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 4,
+      "dateText": "12/9",
+      "description": "12/9 laku",
+      "amountText": "1,5 jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 5,
+      "dateText": "13/9",
+      "description": "13/9 jual nasi",
+      "amountText": "1.5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 6,
+      "dateText": "14/9",
+      "description": "14/9 laku",
+      "amountText": "1,5 jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 7,
+      "dateText": "15/9",
+      "description": "15/9 laku",
+      "amountText": "1,7jt",
+      "amountRp": 1700000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 8,
+      "dateText": "16/9",
+      "description": "16/9 laku",
+      "amountText": "1,6 jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 9,
+      "dateText": "17/9",
+      "description": "17/9 jual nasi",
+      "amountText": "1,4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 10,
+      "dateText": null,
+      "description": "beli beras + lauk",
+      "amountText": "2,3jt",
+      "amountRp": 2300000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 0.95
+     },
+     {
+      "line": 11,
+      "dateText": null,
+      "description": "kasbon Pak RT",
+      "amountText": "25 rb",
+      "amountRp": 25000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 12,
+      "dateText": "18/9",
+      "description": "18/9 laku",
+      "amountText": "1,5 jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 13,
+      "dateText": "19/9",
+      "description": "19/9 jual nasi",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 14,
+      "dateText": "20/9",
+      "description": "20/9 laku",
+      "amountText": "1,4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     }
+    ]
+   }
+  },
+  {
+   "id": "notebook-2026-09-3",
+   "type": "ledger_page",
+   "image": "/samples/pak-hendra/notebook-2026-09-3.webp",
+   "capturedAt": "2026-10-06T09:52:00+00:00",
+   "reading": {
+    "label": "Notebook page 6",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": "21-30",
+      "description": "Sep 21-30",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 0.95
+     },
+     {
+      "line": 2,
+      "dateText": "21/9",
+      "description": "21/9 laku",
+      "amountText": "1,5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 3,
+      "dateText": "22/9",
+      "description": "22/9 laku",
+      "amountText": "1,5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 4,
+      "dateText": "23/9",
+      "description": "23/9 laku",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 5,
+      "dateText": "24/9",
+      "description": "24/9 omzet",
+      "amountText": "1,6 jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 6,
+      "dateText": null,
+      "description": "beli beras + lauk",
+      "amountText": "1,9jt",
+      "amountRp": 1900000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 0.95
+     },
+     {
+      "line": 7,
+      "dateText": "25/9",
+      "description": "25/9 jual nasi",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 8,
+      "dateText": null,
+      "description": "bayar gaji pegawai",
+      "amountText": "1,5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "expense",
+      "confidence": 0.95
+     },
+     {
+      "line": 9,
+      "dateText": "26/9",
+      "description": "26/9 jual nasi",
+      "amountText": "1,5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 10,
+      "dateText": "27/9",
+      "description": "27/9 omzet",
+      "amountText": "1,4jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 11,
+      "dateText": null,
+      "description": "kasbon Pak RT",
+      "amountText": "15rb",
+      "amountRp": 15000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 12,
+      "dateText": "28/9",
+      "description": "28/9 laku",
+      "amountText": "1,4 jt",
+      "amountRp": 1400000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 13,
+      "dateText": "29/9",
+      "description": "29/9 laku",
+      "amountText": "1,6jt",
+      "amountRp": 1600000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 14,
+      "dateText": "30/9",
+      "description": "30/9 jual nasi",
+      "amountText": "1,5jt",
+      "amountRp": 1500000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     }
+    ]
+   }
+  },
+  {
+   "id": "receipt-2026-09-1",
+   "type": "receipt",
+   "image": "/samples/pak-hendra/receipt-2026-09-1.webp",
+   "capturedAt": "2026-10-06T09:54:00+00:00",
+   "reading": {
+    "label": "Receipt 5",
+    "legible": true,
+    "merchant": "AGEN BERAS CIANJUR",
+    "dateText": "3/9/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "sak beras 25kg",
+      "quantityText": "2",
+      "amountText": "660.000",
+      "amountRp": 660000,
+      "confidence": 1.0
+     },
+     {
+      "name": "kg cabai",
+      "quantityText": "11",
+      "amountText": "605.000",
+      "amountRp": 605000,
+      "confidence": 1.0
+     },
+     {
+      "name": "kg ayam",
+      "quantityText": "19",
+      "amountText": "735.000",
+      "amountRp": 735000,
+      "confidence": 1.0
+     }
+    ],
+    "itemsSumRp": 2000000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "2.000.000",
+    "totalRp": 2000000
+   }
+  },
+  {
+   "id": "receipt-2026-09-2",
+   "type": "receipt",
+   "image": "/samples/pak-hendra/receipt-2026-09-2.webp",
+   "capturedAt": "2026-10-06T09:56:00+00:00",
+   "reading": {
+    "label": "Receipt 6",
+    "legible": true,
+    "merchant": "PASAR KOSAMBI - KIOS BU IMAS",
+    "dateText": "10/9/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "sak beras 25kg",
+      "quantityText": "2",
+      "amountText": "660.000",
+      "amountRp": 660000,
+      "confidence": 1.0
+     },
+     {
+      "name": "kg ayam",
+      "quantityText": "12",
+      "amountText": "456.000",
+      "amountRp": 456000,
+      "confidence": 1.0
+     },
+     {
+      "name": "ikat sayur",
+      "quantityText": "98",
+      "amountText": "784.000",
+      "amountRp": 784000,
+      "confidence": 1.0
+     }
+    ],
+    "itemsSumRp": 1900000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "1.900.000",
+    "totalRp": 1900000
+   }
+  },
+  {
+   "id": "receipt-2026-09-3",
+   "type": "receipt",
+   "image": "/samples/pak-hendra/receipt-2026-09-3.webp",
+   "capturedAt": "2026-10-06T09:58:00+00:00",
+   "reading": {
+    "label": "Receipt 7",
+    "legible": true,
+    "merchant": "PASAR KOSAMBI - KIOS BU IMAS",
+    "dateText": "17/9/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "sak beras 25kg",
+      "quantityText": "2",
+      "amountText": "660.000",
+      "amountRp": 660000,
+      "confidence": 1.0
+     },
+     {
+      "name": "kg bawang",
+      "quantityText": "12",
+      "amountText": "480.000",
+      "amountRp": 480000,
+      "confidence": 1.0
+     },
+     {
+      "name": "kg cabai",
+      "quantityText": "21",
+      "amountText": "1.160.000",
+      "amountRp": 1160000,
+      "confidence": 1.0
+     }
+    ],
+    "itemsSumRp": 2300000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "2.300.000",
+    "totalRp": 2300000
+   }
+  },
+  {
+   "id": "receipt-2026-09-4",
+   "type": "receipt",
+   "image": "/samples/pak-hendra/receipt-2026-09-4.webp",
+   "capturedAt": "2026-10-06T10:00:00+00:00",
+   "reading": {
+    "label": "Receipt 8",
+    "legible": true,
+    "merchant": "AGEN BERAS CIANJUR",
+    "dateText": "24/9/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "sak beras 25kg",
+      "quantityText": "1",
+      "amountText": "330.000",
+      "amountRp": 330000,
+      "confidence": 1.0
+     },
+     {
+      "name": "kg cabai",
+      "quantityText": "11",
+      "amountText": "605.000",
+      "amountRp": 605000,
+      "confidence": 1.0
+     },
+     {
+      "name": "ikat sayur",
+      "quantityText": "120",
+      "amountText": "965.000",
+      "amountRp": 965000,
+      "confidence": 1.0
+     }
+    ],
+    "itemsSumRp": 1900000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "1.900.000",
+    "totalRp": 1900000
+   }
+  },
+  {
+   "id": "qris-2026-09",
+   "type": "qris_history",
+   "image": "/samples/pak-hendra/qris-2026-09.webp",
+   "capturedAt": "2026-10-06T10:02:00+00:00",
+   "reading": {
+    "label": "QRIS history 2",
+    "legible": true,
+    "appName": "Dompet Usaha",
+    "merchantName": "Warung Makan Hendra",
+    "isScreenshot": true,
+    "editingSigns": [],
+    "rows": [
+     {
+      "row": 1,
+      "dateText": "30 Sep 2026",
+      "timeText": "13:29",
+      "amountText": "+Rp19.500",
+      "amountRp": 19500,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 2,
+      "dateText": "30 Sep 2026",
+      "timeText": "13:20",
+      "amountText": "+Rp5.000",
+      "amountRp": 5000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 3,
+      "dateText": "30 Sep 2026",
+      "timeText": "12:21",
+      "amountText": "+Rp32.000",
+      "amountRp": 32000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 4,
+      "dateText": "30 Sep 2026",
+      "timeText": "11:14",
+      "amountText": "+Rp10.000",
+      "amountRp": 10000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 5,
+      "dateText": "30 Sep 2026",
+      "timeText": "10:43",
+      "amountText": "+Rp60.000",
+      "amountRp": 60000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 6,
+      "dateText": "30 Sep 2026",
+      "timeText": "10:04",
+      "amountText": "+Rp5.000",
+      "amountRp": 5000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 7,
+      "dateText": "30 Sep 2026",
+      "timeText": "09:02",
+      "amountText": "+Rp60.000",
+      "amountRp": 60000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 8,
+      "dateText": "30 Sep 2026",
+      "timeText": "08:35",
+      "amountText": "+Rp7.500",
+      "amountRp": 7500,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 9,
+      "dateText": "30 Sep 2026",
+      "timeText": "07:52",
+      "amountText": "+Rp5.000",
+      "amountRp": 5000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     },
+     {
+      "row": 10,
+      "dateText": "29 Sep 2026",
+      "timeText": "13:08",
+      "amountText": "+Rp15.000",
+      "amountRp": 15000,
+      "direction": "in",
+      "label": "Pembayaran QRIS",
+      "confidence": 1.0
+     }
+    ],
+    "totals": [
+     {
+      "periodText": "September 2026",
+      "amountText": "Rp5.884.000",
+      "amountRp": 5884000,
+      "count": 284
+     }
+    ],
+    "rowsInSumRp": 219000,
+    "arithmeticProblems": []
+   }
+  }
+ ],
+ "assessment": "inconsistent",
+ "policy": {
+  "assessment": "inconsistent",
+  "evidenceStrength": 80,
+  "capacityBasis": null,
+  "maxInstallment": null,
+  "requestedInstallment": 2216031,
+  "withinPolicy": false,
+  "reasons": [
+   "The sources contradict each other; a person needs to investigate.",
+   "No instalment is suggested; the lender's normal process applies."
+  ]
+ },
+ "cashflow": {
+  "months": [
+   {
+    "month": "2026-08",
+    "provenInflows": 6173000,
+    "claimedSales": 46200000,
+    "receiptPurchases": 8400000,
+    "claimedPurchases": 8400000,
+    "claimedExpenses": 1800000
+   },
+   {
+    "month": "2026-09",
+    "provenInflows": 5884000,
+    "claimedSales": 45500000,
+    "receiptPurchases": 8100000,
+    "claimedPurchases": 8100000,
+    "claimedExpenses": 1800000
+   }
+  ],
+  "avgProvenInflows": 6028500,
+  "avgClaimedSales": 45850000,
+  "avgCosts": 10050000,
+  "avgReceiptPurchases": 8250000,
+  "revenueLow": 6028500,
+  "revenueHigh": 45850000,
+  "netHigh": 35800000,
+  "hardCoverage": 0.131,
+  "salesToPurchases": 5.558
+ },
+ "findings": [
+  {
+   "kind": "discrepancy",
+   "severity": "high",
+   "text": "Claimed sales are 5.6× supplier purchases, well above the plausible markup for an eatery. Hard inflows in QRIS cover only 13% of claimed sales.",
+   "citations": [
+    {
+     "evidenceId": "notebook-2026-08-1",
+     "locator": "line 2"
+    },
+    {
+     "evidenceId": "receipt-2026-08-1",
+     "locator": "PASAR KOSAMBI - KIOS BU IMAS"
+    },
+    {
+     "evidenceId": "qris-2026-08",
+     "locator": "August 2026"
+    }
+   ],
+   "followUpQuestion": "Bisa tolong diceritakan bagaimana perbandingan belanja bahan baku dengan hasil penjualan harian warung Bapak/Ibu?",
+   "followUpQuestionEn": "Could you share more about the ratio between raw material purchases and your daily sales?",
+   "figures": [
+    "sales_to_purchases",
+    "hard_coverage"
+   ],
+   "source": "code",
+   "answer": null,
+   "resolved": false
+  },
+  {
+   "kind": "missing_evidence",
+   "severity": "low",
+   "text": "The file lacks shop photos and an interview recording to verify physical business premises and trade context.",
+   "citations": [
+    {
+     "evidenceId": "notebook-2026-08-1",
+     "locator": "line 1"
+    }
+   ],
+   "followUpQuestion": "Bolehkah kami mengambil foto tempat usaha warung dan melakukan wawancara singkat, Bapak/Ibu?",
+   "followUpQuestionEn": "May we take some photos of your stall and conduct a brief interview?",
+   "figures": [],
+   "source": "verifier",
+   "answer": null,
+   "resolved": false
+  }
+ ],
+ "confirmations": [
+  {
+   "text": "Purchase entries in the notebook align in timing and amount with supplier receipts, such as the purchase on 4/8.",
+   "figures": [],
+   "citations": [
+    {
+     "evidenceId": "notebook-2026-08-1",
+     "locator": "line 7"
+    },
+    {
+     "evidenceId": "receipt-2026-08-1",
+     "locator": "4/8/26"
+    }
+   ]
+  },
+  {
+   "text": "The purchase recorded on 18/8 matches receipt records from Agen Beras Cianjur.",
+   "figures": [],
+   "citations": [
+    {
+     "evidenceId": "notebook-2026-08-2",
+     "locator": "line 12"
+    },
+    {
+     "evidenceId": "receipt-2026-08-3",
+     "locator": "18/8/26"
+    }
+   ]
+  },
+  {
+   "text": "The purchase recorded on 17/9 corresponds with Receipt 7 from Pasar Kosambi.",
+   "figures": [],
+   "citations": [
+    {
+     "evidenceId": "notebook-2026-09-2",
+     "locator": "line 10"
+    },
+    {
+     "evidenceId": "receipt-2026-09-3",
+     "locator": "17/9/26"
+    }
+   ]
+  }
+ ],
+ "memo": {
+  "headline": "The application is marked inconsistent due to claimed sales exceeding plausible margins relative to supplier receipts and low digital transaction coverage.",
+  "character": {
+   "text": "The food stall has operated for 3 years in Bandung. While daily entries are maintained across multiple pages, recorded sales are 5.6× of supplier purchases, which deviates from expected food stall margins. Additionally, QRIS records substantiate only 13% of claimed sales, leaving significant unverified cash volume.",
+   "citations": [
+    {
+     "evidenceId": "notebook-2026-08-1",
+     "locator": "line 2"
+    },
+    {
+     "evidenceId": "qris-2026-08",
+     "locator": "August 2026"
+    }
+   ]
+  },
+  "capacity": {
+   "text": "On hard evidence alone, monthly inflow is Rp 6.028.500, whereas total claimed revenue reaches Rp 45.850.000, yielding a net cash flow of Rp 35.800.000 on the high end. Monthly supplier receipts average Rp 8.250.000, against total costs of Rp 10.050.000. Policy suggests no maximum instalment because the sources contradict each other, which leaves the requested instalment of Rp 2.216.031 unvalidated by hard verification.",
+   "citations": [
+    {
+     "evidenceId": "qris-2026-08",
+     "locator": "August 2026"
+    },
+    {
+     "evidenceId": "receipt-2026-08-1",
+     "locator": "PASAR KOSAMBI - KIOS BU IMAS"
+    },
+    {
+     "evidenceId": "notebook-2026-09-1",
+     "locator": "line 2"
+    }
+   ]
+  },
+  "capital": {
+   "text": "The business regularly repurchases staple inventory such as rice, chicken, and produce across weekly receipts from local merchants. However, shop photos are missing from the file, so existing physical assets and stock on hand cannot be visually confirmed. Recorded cash purchases show repeated weekly reinvestment averaging Rp 8.250.000.",
+   "citations": [
+    {
+     "evidenceId": "receipt-2026-08-1",
+     "locator": "PASAR KOSAMBI - KIOS BU IMAS"
+    },
+    {
+     "evidenceId": "receipt-2026-09-1",
+     "locator": "AGEN BERAS CIANJUR"
+    }
+   ]
+  },
+  "collateral": {
+   "text": "The requested financing of Rp 50.000.000 falls well within the KUR collateral-free threshold of Rp 100.000.000, meaning additional collateral may not be mandated by program rules. No physical collateral assets are documented or visible in the file. The loan assessment consequently depends primarily on verifiable business cash flow.",
+   "citations": [
+    {
+     "evidenceId": "notebook-2026-08-1",
+     "locator": "line 1"
+    }
+   ]
+  },
+  "conditions": {
+   "text": "The borrower seeks Rp 50.000.000 over a tenor of 24 months to support food stall operations. The enterprise serves local eatery clientele in Bandung, maintaining steady customer traffic with recorded transactions throughout the month. Economic performance depends on food commodity prices, as shown by regular purchases of staples like chili, chicken, and rice.",
+   "citations": [
+    {
+     "evidenceId": "receipt-2026-08-2",
+     "locator": "PASAR KOSAMBI - KIOS BU IMAS"
+    },
+    {
+     "evidenceId": "qris-2026-09",
+     "locator": "September 2026"
+    }
+   ]
+  },
+  "officerNextSteps": [
+   "Conduct an on-site visit to inspect the physical warung, verify seating capacity, and capture shop photos.",
+   "Cross-check cash sales directly via an interview to establish the actual cash-to-QRIS payment ratio.",
+   "Review additional supplier purchase receipts to confirm whether inventory purchases match the claimed sales volume."
+  ],
+  "ownerSummary": {
+   "verified": "Catatan buku harian Anda rapi dan transaksi masuk lewat QRIS serta nota belanja bahan pokok dari pasar/agen sudah terdata dengan baik.",
+   "missing": "Foto tempat usaha dan konfirmasi penerimaan uang tunai harian belum lengkap di dalam berkas.",
+   "tips": [
+    "Minta dan simpan semua nota belanja bahan dari pasar atau agen secara lengkap setiap kali kulakan.",
+    "Ajak lebih banyak pelanggan membayar dengan QRIS agar perputaran omzet tercatat rapi secara digital.",
+    "Siapkan foto tempat usaha, dapur, dan etalase makanan saat petugas bank datang berkunjung."
+   ]
+  },
+  "figures": [
+   "avg_costs",
+   "avg_receipt_purchases",
+   "hard_coverage",
+   "kur_collateral_free_limit",
+   "net_high",
+   "requested_amount",
+   "requested_installment",
+   "revenue_high",
+   "revenue_low",
+   "sales_to_purchases",
+   "tenor_months"
+  ]
+ },
+ "facts": [
+  {
+   "key": "page_4_sales",
+   "label": "Sales written on Notebook page 4",
+   "kind": "rupiah",
+   "value": 15000000.0,
+   "sources": [],
+   "display": "Rp 15.000.000"
+  },
+  {
+   "key": "page_4_purchases",
+   "label": "Purchases written on Notebook page 4",
+   "kind": "rupiah",
+   "value": 3900000.0,
+   "sources": [],
+   "display": "Rp 3.900.000"
+  },
+  {
+   "key": "page_2_sales",
+   "label": "Sales written on Notebook page 2",
+   "kind": "rupiah",
+   "value": 15000000.0,
+   "sources": [],
+   "display": "Rp 15.000.000"
+  },
+  {
+   "key": "page_2_purchases",
+   "label": "Purchases written on Notebook page 2",
+   "kind": "rupiah",
+   "value": 4000000.0,
+   "sources": [],
+   "display": "Rp 4.000.000"
+  },
+  {
+   "key": "page_3_sales",
+   "label": "Sales written on Notebook page 3",
+   "kind": "rupiah",
+   "value": 16000000.0,
+   "sources": [],
+   "display": "Rp 16.000.000"
+  },
+  {
+   "key": "page_3_purchases",
+   "label": "Purchases written on Notebook page 3",
+   "kind": "rupiah",
+   "value": 2100000.0,
+   "sources": [],
+   "display": "Rp 2.100.000"
+  },
+  {
+   "key": "page_1_sales",
+   "label": "Sales written on Notebook page 1",
+   "kind": "rupiah",
+   "value": 15200000.0,
+   "sources": [],
+   "display": "Rp 15.200.000"
+  },
+  {
+   "key": "page_1_purchases",
+   "label": "Purchases written on Notebook page 1",
+   "kind": "rupiah",
+   "value": 2300000.0,
+   "sources": [],
+   "display": "Rp 2.300.000"
+  },
+  {
+   "key": "receipt_1_total",
+   "label": "Total of Receipt 1",
+   "kind": "rupiah",
+   "value": 2300000.0,
+   "sources": [
+    "receipt-2026-08-1"
+   ],
+   "display": "Rp 2.300.000"
+  },
+  {
+   "key": "receipt_2_total",
+   "label": "Total of Receipt 2",
+   "kind": "rupiah",
+   "value": 2000000.0,
+   "sources": [
+    "receipt-2026-08-2"
+   ],
+   "display": "Rp 2.000.000"
+  },
+  {
+   "key": "page_5_sales",
+   "label": "Sales written on Notebook page 5",
+   "kind": "rupiah",
+   "value": 15300000.0,
+   "sources": [],
+   "display": "Rp 15.300.000"
+  },
+  {
+   "key": "page_5_purchases",
+   "label": "Purchases written on Notebook page 5",
+   "kind": "rupiah",
+   "value": 2300000.0,
+   "sources": [],
+   "display": "Rp 2.300.000"
+  },
+  {
+   "key": "page_6_sales",
+   "label": "Sales written on Notebook page 6",
+   "kind": "rupiah",
+   "value": 15200000.0,
+   "sources": [],
+   "display": "Rp 15.200.000"
+  },
+  {
+   "key": "page_6_purchases",
+   "label": "Purchases written on Notebook page 6",
+   "kind": "rupiah",
+   "value": 1900000.0,
+   "sources": [],
+   "display": "Rp 1.900.000"
+  },
+  {
+   "key": "receipt_3_total",
+   "label": "Total of Receipt 3",
+   "kind": "rupiah",
+   "value": 2000000.0,
+   "sources": [
+    "receipt-2026-08-3"
+   ],
+   "display": "Rp 2.000.000"
+  },
+  {
+   "key": "receipt_4_total",
+   "label": "Total of Receipt 4",
+   "kind": "rupiah",
+   "value": 2100000.0,
+   "sources": [
+    "receipt-2026-08-4"
+   ],
+   "display": "Rp 2.100.000"
+  },
+  {
+   "key": "receipt_5_total",
+   "label": "Total of Receipt 5",
+   "kind": "rupiah",
+   "value": 2000000.0,
+   "sources": [
+    "receipt-2026-09-1"
+   ],
+   "display": "Rp 2.000.000"
+  },
+  {
+   "key": "receipt_6_total",
+   "label": "Total of Receipt 6",
+   "kind": "rupiah",
+   "value": 1900000.0,
+   "sources": [
+    "receipt-2026-09-2"
+   ],
+   "display": "Rp 1.900.000"
+  },
+  {
+   "key": "receipt_7_total",
+   "label": "Total of Receipt 7",
+   "kind": "rupiah",
+   "value": 2300000.0,
+   "sources": [
+    "receipt-2026-09-3"
+   ],
+   "display": "Rp 2.300.000"
+  },
+  {
+   "key": "receipt_8_total",
+   "label": "Total of Receipt 8",
+   "kind": "rupiah",
+   "value": 1900000.0,
+   "sources": [
+    "receipt-2026-09-4"
+   ],
+   "display": "Rp 1.900.000"
+  },
+  {
+   "key": "qris_1_inflows",
+   "label": "Money received in QRIS history 1",
+   "kind": "rupiah",
+   "value": 6173000.0,
+   "sources": [
+    "qris-2026-08"
+   ],
+   "display": "Rp 6.173.000"
+  },
+  {
+   "key": "qris_2_inflows",
+   "label": "Money received in QRIS history 2",
+   "kind": "rupiah",
+   "value": 5884000.0,
+   "sources": [
+    "qris-2026-09"
+   ],
+   "display": "Rp 5.884.000"
+  },
+  {
+   "key": "months_covered",
+   "label": "Months of evidence analysed",
+   "kind": "count",
+   "value": 2.0,
+   "sources": [],
+   "display": "2"
+  },
+  {
+   "key": "avg_claimed_sales",
+   "label": "Monthly sales the notebook claims",
+   "kind": "rupiah",
+   "value": 45850000.0,
+   "sources": [],
+   "display": "Rp 45.850.000"
+  },
+  {
+   "key": "avg_proven_inflows",
+   "label": "Monthly money received via QRIS (hard evidence)",
+   "kind": "rupiah",
+   "value": 6028500.0,
+   "sources": [],
+   "display": "Rp 6.028.500"
+  },
+  {
+   "key": "avg_receipt_purchases",
+   "label": "Monthly supplier purchases on receipts",
+   "kind": "rupiah",
+   "value": 8250000.0,
+   "sources": [],
+   "display": "Rp 8.250.000"
+  },
+  {
+   "key": "avg_costs",
+   "label": "Monthly costs (purchases and expenses)",
+   "kind": "rupiah",
+   "value": 10050000.0,
+   "sources": [],
+   "display": "Rp 10.050.000"
+  },
+  {
+   "key": "revenue_low",
+   "label": "Monthly revenue, low end (hard evidence only)",
+   "kind": "rupiah",
+   "value": 6028500.0,
+   "sources": [],
+   "display": "Rp 6.028.500"
+  },
+  {
+   "key": "revenue_high",
+   "label": "Monthly revenue, high end (all evidence)",
+   "kind": "rupiah",
+   "value": 45850000.0,
+   "sources": [],
+   "display": "Rp 45.850.000"
+  },
+  {
+   "key": "net_high",
+   "label": "Monthly net cash flow, high end",
+   "kind": "rupiah",
+   "value": 35800000.0,
+   "sources": [],
+   "display": "Rp 35.800.000"
+  },
+  {
+   "key": "hard_coverage",
+   "label": "Share of claimed sales seen in QRIS",
+   "kind": "percent",
+   "value": 0.131,
+   "sources": [],
+   "display": "13%"
+  },
+  {
+   "key": "sales_to_purchases",
+   "label": "Claimed sales as a multiple of receipt purchases",
+   "kind": "ratio",
+   "value": 5.558,
+   "sources": [],
+   "display": "5.6×"
+  },
+  {
+   "key": "requested_amount",
+   "label": "Loan amount requested",
+   "kind": "rupiah",
+   "value": 50000000.0,
+   "sources": [],
+   "display": "Rp 50.000.000"
+  },
+  {
+   "key": "tenor_months",
+   "label": "Loan term in months",
+   "kind": "count",
+   "value": 24.0,
+   "sources": [],
+   "display": "24"
+  },
+  {
+   "key": "kur_collateral_free_limit",
+   "label": "KUR loans up to this amount need no extra collateral",
+   "kind": "rupiah",
+   "value": 100000000.0,
+   "sources": [],
+   "display": "Rp 100.000.000"
+  },
+  {
+   "key": "requested_installment",
+   "label": "Monthly instalment for the request",
+   "kind": "rupiah",
+   "value": 2216031.0,
+   "sources": [],
+   "display": "Rp 2.216.031"
+  },
+  {
+   "key": "evidence_strength",
+   "label": "Evidence strength, out of 100",
+   "kind": "count",
+   "value": 80.0,
+   "sources": [],
+   "display": "80"
+  }
+ ],
+ "unreadable": [],
+ "models": [
+  "gemini-3.1-flash-lite",
+  "gemini-3.5-flash-lite",
+  "gemini-3.8-flash"
+ ],
+ "figureProblems": []
+}
