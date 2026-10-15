@@ -156,7 +156,7 @@ Rules every agent follows:
 
 | Layer | What we use | Why |
 | --- | --- | --- |
-| Web app | React, Vite, TypeScript, Tailwind CSS, Recharts | Mobile-first screens for officers, the committee and owners |
+| Web app | React, Vite, TypeScript, plain CSS | Mobile-first screens for officers, the committee and owners |
 | Firebase SDK | `firebase` 12.19.0 | Hosting, anonymous Auth, Storage uploads, Firestore listeners |
 | Backend | Python 3.12, FastAPI on Cloud Run | Our API; background analysis jobs |
 | AI agents | Google ADK 2.12.0, Google Gen AI SDK 2.30.1 | Agent definitions, parallel readers, the follow-up loop |
