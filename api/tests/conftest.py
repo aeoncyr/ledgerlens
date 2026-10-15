@@ -1,10 +1,15 @@
-"""Test doubles so the suite runs offline."""
+"""Test doubles for Gemini, Firestore and Firebase Auth, so the suite runs offline."""
 
 from __future__ import annotations
 
 import pytest
+from fastapi.testclient import TestClient
 
 from app.agents.ledger_reader import LedgerLine, LedgerReading
+from app.auth import User, current_user
+from app.gemini import get_gemini
+from app.main import create_app
+from app.store import get_firestore
 
 SAMPLE_READING = LedgerReading(
     legible=True,
@@ -55,6 +60,51 @@ class FakeGemini:
         return self.reading, "gemini-test"
 
 
+class FakeDocument:
+    def __init__(self, store: dict, doc_id: str) -> None:
+        self._store = store
+        self.id = doc_id
+
+    async def set(self, data: dict) -> None:
+        self._store[self.id] = data
+
+
+class FakeCollection:
+    def __init__(self, store: dict) -> None:
+        self._store = store
+
+    def document(self) -> FakeDocument:
+        return FakeDocument(self._store, f"doc-{len(self._store) + 1}")
+
+
+class FakeFirestore:
+    def __init__(self) -> None:
+        self.collections: dict[str, dict] = {}
+
+    def collection(self, name: str) -> FakeCollection:
+        return FakeCollection(self.collections.setdefault(name, {}))
+
+
 @pytest.fixture
 def fake_gemini() -> FakeGemini:
     return FakeGemini()
+
+
+@pytest.fixture
+def fake_db() -> FakeFirestore:
+    return FakeFirestore()
+
+
+@pytest.fixture
+def client(fake_gemini: FakeGemini, fake_db: FakeFirestore) -> TestClient:
+    app = create_app()
+    app.dependency_overrides[get_gemini] = lambda: fake_gemini
+    app.dependency_overrides[get_firestore] = lambda: fake_db
+    app.dependency_overrides[current_user] = lambda: User(uid="judge-1", anonymous=True)
+    return TestClient(app)
+
+
+@pytest.fixture
+def anonymous_client() -> TestClient:
+    """A client with no auth override, to check that protected routes reject missing tokens."""
+    return TestClient(create_app())
