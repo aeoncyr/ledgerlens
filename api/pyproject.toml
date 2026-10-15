@@ -1,0 +1,16 @@
+[project]
+name = "ledgerlens-api"
+version = "0.1.0"
+description = "LedgerLens backend: FastAPI app and the evidence-reading agents"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
