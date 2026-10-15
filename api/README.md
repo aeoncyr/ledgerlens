@@ -14,10 +14,15 @@ uvicorn app.main:app --reload --port 8080
 ```
 
 Gemini is reached in one of two ways. With `GEMINI_API_KEY` set, the API uses the Gemini Developer
-API (Google AI Studio); the prototype runs on its free tier, which allows only a few requests a
-minute, so calls are made three at a time. Without a key it uses Vertex AI through the service
-account, which is what a lender deployment would use: paid, and its inputs are not used to train
-Google's models.
+API (Google AI Studio), and the prototype runs on its free tier. Without a key it uses Vertex AI
+through the service account, which is what a lender deployment would use: paid, and its inputs are
+not used to train Google's models.
+
+On the free tier every model has its own small quota, so the work is split by role. The readers,
+which make most of the calls and only transcribe, use the Flash-Lite models (15 requests a minute
+and 500 a day each). The verifier and memo writer, two calls an analysis that do the reasoning, use
+a chain of four Flash models (5 a minute and 20 a day each) with low thinking. The client paces
+every model under its per-minute limit and moves down the chain when a model's day is spent.
 
 Configuration comes from environment variables; see [`../.env.example`](../.env.example).
 Interactive API docs are served at `http://localhost:8080/api/docs`.
