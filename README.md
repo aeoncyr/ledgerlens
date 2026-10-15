@@ -29,6 +29,7 @@ from, and a human always makes the lending decision.
 - [Getting started](#getting-started)
 - [Contributing](#contributing)
 - [Sources](#sources)
+- [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -172,18 +173,27 @@ Rules every agent follows:
 - **Consent first.** The owner agrees, on screen, before any record is captured. The consent version and time
   are stored, and the owner can withdraw it at any time.
 - **No personal identifiers.** We store a business alias, never an owner's legal name or national ID number.
-- **Where data lives.** Files and records are stored in Google Cloud's Jakarta region. Gemini is not yet served
-  from Jakarta, so AI processing runs on Google's global endpoint; the consent screen says so plainly.
+- **Where data lives.** Records are stored in Google Cloud's Jakarta region and photos in the United States.
+  Gemini is not yet served from Jakarta, so AI processing runs on Google's global endpoint. The consent screen
+  says all of this plainly.
 - **Human oversight.** No automatic rejections; every decision needs a person and a written reason, recorded
   in an audit log, in line with OJK's AI governance principles.
 - **Synthetic data only.** Every business, notebook and recording in this repository is fictional and made by
-  our team.
+  our team. The one outside dataset we test with, CORD, holds public shop receipts and is downloaded at test
+  time, never committed (see [Acknowledgements](#acknowledgements)).
 
 ## How we measure it
 
-*Planned; results will be published here and in the release notes.*
+**Measured so far** (`gemini-3.8-flash`, October 2026):
 
-We are building seven fictional businesses, each with handwritten notebook pages, QRIS histories, receipts
+| Test | Data | Result |
+| --- | --- | --- |
+| Receipt reader | First 30 receipts of the CORD test split: real photos from Indonesian shops and restaurants | Total paid read exactly on 28 of 29 labelled receipts (97%); 69 of 69 item amounts found |
+
+Run it yourself with `cd api && python -m scripts.receipt_eval --count 30`. The one miss was a receipt that
+prints a single summary amount, which the reader filed as the subtotal rather than the total.
+
+**Planned:** we are building seven fictional businesses, each with handwritten notebook pages, QRIS histories, receipts
 and recorded interviews, so we know their true numbers. Two of them hide planted problems (an inflated notebook
 and an edited QRIS screenshot). Across about 30 test files we will report:
 
@@ -246,3 +256,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for our branch, pull-request and commit-m
 - OJK AI governance guideline for banks: [OJK](https://ojk.go.id/id/Publikasi/Roadmap-dan-Pedoman/Perbankan/Pages/Tata-Kelola-Kecerdasan-Artifisial-Perbankan-Indonesia.aspx)
 - Number of rural banks (BPR/BPRS): [Kontan](https://keuangan.kontan.co.id/news/ojk-percepat-konsolidasi-sejumlah-bpr-berguguran-sepanjang-2025)
 - No extra collateral for KUR loans up to Rp 100 million: [Kontan](https://nasional.kontan.co.id/news/kementerian-umkm-tegaskan-kur-hingga-rp-100-juta-tak-perlu-agunan-tambahan)
+
+## Acknowledgements
+
+The receipt reader is evaluated on **CORD** (Consolidated Receipt Dataset), by Seunghyun Park, Seung Shin,
+Bado Lee, Junyeop Lee, Jaeheung Surh, Minjoon Seo and Hwalsuk Lee, *CORD: A Consolidated Receipt Dataset for
+Post-OCR Parsing*, Document Intelligence Workshop at NeurIPS 2019. It is published by NAVER Clova under the
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) licence at
+[huggingface.co/datasets/naver-clova-ix/cord-v2](https://huggingface.co/datasets/naver-clova-ix/cord-v2). We
+download it at test time and do not redistribute or modify it.
