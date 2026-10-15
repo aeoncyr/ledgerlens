@@ -155,3 +155,11 @@ def test_service_trades_get_a_higher_sales_to_purchases_limit():
 
     assert ratio_findings("Grocery stall")
     assert not ratio_findings("Tailor (penjahit)")
+
+
+def test_no_qris_at_all_is_not_also_reported_as_zero_coverage():
+    summary = summarise(month("2026-09", claimed=7_000_000, receipts=3_000_000))
+
+    found = consistency_findings(summary, LenderPolicy(), "Tailor (penjahit)")
+
+    assert not [f for f in found if "QRIS" in f.text]

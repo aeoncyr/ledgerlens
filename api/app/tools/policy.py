@@ -89,7 +89,13 @@ def consistency_findings(
             )
         )
     coverage = summary.hard_coverage
-    if coverage is not None and coverage < policy.min_hard_coverage:
+    # Without any QRIS history the pipeline reports the missing evidence instead; a "0% coverage"
+    # finding would only say the same thing again.
+    if (
+        coverage is not None
+        and summary.avg_proven_inflows > 0
+        and coverage < policy.min_hard_coverage
+    ):
         findings.append(
             Finding(
                 kind="discrepancy",
