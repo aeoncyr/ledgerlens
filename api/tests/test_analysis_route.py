@@ -39,7 +39,7 @@ def canned_result(findings: list[Finding]) -> AnalysisResult:
 def ready_application(client, fake_db, monkeypatch):
     calls = []
 
-    async def fake_pipeline(*, gemini, store, application, items, progress, policy=None):
+    async def fake_pipeline(*, gemini, store, application, items, progress, **_options):
         calls.append(items)
         await progress("ledger_reader", "Read 14 lines from Notebook page 1", "done")
         result = canned_result(monkeypatch.findings)

@@ -92,7 +92,9 @@ async def generate_checked[T: BaseModel](
     quoted: set[str],
 ) -> tuple[T, str, list[str]]:
     """Generate, check the figures, retry once with feedback. Returns output, model, problems."""
-    output, model = await gemini.generate(contents=contents, schema=schema, system=system)
+    output, model = await gemini.generate(
+        contents=contents, schema=schema, system=system, role="write"
+    )
     issues = problems(output, facts, quoted)
     if not issues:
         return output, model, []
@@ -103,7 +105,9 @@ async def generate_checked[T: BaseModel](
         + "\n- ".join(issues)
         + "\nAnswer again, using [[key]] for every figure.",
     ]
-    output, model = await gemini.generate(contents=retry, schema=schema, system=system)
+    output, model = await gemini.generate(
+        contents=retry, schema=schema, system=system, role="write"
+    )
     issues = problems(output, facts, quoted)
     if issues:
         log.warning("%s still broke the figure rules; scrubbing: %s", schema.__name__, issues)

@@ -8,9 +8,21 @@ The backend: a FastAPI app on Cloud Run that runs the Gemini agents and writes r
 cd api
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
-gcloud auth application-default login   # LedgerLens uses no API keys
+gcloud auth application-default login   # for Firestore and Cloud Storage
+export GEMINI_API_KEY=...                # a Google AI Studio key; never commit it
 uvicorn app.main:app --reload --port 8080
 ```
+
+Gemini is reached in one of two ways. With `GEMINI_API_KEY` set, the API uses the Gemini Developer
+API (Google AI Studio), and the prototype runs on its free tier. Without a key it uses Vertex AI
+through the service account, which is what a lender deployment would use: paid, and its inputs are
+not used to train Google's models.
+
+On the free tier every model has its own small quota, so the work is split by role. The readers,
+which make most of the calls and only transcribe, use the Flash-Lite models (15 requests a minute
+and 500 a day each). The verifier and memo writer, two calls an analysis that do the reasoning, use
+a chain of four Flash models (5 a minute and 20 a day each) with low thinking. The client paces
+every model under its per-minute limit and moves down the chain when a model's day is spent.
 
 Configuration comes from environment variables; see [`../.env.example`](../.env.example).
 Interactive API docs are served at `http://localhost:8080/api/docs`.
@@ -53,6 +65,9 @@ It reads every page with both prompt variants and passes when at least 80% of am
 
 ```bash
 gcloud run deploy ledgerlens-api --source . --region asia-southeast2 \
-  --min-instances 1 --no-cpu-throttling --timeout 900 \
-  --set-env-vars GOOGLE_GENAI_USE_ENTERPRISE=true,GOOGLE_CLOUD_LOCATION=global
+  --memory 512Mi --max-instances 2 --timeout 900 --cpu-throttling \
+  --update-env-vars STORAGE_BUCKET=your-project.firebasestorage.app,GEMINI_API_KEY=your-key
 ```
+
+The service bills only while it serves a request and scales to zero when idle. An analysis runs
+inside its request, so the web app calls this service's URL directly for `/analyze`.

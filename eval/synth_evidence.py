@@ -65,6 +65,15 @@ def catalogue(persona: Persona) -> list[tuple[str, int]]:
     return ITEMS["sembako"]
 
 
+GENERIC_WORDS = {"belanja", "beli", "kulakan", "agen", "pasar", "+"}
+
+
+def goods_named(persona: Persona, line: str) -> list[tuple[str, int]]:
+    """Catalogue items that a notebook purchase line mentions by name."""
+    words = [w for w in line.lower().split() if w not in GENERIC_WORDS]
+    return [item for item in catalogue(persona) if any(w in item[0] for w in words)]
+
+
 # --- What happened, day by day ----------------------------------------------------------------------
 
 
@@ -149,7 +158,10 @@ def render_receipt(rng: random.Random, persona: Persona, purchase: dict, supplie
     """A small handwritten nota on a printed pad, as Indonesian suppliers hand out."""
     total = purchase["amount"]
     items, remaining = [], total
-    choices = rng.sample(catalogue(persona), k=3)
+    # The goods the notebook line names come first ("kulakan minyak" -> oil), then two others.
+    named = goods_named(persona, purchase["word"])
+    others = [item for item in catalogue(persona) if item not in named]
+    choices = (named[:1] + rng.sample(others, k=3))[:3]
     for index, (name, unit) in enumerate(choices):
         if index == len(choices) - 1 or remaining <= unit:
             quantity = max(1, remaining // unit)
