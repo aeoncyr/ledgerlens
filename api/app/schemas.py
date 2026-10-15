@@ -178,6 +178,9 @@ class LedgerLineOut(CamelModel):
     description: str
     amount_text: str | None
     amount_rp: int | None = Field(description="Parsed by code from amount_text, never by the model")
+    crossed_out_text: str | None = Field(
+        default=None, description="A crossed-out earlier amount on the same line, if any"
+    )
     kind: str
     confidence: float
 
