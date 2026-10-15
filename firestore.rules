@@ -1,0 +1,39 @@
+rules_version = '2';
+
+// Browsers only read. Every write goes through the API, which uses the Admin SDK and is not bound by
+// these rules, so results can't be tampered with from the client.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function ownsApplication(appId) {
+      return signedIn()
+        && get(/databases/$(database)/documents/applications/$(appId)).data.officerUid
+          == request.auth.uid;
+    }
+
+    match /applications/{appId} {
+      allow read: if signedIn() && resource.data.officerUid == request.auth.uid;
+
+      // Evidence, runs, findings, the memo and the audit log follow their application.
+      match /{child=**} {
+        allow read: if ownsApplication(appId);
+      }
+    }
+
+    match /pageReadings/{readingId} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    // The fictional sample businesses on the landing page are public.
+    match /samples/{document=**} {
+      allow read: if true;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
