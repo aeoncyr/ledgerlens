@@ -30,11 +30,7 @@ class GeminiError(RuntimeError):
 class Gemini:
     def __init__(self, settings: Settings, client: genai.Client | None = None) -> None:
         self._settings = settings
-        self._client = client or genai.Client(
-            enterprise=True,
-            project=settings.project or None,
-            location=settings.location,
-        )
+        self._client = client or _client_for(settings)
 
     async def generate(
         self,
@@ -69,6 +65,14 @@ class Gemini:
                     )
                     await asyncio.sleep(_backoff(exc, attempt))
         raise GeminiError("All Gemini models failed") from last_error
+
+
+def _client_for(settings: Settings) -> genai.Client:
+    if settings.gemini_api_key:
+        return genai.Client(enterprise=False, api_key=settings.gemini_api_key)
+    return genai.Client(
+        enterprise=True, project=settings.project or None, location=settings.location
+    )
 
 
 def _backoff(exc: Exception, attempt: int) -> float:

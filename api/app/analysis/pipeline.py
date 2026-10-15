@@ -174,15 +174,25 @@ def reconcile(
 
 
 async def _read_ledger(
-    gemini: Gemini, result: ItemResult, data: bytes, mime: str, facts: FactTable
+    gemini: Gemini,
+    result: ItemResult,
+    data: bytes,
+    mime: str,
+    facts: FactTable,
+    double_read: bool = True,
 ) -> str:
     item = result.item
-    (first, model_a), (second, model_b) = await asyncio.gather(
-        read_ledger_page(gemini, data, mime, variant=0),
-        read_ledger_page(gemini, data, mime, variant=1),
-    )
-    result.models += [model_a, model_b]
-    lines, disagreements = reconcile(first, second)
+    if double_read:
+        (first, model_a), (second, model_b) = await asyncio.gather(
+            read_ledger_page(gemini, data, mime, variant=0),
+            read_ledger_page(gemini, data, mime, variant=1),
+        )
+        result.models += [model_a, model_b]
+        lines, disagreements = reconcile(first, second)
+    else:  # one reading saves calls on the free tier; low confidence still flags unclear lines
+        lines, model = await read_ledger_page(gemini, data, mime, variant=0)
+        result.models.append(model)
+        disagreements = []
     if not any(line.amount_rp is not None for line in lines):
         raise ValueError("no amounts could be read")
 
@@ -502,6 +512,7 @@ async def read_item(
     facts: FactTable,
     limit: asyncio.Semaphore,
     progress: Progress,
+    double_read: bool = True,
 ) -> ItemResult:
     result = ItemResult(item=item)
     agent = LABELS[item.type][2]
@@ -510,7 +521,7 @@ async def read_item(
         try:
             data, mime = await store.read(item.storage_path)
             if item.type is EvidenceType.LEDGER_PAGE:
-                message = await _read_ledger(gemini, result, data, mime, facts)
+                message = await _read_ledger(gemini, result, data, mime, facts, double_read)
             elif item.type is EvidenceType.RECEIPT:
                 message = await _read_receipt(gemini, result, data, mime, facts)
             elif item.type is EvidenceType.QRIS_HISTORY:
@@ -653,15 +664,20 @@ async def run_pipeline(
     items: list[EvidenceItem],
     progress: Progress,
     policy: LenderPolicy | None = None,
+    max_parallel: int = MAX_PARALLEL_READS,
+    double_read: bool = True,
 ) -> AnalysisResult:
     policy = policy or LenderPolicy()
     items = label_items(items)
     facts = FactTable()
-    limit = asyncio.Semaphore(MAX_PARALLEL_READS)
+    limit = asyncio.Semaphore(max_parallel)
 
     await progress("intake", f"Reading {len(items)} pieces of evidence in parallel", "running")
     results = await asyncio.gather(
-        *(read_item(gemini, store, i, application, facts, limit, progress) for i in items)
+        *(
+            read_item(gemini, store, i, application, facts, limit, progress, double_read)
+            for i in items
+        )
     )
     readable = [r for r in results if r.error is None]
     await progress("intake", f"Read {len(readable)} of {len(items)} pieces of evidence", "done")

@@ -65,12 +65,15 @@ async def run(sample: Path, out_dir: Path) -> None:
     async def progress(agent: str, message: str, state: str) -> None:
         print(f"{time.monotonic() - started:6.1f}s  {agent:<18} {state:<8} {message}")
 
+    settings = get_settings()
     result = await run_pipeline(
-        gemini=Gemini(get_settings()),
+        gemini=Gemini(settings),
         store=FolderStore(sample),
         application=application,
         items=items,
         progress=progress,
+        max_parallel=settings.max_parallel_calls,
+        double_read=settings.ledger_double_read,
     )
     print(f"\nOutcome: {result.assessment.value}   ({time.monotonic() - started:.0f}s)")
     print(f"Policy: {result.policy.model_dump()}")

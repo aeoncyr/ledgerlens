@@ -116,6 +116,8 @@ async def analyze(
             application=_application(data),
             items=items,
             progress=progress,
+            max_parallel=get_settings().max_parallel_calls,
+            double_read=get_settings().ledger_double_read,
         )
     except Exception as exc:
         await run_ref.update(

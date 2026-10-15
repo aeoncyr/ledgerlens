@@ -287,3 +287,24 @@ def test_reconcile_tolerates_readings_that_number_lines_differently():
 
     assert disagreements == []
     assert all(x.confidence == 0.95 for x in lines)
+
+
+def test_a_single_read_saves_calls_on_the_free_tier():
+    gemini = ScriptedGemini(Verification(findings=[], confirmations=[]), MEMO)
+
+    async def progress(*_):
+        pass
+
+    asyncio.run(
+        run_pipeline(
+            gemini=gemini,
+            store=BytesStore(),
+            application=APPLICATION,
+            items=list(ITEMS),
+            progress=progress,
+            max_parallel=2,
+            double_read=False,
+        )
+    )
+
+    assert gemini.calls.count(LedgerReading) == 1
