@@ -164,7 +164,7 @@ Rules every agent follows:
 | AI models | `gemini-3.8-flash` (main), `gemini-3.5-flash` (fallback) | Multimodal reading and reasoning in Bahasa and English |
 | Calculations | Plain Python with unit tests | Every number in the memo |
 | Database | Firestore (Native mode, Jakarta) | Application data, audit log, live progress |
-| Security | Service account with no API keys; Firestore and Storage rules | No secrets in this repository; only the backend writes results |
+| Security | A service account for Google Cloud, one Gemini API key held only in Cloud Run's settings; Firestore and Storage rules | No secrets in this repository; only the backend writes results |
 | Deploy and ops | `gcloud run deploy`, Firebase CLI, Cloud Logging, budget alerts | Repeatable deploys; visibility into errors and cost |
 | Quality | Our evaluation harness on synthetic files | Measured accuracy, not claims |
 
@@ -176,6 +176,10 @@ Rules every agent follows:
 - **Where data lives.** Records are stored in Google Cloud's Jakarta region and photos in the United States.
   Gemini is not yet served from Jakarta, so AI processing runs on Google's global endpoint. The consent screen
   says all of this plainly.
+- **Prototype versus production.** To keep the hackathon prototype free to run, it calls Gemini through the
+  Gemini Developer API's free tier, where Google may use inputs to improve its products. It therefore processes
+  only synthetic data. A lender deployment would call Gemini through Vertex AI, where inputs are not used that
+  way; the code supports both.
 - **Human oversight.** No automatic rejections; every decision needs a person and a written reason, recorded
   in an audit log, in line with OJK's AI governance principles.
 - **Synthetic data only.** Every business, notebook and recording in this repository is fictional and made by
@@ -241,7 +245,7 @@ assets/           images used in this README
 *Planned; will be finalised with the first code release.*
 
 1. Copy `.env.example` to `.env` and fill in your Google Cloud project and Firebase web config.
-2. Sign in for local development with `gcloud auth application-default login`. LedgerLens uses no API keys.
+2. Sign in for local development with `gcloud auth application-default login`, and set `GEMINI_API_KEY` to a Google AI Studio key. Never commit it.
 3. Run the API: `cd api && uvicorn app.main:app --reload --port 8080`.
 4. Run the web app: `cd web && npm install && npm run dev`. Vite forwards `/api` to port 8080.
 
