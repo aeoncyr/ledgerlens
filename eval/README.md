@@ -27,6 +27,22 @@ The three personas in `personas.py` are fictional: a grocery stall whose evidenc
 QRIS (Indonesia's national QR payment standard) history, and a food stall whose notebook claims far more
 than its purchases could support.
 
+## Complete sample files
+
+`synth_evidence.py` goes further and writes everything an officer would capture for one fictional
+business over two months: three notebook pages a month, a handwritten supplier receipt (*nota*) for
+every purchase the notebook records, and a screenshot of each month's QRIS history from a fictional
+merchant app. `manifest.json` lists the evidence the way the API registers it and holds the true
+monthly figures. Where a persona inflates its notebook, its QRIS payments follow true sales, not the
+notebook, and its purchases stay true, as they would in real life.
+
+```bash
+.venv/bin/python eval/synth_evidence.py --persona pak-hendra --out data/samples/pak-hendra
+cd api && .venv/bin/python -m scripts.run_sample --sample ../data/samples/pak-hendra
+```
+
+`run_sample` runs the whole analysis and prints each figure it read next to the truth.
+
 ## Running the reader against them
 
 The handwriting test in `api/scripts/` sends every page to the ledger reader twice, once with each prompt
