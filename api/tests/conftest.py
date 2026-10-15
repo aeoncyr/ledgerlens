@@ -60,29 +60,64 @@ class FakeGemini:
         return self.reading, "gemini-test"
 
 
+class FakeSnapshot:
+    def __init__(self, data: dict | None) -> None:
+        self._data = data
+        self.exists = data is not None
+
+    def to_dict(self) -> dict | None:
+        return None if self._data is None else dict(self._data)
+
+
 class FakeDocument:
-    def __init__(self, store: dict, doc_id: str) -> None:
-        self._store = store
-        self.id = doc_id
+    def __init__(self, db: FakeFirestore, path: tuple[str, ...]) -> None:
+        self._db = db
+        self._path = path
+        self.id = path[-1]
 
     async def set(self, data: dict) -> None:
-        self._store[self.id] = data
+        self._db.docs[self._path] = dict(data)
+
+    async def get(self) -> FakeSnapshot:
+        return FakeSnapshot(self._db.docs.get(self._path))
+
+    async def update(self, data: dict) -> None:
+        if self._path not in self._db.docs:
+            raise KeyError(f"No document at {'/'.join(self._path)}")
+        self._db.docs[self._path].update(data)
+
+    def collection(self, name: str) -> FakeCollection:
+        return FakeCollection(self._db, (*self._path, name))
 
 
 class FakeCollection:
-    def __init__(self, store: dict) -> None:
-        self._store = store
+    def __init__(self, db: FakeFirestore, path: tuple[str, ...]) -> None:
+        self._db = db
+        self._path = path
 
-    def document(self) -> FakeDocument:
-        return FakeDocument(self._store, f"doc-{len(self._store) + 1}")
+    def document(self, doc_id: str | None = None) -> FakeDocument:
+        if doc_id is None:
+            self._db.counter += 1
+            doc_id = f"doc-{self._db.counter}"
+        return FakeDocument(self._db, (*self._path, doc_id))
 
 
 class FakeFirestore:
+    """An in-memory stand-in for Firestore, keyed by document path."""
+
     def __init__(self) -> None:
-        self.collections: dict[str, dict] = {}
+        self.docs: dict[tuple[str, ...], dict] = {}
+        self.counter = 0
 
     def collection(self, name: str) -> FakeCollection:
-        return FakeCollection(self.collections.setdefault(name, {}))
+        return FakeCollection(self, (name,))
+
+    def docs_in(self, *collection_path: str) -> dict[str, dict]:
+        return {p[-1]: d for p, d in self.docs.items() if p[:-1] == collection_path}
+
+    @property
+    def collections(self) -> dict[str, dict[str, dict]]:
+        return {path[0]: self.docs_in(path[0]) for path in self.docs if len(path) == 2}
 
 
 @pytest.fixture
@@ -96,12 +131,22 @@ def fake_db() -> FakeFirestore:
 
 
 @pytest.fixture
-def client(fake_gemini: FakeGemini, fake_db: FakeFirestore) -> TestClient:
-    app = create_app()
-    app.dependency_overrides[get_gemini] = lambda: fake_gemini
-    app.dependency_overrides[get_firestore] = lambda: fake_db
-    app.dependency_overrides[current_user] = lambda: User(uid="judge-1", anonymous=True)
-    return TestClient(app)
+def client_as(fake_gemini: FakeGemini, fake_db: FakeFirestore):
+    """Build a client signed in as the given user, sharing one fake Gemini and Firestore."""
+
+    def make(uid: str) -> TestClient:
+        app = create_app()
+        app.dependency_overrides[get_gemini] = lambda: fake_gemini
+        app.dependency_overrides[get_firestore] = lambda: fake_db
+        app.dependency_overrides[current_user] = lambda: User(uid=uid, anonymous=True)
+        return TestClient(app)
+
+    return make
+
+
+@pytest.fixture
+def client(client_as) -> TestClient:
+    return client_as("judge-1")
 
 
 @pytest.fixture
