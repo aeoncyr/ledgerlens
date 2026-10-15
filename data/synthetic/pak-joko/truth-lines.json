@@ -1,0 +1,368 @@
+{
+  "page-1.jpg": [
+    {
+      "text": "Sep - minggu 1",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "1/9 jahit seragam",
+      "amount_text": "380rb",
+      "amount_rp": 380000,
+      "kind": "sale"
+    },
+    {
+      "text": "2/9 ongkos jahit",
+      "amount_text": "355.000",
+      "amount_rp": 355000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Bu Ratmi",
+      "amount_text": "10.000",
+      "amount_rp": 10000,
+      "kind": "receivable"
+    },
+    {
+      "text": "3/9 ongkos jahit",
+      "amount_text": "285.000",
+      "amount_rp": 285000,
+      "kind": "sale"
+    },
+    {
+      "text": "4/9 permak celana",
+      "amount_text": "220rb",
+      "amount_rp": 220000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Mas Dimas",
+      "amount_text": "10.000",
+      "amount_rp": 10000,
+      "kind": "receivable"
+    },
+    {
+      "text": "5/9 permak celana",
+      "amount_text": "220rb",
+      "amount_rp": 220000,
+      "kind": "sale"
+    },
+    {
+      "text": "6/9 ongkos jahit",
+      "amount_text": "370 rb",
+      "amount_rp": 370000,
+      "kind": "sale"
+    },
+    {
+      "text": "7/9 jahit kebaya",
+      "amount_text": "Rp 280.000",
+      "amount_rp": 280000,
+      "kind": "sale"
+    },
+    {
+      "text": "beli kain",
+      "amount_text": "Rp 330.000",
+      "amount_rp": 330000,
+      "kind": "purchase"
+    },
+    {
+      "text": "bayar sewa kios",
+      "amount_text": "Rp 500.000",
+      "amount_rp": 500000,
+      "kind": "expense"
+    },
+    {
+      "text": "Sep - minggu 2",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "8/9 permak celana",
+      "amount_text": "190rb",
+      "amount_rp": 190000,
+      "kind": "sale"
+    },
+    {
+      "text": "9/9 ongkos jahit",
+      "amount_text": "285rb",
+      "amount_rp": 285000,
+      "kind": "sale"
+    },
+    {
+      "text": "10/9 permak celana",
+      "amount_text": "225rb",
+      "amount_rp": 225000,
+      "kind": "sale"
+    },
+    {
+      "text": "11/9 jahit seragam",
+      "amount_text": "355rb",
+      "amount_rp": 355000,
+      "kind": "sale"
+    },
+    {
+      "text": "beli benang + kancing",
+      "amount_text": "490 rb",
+      "amount_rp": 490000,
+      "kind": "purchase"
+    },
+    {
+      "text": "12/9 permak celana",
+      "amount_text": "190rb",
+      "amount_rp": 190000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Bu Lurah",
+      "amount_text": "10rb",
+      "amount_rp": 10000,
+      "kind": "receivable"
+    }
+  ],
+  "page-2.jpg": [
+    {
+      "text": "Sep - minggu 3",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "15/9 jahit kebaya",
+      "amount_text": "335.000",
+      "amount_rp": 335000,
+      "kind": "sale"
+    },
+    {
+      "text": "16/9 ongkos jahit",
+      "amount_text": "260rb",
+      "amount_rp": 260000,
+      "kind": "sale"
+    },
+    {
+      "text": "beli benang + kancing",
+      "amount_text": "Rp 600.000",
+      "amount_rp": 600000,
+      "kind": "purchase"
+    },
+    {
+      "text": "17/9 permak celana",
+      "amount_text": "Rp 230.000",
+      "amount_rp": 230000,
+      "kind": "sale"
+    },
+    {
+      "text": "18/9 ongkos jahit",
+      "amount_text": "330 rb",
+      "amount_rp": 330000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Bu Ratmi",
+      "amount_text": "50.000",
+      "amount_rp": 50000,
+      "kind": "receivable"
+    },
+    {
+      "text": "19/9 permak celana",
+      "amount_text": "335.000",
+      "amount_rp": 335000,
+      "kind": "sale"
+    },
+    {
+      "text": "20/9 jahit kebaya",
+      "amount_text": "205 rb",
+      "amount_rp": 205000,
+      "kind": "sale"
+    },
+    {
+      "text": "21/9 jahit seragam",
+      "amount_text": "175.000",
+      "amount_rp": 175000,
+      "kind": "sale"
+    },
+    {
+      "text": "bayar sewa kios",
+      "amount_text": "Rp 500.000",
+      "amount_rp": 500000,
+      "kind": "expense"
+    },
+    {
+      "text": "Sep - minggu 4",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "22/9 ongkos jahit",
+      "amount_text": "305.000",
+      "amount_rp": 305000,
+      "kind": "sale"
+    },
+    {
+      "text": "23/9 permak celana",
+      "amount_text": "Rp 240.000",
+      "amount_rp": 240000,
+      "kind": "sale"
+    },
+    {
+      "text": "24/9 ongkos jahit",
+      "amount_text": "165rb",
+      "amount_rp": 165000,
+      "kind": "sale"
+    },
+    {
+      "text": "25/9 jahit seragam",
+      "amount_text": "355rb",
+      "amount_rp": 355000,
+      "kind": "sale"
+    },
+    {
+      "text": "26/9 ongkos jahit",
+      "amount_text": "190 rb",
+      "amount_rp": 190000,
+      "kind": "sale"
+    },
+    {
+      "text": "27/9 jahit seragam",
+      "amount_text": "350rb",
+      "amount_rp": 350000,
+      "kind": "sale"
+    },
+    {
+      "text": "beli benang + kancing",
+      "amount_text": "530.000",
+      "amount_rp": 530000,
+      "kind": "purchase"
+    },
+    {
+      "text": "kasbon Bu Ratmi",
+      "amount_text": "10.000",
+      "amount_rp": 10000,
+      "kind": "receivable"
+    }
+  ],
+  "page-3.jpg": [
+    {
+      "text": "Sep - minggu 5",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "29/9 permak celana",
+      "amount_text": "330 rb",
+      "amount_rp": 330000,
+      "kind": "sale"
+    },
+    {
+      "text": "30/9 ongkos jahit",
+      "amount_text": "265 rb",
+      "amount_rp": 265000,
+      "kind": "sale"
+    },
+    {
+      "text": "1/10 jahit kebaya",
+      "amount_text": "315 rb",
+      "amount_rp": 315000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Bu Lurah",
+      "amount_text": "Rp 25.000",
+      "amount_rp": 25000,
+      "kind": "receivable"
+    },
+    {
+      "text": "2/10 jahit kebaya",
+      "amount_text": "180.000",
+      "amount_rp": 180000,
+      "kind": "sale"
+    },
+    {
+      "text": "beli kain",
+      "amount_text": "540.000",
+      "amount_rp": 540000,
+      "kind": "purchase"
+    },
+    {
+      "text": "3/10 jahit seragam",
+      "amount_text": "Rp 200.000",
+      "amount_rp": 200000,
+      "kind": "sale"
+    },
+    {
+      "text": "4/10 permak celana",
+      "amount_text": "Rp 280.000",
+      "amount_rp": 280000,
+      "kind": "sale"
+    },
+    {
+      "text": "5/10 permak celana",
+      "amount_text": "360.000",
+      "amount_rp": 360000,
+      "kind": "sale"
+    },
+    {
+      "text": "bayar sewa kios",
+      "amount_text": "500rb",
+      "amount_rp": 500000,
+      "kind": "expense"
+    },
+    {
+      "text": "Oct - minggu 1",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "6/10 jahit seragam",
+      "amount_text": "365 rb",
+      "amount_rp": 365000,
+      "kind": "sale"
+    },
+    {
+      "text": "7/10 jahit kebaya",
+      "amount_text": "230.000",
+      "amount_rp": 230000,
+      "kind": "sale"
+    },
+    {
+      "text": "8/10 ongkos jahit",
+      "amount_text": "210 rb",
+      "amount_rp": 210000,
+      "kind": "sale"
+    },
+    {
+      "text": "9/10 ongkos jahit",
+      "amount_text": "Rp 335.000",
+      "amount_rp": 335000,
+      "kind": "sale"
+    },
+    {
+      "text": "10/10 jahit seragam",
+      "amount_text": "305.000",
+      "amount_rp": 305000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Bu Lurah",
+      "amount_text": "25rb",
+      "amount_rp": 25000,
+      "kind": "receivable"
+    },
+    {
+      "text": "11/10 jahit seragam",
+      "amount_text": "Rp 345.000",
+      "amount_rp": 345000,
+      "kind": "sale"
+    },
+    {
+      "text": "12/10 ongkos jahit",
+      "amount_text": "Rp 325.000",
+      "amount_rp": 325000,
+      "kind": "sale"
+    }
+  ]
+}

@@ -1,0 +1,368 @@
+{
+  "page-1.jpg": [
+    {
+      "text": "Sep - minggu 1",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "1/9 laku",
+      "amount_text": "Rp 585.000",
+      "amount_rp": 585000,
+      "kind": "sale"
+    },
+    {
+      "text": "2/9 jual",
+      "amount_text": "510rb",
+      "amount_rp": 510000,
+      "kind": "sale"
+    },
+    {
+      "text": "kulakan minyak",
+      "amount_text": "2.9jt",
+      "amount_rp": 2900000,
+      "kind": "purchase"
+    },
+    {
+      "text": "3/9 jual",
+      "amount_text": "535rb",
+      "amount_rp": 535000,
+      "kind": "sale"
+    },
+    {
+      "text": "4/9 jual + pulsa",
+      "amount_text": "540rb",
+      "amount_rp": 540000,
+      "kind": "sale"
+    },
+    {
+      "text": "5/9 Sabtu pasar",
+      "amount_text": "2.1jt",
+      "amount_rp": 2100000,
+      "kind": "sale"
+    },
+    {
+      "text": "6/9 jual + pulsa",
+      "amount_text": "675.000",
+      "amount_rp": 675000,
+      "kind": "sale"
+    },
+    {
+      "text": "7/9 jual",
+      "amount_text": "575 rb",
+      "amount_rp": 575000,
+      "kind": "sale"
+    },
+    {
+      "text": "Sep - minggu 2",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "8/9 jual + pulsa",
+      "amount_text": "490rb",
+      "amount_rp": 490000,
+      "kind": "sale"
+    },
+    {
+      "text": "9/9 jual",
+      "amount_text": "580rb",
+      "amount_rp": 580000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Bu Tini",
+      "amount_text": "50rb",
+      "amount_rp": 50000,
+      "kind": "receivable"
+    },
+    {
+      "text": "10/9 laku",
+      "amount_text": "575rb",
+      "amount_rp": 575000,
+      "kind": "sale"
+    },
+    {
+      "text": "11/9 jual",
+      "amount_text": "570 rb",
+      "amount_rp": 570000,
+      "kind": "sale"
+    },
+    {
+      "text": "12/9 Sabtu pasar",
+      "amount_text": "2,3 jt",
+      "amount_rp": 2300000,
+      "kind": "sale"
+    },
+    {
+      "text": "kulakan minyak",
+      "amount_text": "2,9jt",
+      "amount_rp": 2900000,
+      "kind": "purchase"
+    },
+    {
+      "text": "13/9 jual",
+      "amount_text": "Rp 535.000",
+      "amount_rp": 535000,
+      "kind": "sale"
+    },
+    {
+      "text": "14/9 laku",
+      "amount_text": "Rp 585.000",
+      "amount_rp": 585000,
+      "kind": "sale"
+    },
+    {
+      "text": "bayar arisan",
+      "amount_text": "200rb",
+      "amount_rp": 200000,
+      "kind": "expense"
+    }
+  ],
+  "page-2.jpg": [
+    {
+      "text": "Sep - minggu 3",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "15/9 jual sembako",
+      "amount_text": "655.000",
+      "amount_rp": 655000,
+      "kind": "sale"
+    },
+    {
+      "text": "belanja agen",
+      "amount_text": "2,9 jt",
+      "amount_rp": 2900000,
+      "kind": "purchase"
+    },
+    {
+      "text": "16/9 jual",
+      "amount_text": "Rp 575.000",
+      "amount_rp": 575000,
+      "kind": "sale"
+    },
+    {
+      "text": "17/9 jual",
+      "amount_text": "605.000",
+      "amount_rp": 605000,
+      "kind": "sale"
+    },
+    {
+      "text": "18/9 jual + pulsa",
+      "amount_text": "660.000",
+      "amount_rp": 660000,
+      "kind": "sale"
+    },
+    {
+      "text": "19/9 Sabtu pasar",
+      "amount_text": "1,8jt",
+      "amount_rp": 1800000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Pak Ujang",
+      "amount_text": "Rp 15.000",
+      "amount_rp": 15000,
+      "kind": "receivable"
+    },
+    {
+      "text": "20/9 jual",
+      "amount_text": "485rb",
+      "amount_rp": 485000,
+      "kind": "sale"
+    },
+    {
+      "text": "21/9 jual sembako",
+      "amount_text": "500.000",
+      "amount_rp": 500000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Pak Ujang",
+      "amount_text": "25.000",
+      "amount_rp": 25000,
+      "kind": "receivable"
+    },
+    {
+      "text": "bayar arisan",
+      "amount_text": "Rp 200.000",
+      "amount_rp": 200000,
+      "kind": "expense"
+    },
+    {
+      "text": "Sep - minggu 4",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "22/9 jual sembako",
+      "amount_text": "650rb",
+      "amount_rp": 650000,
+      "kind": "sale"
+    },
+    {
+      "text": "23/9 laku",
+      "amount_text": "540rb",
+      "amount_rp": 540000,
+      "kind": "sale"
+    },
+    {
+      "text": "24/9 laku",
+      "amount_text": "645rb",
+      "amount_rp": 645000,
+      "kind": "sale"
+    },
+    {
+      "text": "25/9 jual sembako",
+      "amount_text": "550 rb",
+      "amount_rp": 550000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Mbak Sri",
+      "amount_text": "15.000",
+      "amount_rp": 15000,
+      "kind": "receivable"
+    },
+    {
+      "text": "26/9 Sabtu pasar",
+      "amount_text": "2,2jt",
+      "amount_rp": 2200000,
+      "kind": "sale"
+    },
+    {
+      "text": "27/9 jual",
+      "amount_text": "580 rb",
+      "amount_rp": 580000,
+      "kind": "sale"
+    }
+  ],
+  "page-3.jpg": [
+    {
+      "text": "Sep - minggu 5",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "29/9 jual sembako",
+      "amount_text": "565rb",
+      "amount_rp": 565000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Bu Tini",
+      "amount_text": "15.000",
+      "amount_rp": 15000,
+      "kind": "receivable"
+    },
+    {
+      "text": "30/9 jual",
+      "amount_text": "680.000",
+      "amount_rp": 680000,
+      "kind": "sale"
+    },
+    {
+      "text": "1/10 jual",
+      "amount_text": "510rb",
+      "amount_rp": 510000,
+      "kind": "sale"
+    },
+    {
+      "text": "belanja agen",
+      "amount_text": "2,9 jt",
+      "amount_rp": 2900000,
+      "kind": "purchase"
+    },
+    {
+      "text": "2/10 jual sembako",
+      "amount_text": "530.000",
+      "amount_rp": 530000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Bu Tini",
+      "amount_text": "25rb",
+      "amount_rp": 25000,
+      "kind": "receivable"
+    },
+    {
+      "text": "3/10 Sabtu pasar",
+      "amount_text": "2,1 jt",
+      "amount_rp": 2100000,
+      "kind": "sale"
+    },
+    {
+      "text": "4/10 jual + pulsa",
+      "amount_text": "535.000",
+      "amount_rp": 535000,
+      "kind": "sale"
+    },
+    {
+      "text": "kasbon Pak Ujang",
+      "amount_text": "50 rb",
+      "amount_rp": 50000,
+      "kind": "receivable"
+    },
+    {
+      "text": "5/10 laku",
+      "amount_text": "505.000",
+      "amount_rp": 505000,
+      "kind": "sale"
+    },
+    {
+      "text": "bayar listrik",
+      "amount_text": "Rp 350.000",
+      "amount_rp": 350000,
+      "kind": "expense"
+    },
+    {
+      "text": "Oct - minggu 1",
+      "amount_text": null,
+      "amount_rp": null,
+      "kind": "heading"
+    },
+    {
+      "text": "6/10 jual",
+      "amount_text": "Rp 590.000",
+      "amount_rp": 590000,
+      "kind": "sale"
+    },
+    {
+      "text": "7/10 laku",
+      "amount_text": "635rb",
+      "amount_rp": 635000,
+      "kind": "sale"
+    },
+    {
+      "text": "8/10 jual",
+      "amount_text": "665.000",
+      "amount_rp": 665000,
+      "kind": "sale"
+    },
+    {
+      "text": "9/10 jual",
+      "amount_text": "515.000",
+      "amount_rp": 515000,
+      "kind": "sale"
+    },
+    {
+      "text": "belanja agen beras",
+      "amount_text": "3,1jt",
+      "amount_rp": 3100000,
+      "kind": "purchase"
+    },
+    {
+      "text": "kasbon Pak Ujang",
+      "amount_text": "25 rb",
+      "amount_rp": 25000,
+      "kind": "receivable"
+    }
+  ]
+}
