@@ -167,6 +167,9 @@ class Finding(CamelModel):
     citations: list[Citation] = Field(default_factory=list)
     follow_up_question: str | None = None
     answer: str | None = None
+    resolved: bool = Field(
+        default=False, description="True once the owner's answer explains the finding"
+    )
 
 
 class LedgerLineOut(CamelModel):
