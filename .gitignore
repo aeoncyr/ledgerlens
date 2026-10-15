@@ -33,6 +33,7 @@ dist/
 
 # Evaluation runs (raw model output; the summary report is committed separately)
 eval/out/
+eval/.cache/
 
 # Editors and operating systems
 .vscode/
