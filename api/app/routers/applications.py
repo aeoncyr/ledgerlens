@@ -121,7 +121,9 @@ async def register_evidence(
     ref, data = await _owned_application(db, application_id, user)
     if not (data.get("consent") or {}).get("given"):
         raise HTTPException(status.HTTP_409_CONFLICT, "Record the owner's consent first")
-    expected_prefix = f"evidence/{application_id}/"
+    # The browser uploads into its own folder; Storage rules check that folder against the user's
+    # ID, and this check ties it to an application the user owns.
+    expected_prefix = f"evidence/{application_id}/{user.uid}/"
     if not body.storage_path.startswith(expected_prefix):
         raise HTTPException(
             status.HTTP_422_UNPROCESSABLE_CONTENT,
