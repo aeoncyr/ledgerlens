@@ -189,3 +189,33 @@ class LedgerPageResult(CamelModel):
     reading_id: str
     model: str
     lines: list[LedgerLineOut]
+
+
+class ReceiptItemOut(CamelModel):
+    name: str
+    quantity_text: str | None
+    amount_text: str | None
+    amount_rp: int | None = Field(description="Parsed by code from amount_text, never by the model")
+    confidence: float
+
+
+class ReceiptOut(CamelModel):
+    legible: bool
+    merchant: str | None
+    date_text: str | None
+    handwritten: bool
+    items: list[ReceiptItemOut]
+    items_sum_rp: int | None = Field(
+        description="The item amounts added up by code; null if any amount could not be parsed"
+    )
+    subtotal_rp: int | None
+    tax_rp: int | None
+    discount_rp: int | None
+    total_text: str | None
+    total_rp: int | None = Field(description="Parsed by code from total_text, never by the model")
+
+
+class ReceiptResult(CamelModel):
+    reading_id: str
+    model: str
+    receipt: ReceiptOut

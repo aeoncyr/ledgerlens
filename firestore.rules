@@ -27,6 +27,10 @@ service cloud.firestore {
       allow read: if signedIn() && resource.data.uid == request.auth.uid;
     }
 
+    match /receiptReadings/{readingId} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
     // The fictional sample businesses on the landing page are public.
     match /samples/{document=**} {
       allow read: if true;
