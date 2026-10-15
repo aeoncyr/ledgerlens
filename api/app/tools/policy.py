@@ -32,6 +32,18 @@ class LenderPolicy(BaseModel):
     max_sales_to_purchases: float = Field(
         default=2.5, description="Claimed sales above this multiple of purchases are implausible"
     )
+    service_max_sales_to_purchases: float = Field(
+        default=4.0,
+        description="The same limit for service trades (tailors, repair, laundry), whose costs "
+        "are mostly labour rather than goods bought for resale",
+    )
+
+
+SERVICE_WORDS = ("tailor", "penjahit", "jahit", "repair", "bengkel", "laundry", "salon", "jasa")
+
+
+def is_service(business_type: str) -> bool:
+    return any(word in business_type.lower() for word in SERVICE_WORDS)
 
 
 EVIDENCE_POINTS: dict[EvidenceType, int] = {
@@ -54,18 +66,25 @@ class PolicyResult(BaseModel):
     reasons: list[str]
 
 
-def consistency_findings(summary: CashFlowSummary, policy: LenderPolicy) -> list[Finding]:
+def consistency_findings(
+    summary: CashFlowSummary, policy: LenderPolicy, business_type: str = ""
+) -> list[Finding]:
     """Checks that need only arithmetic. The verifier agent adds the ones that need judgement."""
     findings: list[Finding] = []
     ratio = summary.sales_to_purchases
-    if ratio is not None and ratio > policy.max_sales_to_purchases:
+    limit = (
+        policy.service_max_sales_to_purchases
+        if is_service(business_type)
+        else policy.max_sales_to_purchases
+    )
+    if ratio is not None and ratio > limit:
         findings.append(
             Finding(
                 kind="discrepancy",
                 severity="high",
                 text=(
                     f"Claimed sales are {ratio:.1f}x supplier purchases, above the "
-                    f"{policy.max_sales_to_purchases:.1f}x a business like this can plausibly sell."
+                    f"{limit:.1f}x a business like this can plausibly sell."
                 ),
             )
         )

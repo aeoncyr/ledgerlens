@@ -125,6 +125,15 @@ class RunStartedResponse(CamelModel):
     run_id: str
 
 
+class AnalyzeResponse(CamelModel):
+    """Returned when the analysis has finished; progress streams through Firestore meanwhile."""
+
+    run_id: str
+    assessment: Assessment
+    status: ApplicationStatus
+    latency_ms: int
+
+
 class FollowUpAnswerRequest(CamelModel):
     text: str | None = None
     audio_path: str | None = None
@@ -165,7 +174,16 @@ class Finding(CamelModel):
     severity: Literal["low", "medium", "high"]
     text: str
     citations: list[Citation] = Field(default_factory=list)
-    follow_up_question: str | None = None
+    follow_up_question: str | None = Field(
+        default=None, description="A question for the owner, in Bahasa Indonesia"
+    )
+    follow_up_question_en: str | None = None
+    figures: list[str] = Field(
+        default_factory=list, description="Keys of the computed figures the text mentions"
+    )
+    source: Literal["code", "verifier"] = Field(
+        default="verifier", description="Found by an arithmetic check in code, or by the verifier"
+    )
     answer: str | None = None
     resolved: bool = Field(
         default=False, description="True once the owner's answer explains the finding"

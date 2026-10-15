@@ -144,3 +144,14 @@ def test_low_qris_coverage_is_flagged():
 def test_evidence_strength_rewards_variety_and_history():
     assert evidence_strength({ET.INTERVIEW_AUDIO}, months_covered=1) == 10
     assert evidence_strength({ET.QRIS_HISTORY, ET.RECEIPT}, months_covered=2) == 65
+
+
+def test_service_trades_get_a_higher_sales_to_purchases_limit():
+    summary = summarise(month("2026-09", claimed=7_000_000, receipts=2_200_000))
+
+    def ratio_findings(business_type):
+        found = consistency_findings(summary, LenderPolicy(), business_type)
+        return [f for f in found if "supplier purchases" in f.text]
+
+    assert ratio_findings("Grocery stall")
+    assert not ratio_findings("Tailor (penjahit)")
