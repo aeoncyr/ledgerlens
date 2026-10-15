@@ -10,6 +10,7 @@
 service-account*.json
 *-credentials.json
 *-key.json
+.config/
 
 # Python
 __pycache__/
