@@ -109,7 +109,7 @@ When LedgerLens is unsure, the business is no worse off than it is today.
 
 ```mermaid
 flowchart LR
-    B["Officer's browser<br/>React app on Firebase Hosting<br/>Firebase Auth"] -- "/api calls" --> R["Cloud Run API (Jakarta)<br/>FastAPI + Google ADK agents"]
+    B["Officer's browser<br/>React app on Firebase Hosting<br/>Firebase Auth"] -- "/api calls" --> R["Cloud Run API (Jakarta)<br/>FastAPI + Gemini agents"]
     R -- prompts --> G["Gemini 3.8 Flash<br/>Agent Platform"]
     B -- "uploads photos and audio" --> S[("Firebase Storage<br/>Jakarta")]
     R -- "reads evidence" --> S
@@ -149,7 +149,7 @@ Rules every agent follows:
 | Service | What it does in LedgerLens |
 | --- | --- |
 | **Gemini** (3.8 Flash on Google's Agent Platform) | Reads handwriting, QRIS screenshots, receipts, photos and Bahasa audio; cross-checks the sources; writes follow-up questions, the 5C memo and the owner summary, always as schema-validated JSON |
-| **Cloud Run** (Jakarta) | Hosts our Python API and the agent workflow built with Google's Agent Development Kit (ADK), running each analysis as a background job with one instance always on |
+| **Cloud Run** (Jakarta) | Hosts our Python API and the agent pipeline. Each analysis runs inside its request (up to 15 minutes) and streams its progress through Firestore, so the service scales to zero when idle |
 | **Firestore** (Jakarta) | Stores applications, evidence metadata, findings, memos and the audit log, and streams live analysis progress to the app |
 | **Firebase** | Hosting serves the web app and forwards `/api` to Cloud Run; Auth signs judges in anonymously so there is no login wall; Storage holds the photos and audio |
 
@@ -160,7 +160,7 @@ Rules every agent follows:
 | Web app | React, Vite, TypeScript, plain CSS | Mobile-first screens for officers, the committee and owners |
 | Firebase SDK | `firebase` 12.19.0 | Hosting, anonymous Auth, Storage uploads, Firestore listeners |
 | Backend | Python 3.12, FastAPI on Cloud Run | Our API; background analysis jobs |
-| AI agents | Google ADK 2.12.0, Google Gen AI SDK 2.30.1 | Agent definitions, parallel readers, the follow-up loop |
+| AI agents | Google Gen AI SDK 2.30.1, structured output with Pydantic schemas | Five readers run in parallel; a verifier and a memo writer that may cite figures only by name |
 | AI models | `gemini-3.8-flash` (main), `gemini-3.5-flash` (fallback) | Multimodal reading and reasoning in Bahasa and English |
 | Calculations | Plain Python with unit tests | Every number in the memo |
 | Database | Firestore (Native mode, Jakarta) | Application data, audit log, live progress |

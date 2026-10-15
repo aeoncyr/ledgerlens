@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import random
 from functools import lru_cache
 from typing import Any, TypeVar
 
@@ -42,7 +43,7 @@ class Gemini:
         schema: type[T],
         system: str,
         temperature: float = 0.0,
-        attempts: int = 3,
+        attempts: int = 4,
     ) -> tuple[T, str]:
         """Return the parsed answer and the model that produced it."""
         config = types.GenerateContentConfig(
@@ -66,8 +67,15 @@ class Gemini:
                     log.warning(
                         "Gemini call failed (model=%s, attempt=%d): %s", model, attempt, exc
                     )
-                    await asyncio.sleep(0.5 * 2**attempt)
+                    await asyncio.sleep(_backoff(exc, attempt))
         raise GeminiError("All Gemini models failed") from last_error
+
+
+def _backoff(exc: Exception, attempt: int) -> float:
+    """Wait longer when the quota is exhausted (429): it clears in seconds, not milliseconds."""
+    exhausted = "429" in str(exc) or "RESOURCE_EXHAUSTED" in str(exc)
+    base = 4.0 if exhausted else 0.5
+    return base * 2**attempt + random.uniform(0, base)
 
 
 @lru_cache

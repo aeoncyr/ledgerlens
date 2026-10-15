@@ -95,6 +95,12 @@ class FakeCollection:
         self._db = db
         self._path = path
 
+    async def stream(self):
+        for doc_id, data in self._db.docs_in(*self._path).items():
+            snapshot = FakeSnapshot(data)
+            snapshot.id = doc_id
+            yield snapshot
+
     def document(self, doc_id: str | None = None) -> FakeDocument:
         if doc_id is None:
             self._db.counter += 1

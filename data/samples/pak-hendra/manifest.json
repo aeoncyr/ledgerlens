@@ -1,0 +1,109 @@
+{
+  "persona": "pak-hendra",
+  "application": {
+    "alias": "Warung Makan Hendra",
+    "businessType": "Food stall (warung makan)",
+    "city": "Bandung",
+    "yearsOperating": 3,
+    "amount": 50000000,
+    "tenorMonths": 24
+  },
+  "evidence": [
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-08-1.jpg",
+      "capturedAt": "2026-10-06T09:32:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-08-2.jpg",
+      "capturedAt": "2026-10-06T09:34:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-08-3.jpg",
+      "capturedAt": "2026-10-06T09:36:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-1.jpg",
+      "capturedAt": "2026-10-06T09:38:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-2.jpg",
+      "capturedAt": "2026-10-06T09:40:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-3.jpg",
+      "capturedAt": "2026-10-06T09:42:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-4.jpg",
+      "capturedAt": "2026-10-06T09:44:00+00:00"
+    },
+    {
+      "type": "qris_history",
+      "path": "qris-2026-08.png",
+      "capturedAt": "2026-10-06T09:46:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-09-1.jpg",
+      "capturedAt": "2026-10-06T09:48:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-09-2.jpg",
+      "capturedAt": "2026-10-06T09:50:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-09-3.jpg",
+      "capturedAt": "2026-10-06T09:52:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-1.jpg",
+      "capturedAt": "2026-10-06T09:54:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-2.jpg",
+      "capturedAt": "2026-10-06T09:56:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-3.jpg",
+      "capturedAt": "2026-10-06T09:58:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-4.jpg",
+      "capturedAt": "2026-10-06T10:00:00+00:00"
+    },
+    {
+      "type": "qris_history",
+      "path": "qris-2026-09.png",
+      "capturedAt": "2026-10-06T10:02:00+00:00"
+    }
+  ],
+  "truth": {
+    "2026-08": {
+      "claimed_sales": 46200000,
+      "true_sales": 15400000,
+      "purchases": 8400000,
+      "expenses": 1800000,
+      "qris_total": 6173000
+    },
+    "2026-09": {
+      "claimed_sales": 45500000,
+      "true_sales": 15165000,
+      "purchases": 8100000,
+      "expenses": 1800000,
+      "qris_total": 5884000
+    }
+  }
+}

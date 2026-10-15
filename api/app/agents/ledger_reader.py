@@ -52,8 +52,10 @@ For every line that has writing on it, return:
   (for example "75rb", "1,2jt", "610.000"). Never convert it to a full number.
   If an amount is crossed out and rewritten, amount_text is only the final amount; put the
   crossed-out one in crossed_out_text.
-- kind: sale (jual, laku, penjualan), purchase (belanja, beli, kulakan, agen),
+- kind: sale (jual, laku, omzet, penjualan), purchase (belanja, beli, kulakan, agen),
   receivable (kasbon, utang pelanggan), expense (bayar, listrik, sewa, arisan, gaji) or other.
+  A dated line recording a day's takings is a sale, including "Sabtu pasar" or "hari pasar"
+  (market-day sales). It is a purchase only if it says what was bought or from whom.
 - confidence: lower it whenever a character is unclear. Never invent missing text.
 
 Skip ruled lines with no writing. Set legible to false only if the page cannot be read at all.

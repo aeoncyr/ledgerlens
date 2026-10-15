@@ -20,6 +20,13 @@ class Persona:
     sale_words: tuple[str, ...] = ("jual",)
     purchase_words: tuple[str, ...] = ("belanja agen",)
     customers: tuple[str, ...] = ("Bu Tini", "Pak Ujang", "Mbak Sri")
+    business_type: str = "Grocery stall (warung sembako)"
+    years_operating: int = 5
+    loan_amount: int = 10_000_000
+    tenor_months: int = 12
+    suppliers: tuple[str, ...] = ("Toko Sumber Rejeki",)
+    qris_share: float | None = None  # share of true sales paid by QRIS; None if no QRIS
+    inflation: float = 1.0  # how many times the notebook overstates true sales
 
 
 PERSONAS: dict[str, Persona] = {
@@ -31,22 +38,32 @@ PERSONAS: dict[str, Persona] = {
             city="Bekasi",
             daily_sales=(480_000, 680_000),
             market_day_sales=(1_800_000, 2_300_000),
-            weekly_purchases=(2_600_000, 3_400_000),
+            weekly_purchases=(4_200_000, 5_000_000),  # staples resell on thin margins
             expenses={"bayar listrik": 350_000, "arisan": 200_000},
             sale_words=("jual sembako", "jual + pulsa", "jual", "laku"),
             purchase_words=("belanja agen beras", "kulakan minyak", "belanja agen"),
+            years_operating=8,
+            loan_amount=15_000_000,
+            tenor_months=12,
+            suppliers=("Agen Sembako Makmur", "Toko Beras Sumber Rejeki"),
+            qris_share=0.35,
         ),
         Persona(
             slug="pak-joko",
             name="Penjahit Pak Joko",
             city="Yogyakarta",
-            daily_sales=(150_000, 380_000),
+            daily_sales=(150_000, 320_000),
             market_day_sales=None,
-            weekly_purchases=(300_000, 650_000),
+            weekly_purchases=(650_000, 900_000),
             expenses={"sewa kios": 500_000},
             sale_words=("jahit seragam", "permak celana", "jahit kebaya", "ongkos jahit"),
             purchase_words=("beli kain", "beli benang + kancing"),
             customers=("Bu Ratmi", "Mas Dimas", "Bu Lurah"),
+            business_type="Tailor (penjahit)",
+            years_operating=12,
+            loan_amount=8_000_000,
+            tenor_months=12,
+            suppliers=("Toko Kain Sinar Jaya",),
         ),
         Persona(
             slug="pak-hendra",
@@ -60,6 +77,13 @@ PERSONAS: dict[str, Persona] = {
             sale_words=("jual nasi", "laku", "omzet"),
             purchase_words=("belanja pasar", "beli beras + lauk"),
             customers=("Pak RT", "Kang Asep"),
+            business_type="Food stall (warung makan)",
+            years_operating=3,
+            loan_amount=50_000_000,
+            tenor_months=24,
+            suppliers=("Pasar Kosambi - Kios Bu Imas", "Agen Beras Cianjur"),
+            qris_share=0.4,
+            inflation=3.0,
         ),
     ]
 }

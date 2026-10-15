@@ -1,0 +1,109 @@
+{
+  "persona": "bu-sari",
+  "application": {
+    "alias": "Warung Bu Sari",
+    "businessType": "Grocery stall (warung sembako)",
+    "city": "Bekasi",
+    "yearsOperating": 8,
+    "amount": 15000000,
+    "tenorMonths": 12
+  },
+  "evidence": [
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-08-1.jpg",
+      "capturedAt": "2026-10-06T09:32:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-08-2.jpg",
+      "capturedAt": "2026-10-06T09:34:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-08-3.jpg",
+      "capturedAt": "2026-10-06T09:36:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-1.jpg",
+      "capturedAt": "2026-10-06T09:38:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-2.jpg",
+      "capturedAt": "2026-10-06T09:40:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-3.jpg",
+      "capturedAt": "2026-10-06T09:42:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-4.jpg",
+      "capturedAt": "2026-10-06T09:44:00+00:00"
+    },
+    {
+      "type": "qris_history",
+      "path": "qris-2026-08.png",
+      "capturedAt": "2026-10-06T09:46:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-09-1.jpg",
+      "capturedAt": "2026-10-06T09:48:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-09-2.jpg",
+      "capturedAt": "2026-10-06T09:50:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-09-3.jpg",
+      "capturedAt": "2026-10-06T09:52:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-1.jpg",
+      "capturedAt": "2026-10-06T09:54:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-2.jpg",
+      "capturedAt": "2026-10-06T09:56:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-3.jpg",
+      "capturedAt": "2026-10-06T09:58:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-4.jpg",
+      "capturedAt": "2026-10-06T10:00:00+00:00"
+    },
+    {
+      "type": "qris_history",
+      "path": "qris-2026-09.png",
+      "capturedAt": "2026-10-06T10:02:00+00:00"
+    }
+  ],
+  "truth": {
+    "2026-08": {
+      "claimed_sales": 25905000,
+      "true_sales": 25905000,
+      "purchases": 17900000,
+      "expenses": 550000,
+      "qris_total": 9335000
+    },
+    "2026-09": {
+      "claimed_sales": 23785000,
+      "true_sales": 23785000,
+      "purchases": 18900000,
+      "expenses": 550000,
+      "qris_total": 7854000
+    }
+  }
+}

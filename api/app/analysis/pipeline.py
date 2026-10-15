@@ -1,0 +1,825 @@
+"""The analysis pipeline, from captured evidence to a cited credit memo.
+
+    readers (Gemini, in parallel) -> calculator (code) -> verifier (Gemini)
+        -> policy (code) -> memo writer (Gemini)
+
+Each reader copies what its evidence shows; code turns that into dated amounts, monthly cash flow
+and named figures, and runs every check that is only arithmetic. The verifier cross-checks the
+sources and the memo writer explains the result, both referring to figures by name, so every
+number a lender sees was computed by code or copied from a cited piece of evidence.
+
+This module has no Firestore or HTTP in it: progress goes to a callback, and the result is
+returned, so the same pipeline runs behind the API and in the sample-building script.
+"""
+
+from __future__ import annotations
+
+import asyncio
+import logging
+from collections.abc import Awaitable, Callable
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any
+
+from pydantic import BaseModel
+
+from app.agents.interview_listener import listen
+from app.agents.ledger_reader import read_ledger_page
+from app.agents.memo_writer import write_memo
+from app.agents.photo_assessor import assess_photo
+from app.agents.qris_reader import read_qris
+from app.agents.receipt_reader import read_receipt
+from app.agents.verifier import verify
+from app.agents.writing import number_tokens, render
+from app.analysis.evidence_store import EvidenceStore
+from app.gemini import Gemini
+from app.schemas import (
+    TIER_BY_TYPE,
+    Assessment,
+    Citation,
+    EvidenceType,
+    Finding,
+    LedgerLineOut,
+)
+from app.tools.cashflow import CashFlowSummary, Entry, summarise
+from app.tools.dates import month_of
+from app.tools.facts import Fact, FactTable
+from app.tools.policy import LenderPolicy, PolicyResult, assess, consistency_findings
+from app.tools.policy import monthly_installment as installment_for
+
+log = logging.getLogger(__name__)
+
+Progress = Callable[[str, str, str], Awaitable[None]]  # agent, message, state
+
+KUR_COLLATERAL_FREE_LIMIT = 100_000_000  # KUR loans up to this amount need no extra collateral
+MAX_PARALLEL_READS = 8
+LOW_CONFIDENCE = 0.6
+
+LABELS: dict[EvidenceType, tuple[str, str, str]] = {
+    # type: (label, fact-key prefix, agent name)
+    EvidenceType.LEDGER_PAGE: ("Notebook page", "page", "ledger_reader"),
+    EvidenceType.RECEIPT: ("Receipt", "receipt", "receipt_reader"),
+    EvidenceType.QRIS_HISTORY: ("QRIS history", "qris", "qris_reader"),
+    EvidenceType.SHOP_PHOTO: ("Shop photo", "photo", "photo_assessor"),
+    EvidenceType.INTERVIEW_AUDIO: ("Interview", "interview", "interview_listener"),
+}
+
+
+@dataclass
+class EvidenceItem:
+    id: str
+    type: EvidenceType
+    storage_path: str
+    captured_at: datetime
+    label: str = ""
+    key: str = ""
+
+
+@dataclass
+class Application:
+    alias: str
+    business_type: str
+    city: str
+    years_operating: int
+    amount: int
+    tenor_months: int
+
+
+@dataclass
+class ItemResult:
+    item: EvidenceItem
+    extraction: dict[str, Any] | None = None
+    models: list[str] = field(default_factory=list)
+    entries: list[Entry] = field(default_factory=list)
+    checks: list[Finding] = field(default_factory=list)
+    digest: dict[str, Any] = field(default_factory=dict)
+    written: list[str] = field(default_factory=list)  # amounts as written, which may be quoted
+    error: str | None = None
+
+
+class AnalysisResult(BaseModel):
+    assessment: Assessment
+    policy: PolicyResult
+    cashflow: CashFlowSummary
+    findings: list[Finding]
+    confirmations: list[dict[str, Any]]
+    memo: dict[str, Any]
+    facts: list[dict[str, Any]]
+    extractions: dict[str, dict[str, Any]]
+    unreadable: list[str]
+    models: list[str]
+    figure_problems: list[str]
+
+
+def _rp(value: int | None) -> str:
+    return "unreadable" if value is None else "Rp " + f"{value:,}".replace(",", ".")
+
+
+def _month(item: EvidenceItem) -> str:
+    return item.captured_at.strftime("%Y-%m")
+
+
+def _cite(item: EvidenceItem, locator: str) -> Citation:
+    return Citation(evidence_id=item.id, locator=locator)
+
+
+def label_items(items: list[EvidenceItem]) -> list[EvidenceItem]:
+    """Number each kind of evidence in capture order: Notebook page 1, Receipt 2, ..."""
+    ordered = sorted(items, key=lambda i: (list(LABELS).index(i.type), i.captured_at, i.id))
+    counts: dict[EvidenceType, int] = {}
+    for item in ordered:
+        counts[item.type] = counts.get(item.type, 0) + 1
+        label, prefix, _ = LABELS[item.type]
+        number = counts[item.type]
+        item.label = label if item.type is EvidenceType.INTERVIEW_AUDIO else f"{label} {number}"
+        item.key = f"{prefix}_{number}"
+    return ordered
+
+
+# --- Readers ---------------------------------------------------------------------------------
+
+
+def reconcile(
+    first: list[LedgerLineOut], second: list[LedgerLineOut], slack: int = 2
+) -> tuple[list[LedgerLineOut], list[tuple[int, int | None, int | None]]]:
+    """Compare two readings of the same page; amounts the second reading doesn't confirm are
+    marked uncertain.
+
+    The two readings may number lines differently (one may skip a heading), so an amount counts as
+    confirmed when the second reading has the same amount within ``slack`` lines of it.
+    """
+    unused = [line for line in second if line.amount_rp is not None]
+    by_number = {line.line: line for line in second}
+    lines, disagreements = [], []
+    for line in first:
+        if line.amount_rp is not None:
+            match = next(
+                (
+                    other
+                    for other in unused
+                    if other.amount_rp == line.amount_rp and abs(other.line - line.line) <= slack
+                ),
+                None,
+            )
+            if match is not None:
+                unused.remove(match)
+            else:
+                other = by_number.get(line.line)
+                disagreements.append(
+                    (line.line, line.amount_rp, other.amount_rp if other else None)
+                )
+                line = line.model_copy(update={"confidence": min(line.confidence, 0.5)})
+        lines.append(line)
+    return lines, disagreements
+
+
+async def _read_ledger(
+    gemini: Gemini, result: ItemResult, data: bytes, mime: str, facts: FactTable
+) -> str:
+    item = result.item
+    (first, model_a), (second, model_b) = await asyncio.gather(
+        read_ledger_page(gemini, data, mime, variant=0),
+        read_ledger_page(gemini, data, mime, variant=1),
+    )
+    result.models += [model_a, model_b]
+    lines, disagreements = reconcile(first, second)
+    if not any(line.amount_rp is not None for line in lines):
+        raise ValueError("no amounts could be read")
+
+    reference = item.captured_at.date()
+    current: str | None = None
+    for line in lines:
+        written_month = month_of(line.date_text, reference)
+        if written_month is None and line.amount_text is None:
+            written_month = month_of(line.description, reference)  # headings like "Sep - minggu 1"
+        current = written_month or current
+        if line.amount_rp is not None and line.kind in (
+            "sale",
+            "purchase",
+            "expense",
+            "receivable",
+        ):
+            result.entries.append(
+                Entry(
+                    month=current or _month(item),
+                    kind=line.kind,
+                    amount_rp=line.amount_rp,
+                    evidence_type=item.type,
+                    evidence_id=item.id,
+                    locator=f"line {line.line}",
+                )
+            )
+        if line.amount_text:
+            result.written.append(line.amount_text)
+
+    if disagreements:
+        detail = "; ".join(f"line {n}: {_rp(a)} or {_rp(b)}" for n, a, b in disagreements)
+        result.checks.append(
+            Finding(
+                kind="low_confidence",
+                severity="low",
+                source="code",
+                text=f"The two readings of {item.label} disagree ({detail}). Confirm on the photo.",
+                citations=[_cite(item, f"line {n}") for n, _, _ in disagreements],
+            )
+        )
+    unclear = [
+        line
+        for line in lines
+        if line.amount_rp is not None
+        and line.confidence < LOW_CONFIDENCE
+        and line.line not in {n for n, _, _ in disagreements}
+    ]
+    if unclear:
+        result.checks.append(
+            Finding(
+                kind="low_confidence",
+                severity="low",
+                source="code",
+                text=f"Some amounts on {item.label} were hard to read. Confirm them on the photo.",
+                citations=[_cite(item, f"line {line.line}") for line in unclear],
+            )
+        )
+
+    by_kind = {kind: 0 for kind in ("sale", "purchase", "expense")}
+    for entry in result.entries:
+        if entry.kind in by_kind:
+            by_kind[entry.kind] += entry.amount_rp
+    facts.add(f"{item.key}_sales", f"Sales written on {item.label}", "rupiah", by_kind["sale"])
+    facts.add(
+        f"{item.key}_purchases", f"Purchases written on {item.label}", "rupiah", by_kind["purchase"]
+    )
+    result.extraction = {"lines": [line.model_dump(by_alias=True) for line in lines]}
+    result.digest = {
+        "lines": [
+            {
+                "locator": f"line {line.line}",
+                "date": line.date_text,
+                "text": line.description,
+                "amount_written": line.amount_text,
+                "crossed_out": line.crossed_out_text,
+                "kind": line.kind,
+                "confidence": line.confidence,
+            }
+            for line in lines
+        ],
+        "figures": [f"{item.key}_sales", f"{item.key}_purchases"],
+    }
+    return f"Read {len(lines)} lines from {item.label}"
+
+
+async def _read_receipt(
+    gemini: Gemini, result: ItemResult, data: bytes, mime: str, facts: FactTable
+) -> str:
+    item = result.item
+    receipt, model = await read_receipt(gemini, data, mime)
+    result.models.append(model)
+    if not receipt.legible:
+        raise ValueError("the receipt is not legible")
+    amount = receipt.total_rp if receipt.total_rp is not None else receipt.items_sum_rp
+    if amount is None:
+        result.checks.append(
+            Finding(
+                kind="missing_evidence",
+                severity="low",
+                source="code",
+                text=f"The total on {item.label} could not be read.",
+                citations=[_cite(item, "total")],
+            )
+        )
+    else:
+        result.entries.append(
+            Entry(
+                month=month_of(receipt.date_text, item.captured_at.date()) or _month(item),
+                kind="purchase",
+                amount_rp=amount,
+                evidence_type=item.type,
+                evidence_id=item.id,
+                locator="total",
+            )
+        )
+        facts.add(f"{item.key}_total", f"Total of {item.label}", "rupiah", amount, [item.id])
+    reference = receipt.subtotal_rp or (receipt.total_rp if not receipt.discount_rp else None)
+    if (
+        receipt.items_sum_rp is not None
+        and reference
+        and abs(receipt.items_sum_rp - reference) > 0.01 * reference
+        and not receipt.tax_rp
+    ):
+        result.checks.append(
+            Finding(
+                kind="low_confidence",
+                severity="low",
+                source="code",
+                text=(
+                    f"The items on {item.label} add up to {_rp(receipt.items_sum_rp)}, "
+                    f"not the printed {_rp(reference)}."
+                ),
+                citations=[_cite(item, "items"), _cite(item, "total")],
+            )
+        )
+    result.written += [i.amount_text for i in receipt.items if i.amount_text]
+    result.written += [receipt.total_text] if receipt.total_text else []
+    result.extraction = receipt.model_dump(by_alias=True)
+    result.digest = {
+        "merchant": receipt.merchant,
+        "date": receipt.date_text,
+        "handwritten": receipt.handwritten,
+        "items": [
+            {"name": i.name, "quantity": i.quantity_text, "amount_written": i.amount_text}
+            for i in receipt.items
+        ],
+        "total_written": receipt.total_text,
+        "figures": [f"{item.key}_total"] if amount is not None else [],
+    }
+    return f"Read {item.label}: {len(receipt.items)} items, total {_rp(amount)}"
+
+
+async def _read_qris(
+    gemini: Gemini, result: ItemResult, data: bytes, mime: str, facts: FactTable
+) -> str:
+    item = result.item
+    qris, model = await read_qris(gemini, data, mime)
+    result.models.append(model)
+    if not qris.legible:
+        raise ValueError("the screenshot is not legible")
+    reference = item.captured_at.date()
+    covered: set[str] = set()
+    for total in qris.totals:
+        month = month_of(total.period_text, reference)
+        if total.amount_rp is not None and month and month not in covered:
+            covered.add(month)
+            result.entries.append(
+                Entry(
+                    month=month,
+                    kind="sale",
+                    amount_rp=total.amount_rp,
+                    evidence_type=item.type,
+                    evidence_id=item.id,
+                    locator=f"total for {total.period_text}",
+                )
+            )
+    for row in qris.rows:
+        month = month_of(row.date_text, reference) or _month(item)
+        if row.direction == "in" and row.amount_rp is not None and month not in covered:
+            result.entries.append(
+                Entry(
+                    month=month,
+                    kind="sale",
+                    amount_rp=row.amount_rp,
+                    evidence_type=item.type,
+                    evidence_id=item.id,
+                    locator=f"row {row.row}",
+                )
+            )
+    inflows = sum(entry.amount_rp for entry in result.entries)
+    facts.add(
+        f"{item.key}_inflows", f"Money received in {item.label}", "rupiah", inflows, [item.id]
+    )
+
+    for problem in qris.arithmetic_problems:
+        result.checks.append(
+            Finding(
+                kind="fraud_signal",
+                severity="high",
+                source="code",
+                text=f"{item.label}: {problem} The screenshot may have been edited.",
+                citations=[_cite(item, "rows"), _cite(item, "total")],
+            )
+        )
+    if qris.editing_signs:
+        result.checks.append(
+            Finding(
+                kind="low_confidence",
+                severity="medium",
+                source="code",
+                text=(
+                    f"{item.label} shows possible signs of editing: "
+                    f"{'; '.join(qris.editing_signs)}. Check the history in the app itself."
+                ),
+                citations=[_cite(item, "whole screenshot")],
+            )
+        )
+    if not qris.is_screenshot:
+        result.checks.append(
+            Finding(
+                kind="low_confidence",
+                severity="low",
+                source="code",
+                text=f"{item.label} is a photo of a screen or paper, not a screenshot.",
+                citations=[_cite(item, "whole screenshot")],
+            )
+        )
+    result.written += [row.amount_text for row in qris.rows]
+    result.written += [total.amount_text for total in qris.totals]
+    result.extraction = qris.model_dump()
+    result.digest = {
+        "app": qris.app_name,
+        "merchant": qris.merchant_name,
+        "rows": [
+            {
+                "locator": f"row {row.row}",
+                "date": row.date_text,
+                "time": row.time_text,
+                "amount_written": row.amount_text,
+                "direction": row.direction,
+                "label": row.label,
+            }
+            for row in qris.rows
+        ],
+        "totals": [
+            {"period": t.period_text, "amount_written": t.amount_text, "count": t.count}
+            for t in qris.totals
+        ],
+        "editing_signs": qris.editing_signs,
+        "figures": [f"{item.key}_inflows"],
+    }
+    return f"Read {item.label}: {len(qris.rows)} transactions, {len(qris.totals)} totals"
+
+
+async def _assess_photo(
+    gemini: Gemini, result: ItemResult, data: bytes, mime: str, business_type: str
+) -> str:
+    assessment, model = await assess_photo(gemini, data, mime, business_type=business_type)
+    result.models.append(model)
+    result.extraction = assessment.model_dump()
+    result.digest = assessment.model_dump()
+    return (
+        f"Looked at {result.item.label}: {assessment.business_seen}, stock {assessment.stock_level}"
+    )
+
+
+async def _listen(
+    gemini: Gemini, result: ItemResult, data: bytes, mime: str, facts: FactTable
+) -> str:
+    item = result.item
+    interview, model = await listen(gemini, data, mime)
+    result.models.append(model)
+    if not interview.audible:
+        raise ValueError("the recording is not audible")
+    claims = []
+    for number, claim in enumerate(interview.claims, start=1):
+        key = f"{item.key}_claim_{number}"
+        figures = []
+        if claim.amount_rp is not None:
+            facts.add(
+                key, f"Owner said: {claim.statement_en}", "rupiah", claim.amount_rp, [item.id]
+            )
+            figures.append(key)
+        if claim.monthly_rp is not None and claim.period != "month":
+            facts.add(
+                f"{key}_monthly",
+                f"Owner's figure as a monthly amount (code's estimate, 26 trading days a month): "
+                f"{claim.statement_en}",
+                "rupiah",
+                claim.monthly_rp,
+                [item.id],
+            )
+            figures.append(f"{key}_monthly")
+        claims.append(
+            {
+                "locator": claim.time_text or "recording",
+                "topic": claim.topic,
+                "statement": claim.statement_en,
+                "quote": claim.quote,
+                "amount_said": claim.amount_text,
+                "period": claim.period,
+                "figures": figures,
+            }
+        )
+        if claim.amount_text:
+            result.written.append(claim.amount_text)
+    result.extraction = interview.model_dump()
+    result.digest = {"summary": interview.summary_en, "claims": claims}
+    return f"Listened to the interview: {len(claims)} claims"
+
+
+async def read_item(
+    gemini: Gemini,
+    store: EvidenceStore,
+    item: EvidenceItem,
+    application: Application,
+    facts: FactTable,
+    limit: asyncio.Semaphore,
+    progress: Progress,
+) -> ItemResult:
+    result = ItemResult(item=item)
+    agent = LABELS[item.type][2]
+    async with limit:
+        await progress(agent, f"Reading {item.label}", "running")
+        try:
+            data, mime = await store.read(item.storage_path)
+            if item.type is EvidenceType.LEDGER_PAGE:
+                message = await _read_ledger(gemini, result, data, mime, facts)
+            elif item.type is EvidenceType.RECEIPT:
+                message = await _read_receipt(gemini, result, data, mime, facts)
+            elif item.type is EvidenceType.QRIS_HISTORY:
+                message = await _read_qris(gemini, result, data, mime, facts)
+            elif item.type is EvidenceType.SHOP_PHOTO:
+                message = await _assess_photo(gemini, result, data, mime, application.business_type)
+            else:
+                message = await _listen(gemini, result, data, mime, facts)
+        except Exception as exc:  # one unreadable item must not stop the analysis
+            log.warning("Could not read %s (%s): %s", item.label, item.id, exc)
+            result.error = str(exc)
+            result.entries, result.checks = [], []
+            result.checks.append(
+                Finding(
+                    kind="missing_evidence",
+                    severity="medium",
+                    source="code",
+                    text=f"{item.label} could not be read ({exc}). Retake it if it matters.",
+                    citations=[_cite(item, "whole item")],
+                )
+            )
+            await progress(agent, f"Could not read {item.label}", "failed")
+            return result
+    await progress(agent, message, "done")
+    return result
+
+
+# --- Pipeline --------------------------------------------------------------------------------
+
+
+def _analysis_window(entries: list[Entry]) -> list[Entry]:
+    """Compare like with like: if the notebook covers some months, judge those months."""
+    notebook_months = {
+        e.month for e in entries if e.evidence_type is EvidenceType.LEDGER_PAGE and e.kind == "sale"
+    }
+    return [e for e in entries if e.month in notebook_months] if notebook_months else entries
+
+
+def add_summary_facts(facts: FactTable, summary: CashFlowSummary, application: Application) -> None:
+    facts.add("months_covered", "Months of evidence analysed", "count", len(summary.months))
+    facts.add(
+        "avg_claimed_sales",
+        "Monthly sales the notebook claims",
+        "rupiah",
+        summary.avg_claimed_sales,
+    )
+    facts.add(
+        "avg_proven_inflows",
+        "Monthly money received via QRIS (hard evidence)",
+        "rupiah",
+        summary.avg_proven_inflows,
+    )
+    facts.add(
+        "avg_receipt_purchases",
+        "Monthly supplier purchases on receipts",
+        "rupiah",
+        summary.avg_receipt_purchases,
+    )
+    facts.add("avg_costs", "Monthly costs (purchases and expenses)", "rupiah", summary.avg_costs)
+    facts.add(
+        "revenue_low",
+        "Monthly revenue, low end (hard evidence only)",
+        "rupiah",
+        summary.revenue_low,
+    )
+    facts.add(
+        "revenue_high", "Monthly revenue, high end (all evidence)", "rupiah", summary.revenue_high
+    )
+    facts.add("net_high", "Monthly net cash flow, high end", "rupiah", summary.net_high)
+    facts.add(
+        "hard_coverage", "Share of claimed sales seen in QRIS", "percent", summary.hard_coverage
+    )
+    facts.add(
+        "sales_to_purchases",
+        "Claimed sales as a multiple of receipt purchases",
+        "ratio",
+        summary.sales_to_purchases,
+    )
+    facts.add("requested_amount", "Loan amount requested", "rupiah", application.amount)
+    facts.add("tenor_months", "Loan term in months", "count", application.tenor_months)
+    facts.add(
+        "kur_collateral_free_limit",
+        "KUR loans up to this amount need no extra collateral",
+        "rupiah",
+        KUR_COLLATERAL_FREE_LIMIT,
+    )
+
+
+def merge_findings(
+    checks: dict[str, Finding], drafts: list[Any], facts: FactTable, evidence_ids: set[str]
+) -> list[Finding]:
+    """Combine the verifier's findings with code's checks; code keeps the final say on severity."""
+    merged: list[Finding] = []
+    explained: set[str] = set()
+    for draft in drafts:
+        check = checks.get(draft.check_id or "")
+        if check is not None:
+            if draft.check_id in explained:
+                continue
+            explained.add(draft.check_id)
+        citations = [
+            Citation(evidence_id=c.evidence_id, locator=c.locator)
+            for c in draft.citations
+            if c.evidence_id in evidence_ids
+        ]
+        merged.append(
+            Finding(
+                kind=check.kind if check else draft.kind,
+                severity=check.severity if check else _verifier_severity(draft),
+                source="code" if check else "verifier",
+                text=facts.render(draft.text),
+                citations=citations or (check.citations if check else []),
+                follow_up_question=facts.render(draft.follow_up_question or "") or None,
+                follow_up_question_en=facts.render(draft.follow_up_question_en or "") or None,
+                figures=[key for key in facts_in(draft.text) if key in facts],
+            )
+        )
+    merged += [check for check_id, check in checks.items() if check_id not in explained]
+    order = {"high": 0, "medium": 1, "low": 2}
+    return sorted(merged, key=lambda f: order[f.severity])
+
+
+def _verifier_severity(draft: Any) -> str:
+    # Missing evidence that matters (QRIS, receipts) is handled by code and the policy; what the
+    # verifier adds (no photo, no interview) must not on its own stop a file being verified.
+    return "low" if draft.kind == "missing_evidence" else draft.severity
+
+
+def facts_in(text: str) -> list[str]:
+    import re
+
+    return re.findall(r"\[\[([a-z0-9_]+)\]\]", text)
+
+
+async def run_pipeline(
+    *,
+    gemini: Gemini,
+    store: EvidenceStore,
+    application: Application,
+    items: list[EvidenceItem],
+    progress: Progress,
+    policy: LenderPolicy | None = None,
+) -> AnalysisResult:
+    policy = policy or LenderPolicy()
+    items = label_items(items)
+    facts = FactTable()
+    limit = asyncio.Semaphore(MAX_PARALLEL_READS)
+
+    await progress("intake", f"Reading {len(items)} pieces of evidence in parallel", "running")
+    results = await asyncio.gather(
+        *(read_item(gemini, store, i, application, facts, limit, progress) for i in items)
+    )
+    readable = [r for r in results if r.error is None]
+    await progress("intake", f"Read {len(readable)} of {len(items)} pieces of evidence", "done")
+
+    await progress("calculator", "Computing monthly cash flow", "running")
+    entries = _analysis_window([e for r in results for e in r.entries])
+    summary = summarise(entries)
+    add_summary_facts(facts, summary, application)
+    requested = installment_for(application.amount, application.tenor_months, policy.monthly_rate)
+    facts.add("requested_installment", "Monthly instalment for the request", "rupiah", requested)
+    await progress(
+        "calculator",
+        f"Cash flow over {len(summary.months)} month(s) from {len(entries)} amounts",
+        "done",
+    )
+
+    checks: dict[str, Finding] = {}
+    for finding in [c for r in results for c in r.checks] + consistency_findings(
+        summary, policy, application.business_type
+    ):
+        checks[f"check-{len(checks) + 1}"] = finding
+    present = {r.item.type for r in readable}
+    if EvidenceType.QRIS_HISTORY not in present:
+        checks[f"check-{len(checks) + 1}"] = Finding(
+            kind="missing_evidence",
+            severity="medium",
+            source="code",
+            text="There is no QRIS or e-wallet history, so no sales are confirmed by a payment "
+            "provider and the low end of cash flow rests on receipts alone.",
+        )
+
+    case_file = {
+        "business": {
+            "alias": application.alias,
+            "type": application.business_type,
+            "city": application.city,
+            "years_operating": application.years_operating,
+        },
+        "request": {"amount": "[[requested_amount]]", "term_months": application.tenor_months},
+        "facts": facts.for_prompt(),
+        "evidence": [
+            {
+                "evidence_id": r.item.id,
+                "label": r.item.label,
+                "type": r.item.type.value,
+                "tier": TIER_BY_TYPE[r.item.type].value,
+                "captured": r.item.captured_at.date().isoformat(),
+                "reading": r.digest,
+            }
+            for r in readable
+        ],
+        "unreadable": [r.item.label for r in results if r.error],
+        "evidence_types_missing": [t.value for t in EvidenceType if t not in present],
+        "checks": [
+            {
+                "check_id": check_id,
+                "kind": c.kind,
+                "severity": c.severity,
+                "text": c.text,
+                "citations": [x.model_dump() for x in c.citations],
+            }
+            for check_id, c in checks.items()
+        ],
+    }
+    quoted = number_tokens([w for r in results for w in r.written])
+    quoted |= number_tokens([c.text for c in checks.values()])
+    evidence_ids = {r.item.id for r in results}
+
+    await progress("verifier", "Cross-checking the sources against each other", "running")
+    verification, verifier_model, verifier_problems = await verify(gemini, case_file, facts, quoted)
+    findings = merge_findings(checks, verification.findings, facts, evidence_ids)
+    confirmations = [
+        {
+            "text": facts.render(c.text),
+            "figures": [k for k in facts_in(c.text) if k in facts],
+            "citations": [x.model_dump() for x in c.citations if x.evidence_id in evidence_ids],
+        }
+        for c in verification.confirmations
+    ]
+    await progress(
+        "verifier",
+        f"{len(findings)} finding(s), {len(confirmations)} point(s) where the sources agree",
+        "done",
+    )
+
+    await progress("policy", "Applying the lender's policy", "running")
+    result = assess(
+        summary=summary,
+        findings=findings,
+        evidence_types=present,
+        amount=application.amount,
+        tenor_months=application.tenor_months,
+        policy=policy,
+    )
+    facts.add(
+        "capacity_basis",
+        "Net monthly cash flow after the policy's haircut",
+        "rupiah",
+        result.capacity_basis,
+    )
+    facts.add(
+        "max_installment",
+        "Largest monthly instalment the policy allows",
+        "rupiah",
+        result.max_installment,
+    )
+    facts.add(
+        "evidence_strength", "Evidence strength, out of 100", "count", result.evidence_strength
+    )
+    outcome_label = result.assessment.value.replace("_", " ")
+    await progress("policy", f"Outcome: {outcome_label}", "done")
+
+    await progress("memo_writer", "Writing the credit memo", "running")
+    case_file["facts"] = facts.for_prompt()
+    memo, memo_model, memo_problems = await write_memo(
+        gemini,
+        case_file,
+        [f.model_dump(include={"kind", "severity", "text", "citations"}) for f in findings],
+        {
+            "assessment": result.assessment.value,
+            "within_policy": result.within_policy,
+            "reasons": result.reasons,
+            "figures": ["capacity_basis", "max_installment", "requested_installment"],
+        },
+        facts,
+        quoted,
+    )
+    rendered_memo = render(memo.model_dump(), facts)
+    rendered_memo["figures"] = sorted(
+        {key for text in _all_text(memo.model_dump()) for key in facts_in(text) if key in facts}
+    )
+    await progress("memo_writer", "Credit memo ready", "done")
+
+    models = sorted({m for r in results for m in r.models} | {verifier_model, memo_model})
+    return AnalysisResult(
+        assessment=result.assessment,
+        policy=result,
+        cashflow=summary,
+        findings=findings,
+        confirmations=confirmations,
+        memo=rendered_memo,
+        facts=[_fact_out(f) for f in facts.all()],
+        extractions={r.item.id: {"label": r.item.label, **(r.extraction or {})} for r in results},
+        unreadable=[r.item.label for r in results if r.error],
+        models=models,
+        figure_problems=verifier_problems + memo_problems,
+    )
+
+
+def _fact_out(fact: Fact) -> dict[str, Any]:
+    return {**fact.model_dump(), "display": fact.display}
+
+
+def _all_text(value: Any) -> list[str]:
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, dict):
+        return [t for v in value.values() for t in _all_text(v)]
+    if isinstance(value, list):
+        return [t for v in value for t in _all_text(v)]
+    return []

@@ -148,7 +148,12 @@ async def record_decision(
     application_id: str, body: DecisionRequest, user: CurrentUser, db: Db
 ) -> None:
     ref, data = await _owned_application(db, application_id, user)
-    if data.get("status") not in (ApplicationStatus.READY.value, ApplicationStatus.IN_REVIEW.value):
+    decidable = (
+        ApplicationStatus.READY,
+        ApplicationStatus.NEEDS_FOLLOW_UP,
+        ApplicationStatus.IN_REVIEW,
+    )
+    if data.get("status") not in {s.value for s in decidable}:
         raise HTTPException(status.HTTP_409_CONFLICT, "Only analysed applications can be decided")
     new_status = (
         ApplicationStatus.COLLECTING
