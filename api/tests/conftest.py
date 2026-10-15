@@ -55,7 +55,7 @@ class FakeGemini:
         self.reading = reading
         self.calls: list[dict] = []
 
-    async def generate(self, *, contents, schema, system, temperature=0.0, attempts=3):
+    async def generate(self, *, contents, schema, system, temperature=0.0, attempts=3, role="read"):
         self.calls.append({"contents": contents, "schema": schema, "system": system})
         return self.reading, "gemini-test"
 

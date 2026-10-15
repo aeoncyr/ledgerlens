@@ -11,13 +11,26 @@ def _split(value: str) -> list[str]:
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
+# Gemini Developer API free tier, checked in AI Studio on 2026-10-15: Flash-Lite models allow 15
+# requests a minute and 500 a day each; Flash models 5 a minute and 20 a day each.
+FREE_READERS = ("gemini-3.5-flash-lite", "gemini-3.1-flash-lite")
+FREE_WRITERS = (
+    "gemini-3.8-flash",
+    "gemini-3.7-flash",
+    "gemini-3.6-flash",
+    "gemini-3-flash-preview",
+)
+FREE_TIER_RPM = {"lite": 15, "flash": 5}
+
+
 @dataclass(frozen=True)
 class Settings:
     project: str
     location: str
     gemini_api_key: str | None
-    model_main: str
-    model_fallback: str
+    reader_models: tuple[str, ...]
+    writer_models: tuple[str, ...]
+    writer_thinking: str | None
     model_strong: str | None
     storage_bucket: str | None
     cors_origins: list[str]
@@ -31,10 +44,16 @@ class Settings:
         """True when Gemini is reached with an AI Studio key rather than through Vertex AI."""
         return bool(self.gemini_api_key)
 
+    @property
+    def model_main(self) -> str:
+        return self.writer_models[0]
+
     @classmethod
     def from_env(cls) -> Settings:
         env = os.environ
         api_key = env.get("GEMINI_API_KEY") or None
+        main = env.get("MODEL_MAIN", "gemini-3.8-flash")
+        fallback = env.get("MODEL_FALLBACK", "gemini-3.5-flash")
         return cls(
             project=env.get("GOOGLE_CLOUD_PROJECT", ""),
             # No Gemini model is served in Jakarta, so Gemini calls use the global endpoint.
@@ -42,17 +61,26 @@ class Settings:
             # With a key, Gemini is reached through the Gemini Developer API (Google AI Studio),
             # whose free tier we use for the prototype (D-013); without one, through Vertex AI.
             gemini_api_key=api_key,
-            model_main=env.get("MODEL_MAIN", "gemini-3.8-flash"),
-            # gemini-3.5-flash is not offered on the Developer API; 3.6 is, on the free tier too.
-            model_fallback=env.get(
-                "MODEL_FALLBACK", "gemini-3.6-flash" if api_key else "gemini-3.5-flash"
+            # Readers make most of the calls and only transcribe; the verifier and memo writer
+            # make two calls per analysis and do the reasoning. On the free tier every model has
+            # its own daily quota, so each role works down a chain of models (D-014).
+            reader_models=tuple(
+                _split(env.get("READER_MODELS", ""))
+                or (FREE_READERS if api_key else (main, fallback))
             ),
+            writer_models=tuple(
+                _split(env.get("WRITER_MODELS", ""))
+                or (FREE_WRITERS if api_key else (main, fallback))
+            ),
+            # How hard the verifier and memo writer think before answering (minimal, low, medium,
+            # high). On the free tier, high thinking over a whole case file takes minutes a call.
+            writer_thinking=env.get("WRITER_THINKING") or ("low" if api_key else None),
             model_strong=env.get("MODEL_STRONG") or None,
             storage_bucket=env.get("STORAGE_BUCKET") or None,
             cors_origins=_split(env.get("CORS_ORIGINS", "http://localhost:5173")),
             rate_limit_per_minute=int(env.get("RATE_LIMIT_PER_MINUTE", "10")),
-            # The free tier allows only a few requests a minute, so make fewer calls at once.
-            max_parallel_calls=int(env.get("MAX_PARALLEL_CALLS", "3" if api_key else "8")),
+            # Calls are paced per model on the free tier; this only caps how many are in flight.
+            max_parallel_calls=int(env.get("MAX_PARALLEL_CALLS", "4" if api_key else "8")),
             ledger_double_read=env.get("LEDGER_DOUBLE_READ", "true").lower() == "true",
             version=env.get("APP_VERSION", "0.1.0"),
         )

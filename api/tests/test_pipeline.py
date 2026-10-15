@@ -71,9 +71,11 @@ class ScriptedGemini:
             MemoDraft: memo,
         }
         self.calls: list[type] = []
+        self.roles: dict[type, str] = {}
 
-    async def generate(self, *, contents, schema, system, temperature=0.0, attempts=3):
+    async def generate(self, *, contents, schema, system, temperature=0.0, attempts=3, role="read"):
         self.calls.append(schema)
+        self.roles[schema] = role
         return self.answers[schema], "gemini-test"
 
 
@@ -133,6 +135,13 @@ def test_runs_every_agent_and_computes_cash_flow_in_code():
 
     assert gemini.calls.count(LedgerReading) == 2  # the page is read twice
     assert gemini.calls[-2:] == [Verification, MemoDraft]
+    assert gemini.roles == {
+        LedgerReading: "read",
+        ReceiptReading: "read",
+        QrisReading: "read",
+        Verification: "write",
+        MemoDraft: "write",
+    }
     month = result.cashflow.months[0]
     assert (month.month, month.claimed_sales, month.proven_inflows, month.receipt_purchases) == (
         "2026-09",
