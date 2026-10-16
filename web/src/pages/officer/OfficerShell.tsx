@@ -72,7 +72,7 @@ export default function OfficerShell({
             Applications
           </NavLink>
           <NavLink to="/app/new" end>
-            New application
+            New<span className="appbar-long"> application</span>
           </NavLink>
         </nav>
       </AppBar>

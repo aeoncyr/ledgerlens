@@ -1421,6 +1421,46 @@
   }
 }
 
+/* A laptop: the owner's pages use the width instead of staying phone-sized. The home page puts how it
+   works beside the owner's files; a file keeps its records on the left and the share card pinned on
+   the right. A form, the consent and a running check stay one readable column. */
+@media (min-width: 1000px) {
+  .ow-main-wide {
+    max-width: 1160px;
+    padding-inline: var(--gutter);
+  }
+
+  .ow-home-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+  }
+
+  .ow-narrow {
+    max-width: 680px;
+  }
+
+  .ow-board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    column-gap: 40px;
+    align-items: start;
+  }
+
+  .ow-board > * {
+    grid-column: 1;
+  }
+
+  .ow-board > .ow-share,
+  .ow-board > .ow-share-teaser {
+    position: sticky;
+    top: 84px;
+    grid-row: 1 / span 8;
+    grid-column: 2;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ow-spinner,
   .ow-stage-running .ow-stage-mark,

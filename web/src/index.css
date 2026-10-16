@@ -3795,6 +3795,8 @@ textarea:focus {
   flex-wrap: wrap;
   gap: 6px 18px;
   align-items: center;
+  /* The same height in both apps, whether the tools are links or the owner's language switch. */
+  min-height: 68px;
   padding-block: 8px;
 }
 
@@ -3879,8 +3881,13 @@ textarea:focus {
 /* On a phone: the brand gives way, so Home, the app's name and its tools fit on one line. */
 @media (max-width: 560px) {
   .appbar-name,
-  .appbar-home-label {
+  .appbar-home-label,
+  .appbar-long {
     display: none;
+  }
+
+  .appbar-inner {
+    flex-wrap: nowrap;
   }
 
   .appbar-home {

@@ -146,7 +146,7 @@ export default function OwnerFile() {
   }
 
   return (
-    <OwnerShell>
+    <OwnerShell wide>
       <p className="ow-back">
         <Link to="/owner">← {t.backHome}</Link>
       </p>
@@ -170,16 +170,20 @@ export default function OwnerFile() {
       )}
 
       {!consented ? (
-        <ConsentCard
-          t={t}
-          busy={busy === 'consent'}
-          onAgree={() => act('consent', () => recordConsent(id, true))}
-          onLater={() => navigate('/owner')}
-        />
+        <div className="ow-narrow">
+          <ConsentCard
+            t={t}
+            busy={busy === 'consent'}
+            onAgree={() => act('consent', () => recordConsent(id, true))}
+            onLater={() => navigate('/owner')}
+          />
+        </div>
       ) : checking ? (
-        <Checking run={run} t={t} />
+        <div className="ow-narrow">
+          <Checking run={run} t={t} />
+        </div>
       ) : (
-        <>
+        <div className="ow-board">
           {run?.state === 'failed' && (
             <p className="ow-error" role="alert">
               {isQuotaError(run.error) ? t.checkQuota : t.checkFailed}
@@ -226,7 +230,7 @@ export default function OwnerFile() {
               <p className="ow-fine">{t.shareNeedsCheck}</p>
             </section>
           )}
-        </>
+        </div>
       )}
     </OwnerShell>
   )

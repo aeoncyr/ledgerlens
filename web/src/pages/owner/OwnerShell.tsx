@@ -3,9 +3,15 @@ import AppBar from '../../components/AppBar.tsx'
 import { useLang } from '../../i18n/owner.ts'
 import '../../owner.css'
 
-// The owner's pages: the shared app bar with a language switch, then one narrow column sized for a
-// phone held in one hand.
-export default function OwnerShell({ children }: { children: ReactNode }) {
+// The owner's pages: the shared app bar with a language switch, then the page. Every page is one
+// column on a phone; `wide` pages spread into two columns on a laptop instead of staying phone-sized.
+export default function OwnerShell({
+  children,
+  wide = false,
+}: {
+  children: ReactNode
+  wide?: boolean
+}) {
   const { lang, t, setLang } = useLang()
 
   useEffect(() => {
@@ -45,7 +51,7 @@ export default function OwnerShell({ children }: { children: ReactNode }) {
           </button>
         </div>
       </AppBar>
-      <main className="ow-main">{children}</main>
+      <main className={wide ? 'ow-main ow-main-wide' : 'ow-main'}>{children}</main>
     </div>
   )
 }
