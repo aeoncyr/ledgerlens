@@ -5,6 +5,7 @@ import Landing from './pages/Landing.tsx'
 // Pages that use Firebase load on demand, so the landing page stays small and fast.
 const Status = lazy(() => import('./pages/Status.tsx'))
 const SampleFile = lazy(() => import('./pages/SampleFile.tsx'))
+const HowItWorks = lazy(() => import('./pages/HowItWorks.tsx'))
 // The officer's workspace uses Firebase, so it loads only when opened.
 const Applications = lazy(() => import('./pages/officer/Applications.tsx'))
 const NewApplication = lazy(() => import('./pages/officer/NewApplication.tsx'))
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/status" element={<Status />} />
         <Route path="/samples/:slug" element={<SampleFile />} />
+        <Route path="/ai" element={<HowItWorks />} />
         <Route path="/app" element={<Applications />} />
         <Route path="/app/new" element={<NewApplication />} />
         <Route path="/app/:id" element={<ApplicationFile />} />
