@@ -300,11 +300,7 @@ def test_the_officer_confirms_a_disputed_reading(client, fake_db, disputed_file)
     assert confirmed.json() == {"pending": 0}
     context = fake_db.docs[("applications", app_id, "memo", "context")]
     assert context["confirmed"] == {evidence_id: {"2": 650_000}}
-    assert (
-        context["pendingConfirmations"]
-        if "pendingConfirmations" in context
-        else context["pending_confirmations"]
-    )
+    assert context["pending_confirmations"] is True
     line = fake_db.docs[("applications", app_id, "evidence", evidence_id)]["extraction"]["lines"][0]
     assert (line["amountRp"], line["confirmedByOfficer"]) == (650_000, True)
 
