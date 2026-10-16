@@ -138,6 +138,7 @@ export type CreditFileData = {
   memo: Memo
   facts: Fact[]
   models: string[]
+  round?: number
 }
 
 export const EVIDENCE_LABEL: Record<EvidenceType, string> = {
