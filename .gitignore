@@ -1,5 +1,9 @@
-# Internal planning docs (private, never pushed)
+# Internal planning docs (private, never pushed): submission files, interview transcripts
 .docs/
+data/samples/*/interview-script.txt
+# Interview recordings stay private; the live site serves its own copies from Hosting.
+data/samples/*/interview.wav
+web/public/samples/*/interview.wav
 
 # Environment files and credentials
 .env

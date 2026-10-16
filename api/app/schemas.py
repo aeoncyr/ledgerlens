@@ -154,6 +154,15 @@ class ShareRequest(CamelModel):
     lender_id: str
 
 
+class ShareResponse(CamelModel):
+    share_code: str
+    path: str = Field(description="Where the lender opens the file, e.g. /app/shared/ABCD2345")
+
+
+class ClaimResponse(CamelModel):
+    application_id: str
+
+
 # --- Documents the app reads from Firestore ------------------------------------------------------
 
 

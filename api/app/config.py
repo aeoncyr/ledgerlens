@@ -35,6 +35,8 @@ class Settings:
     storage_bucket: str | None
     cors_origins: list[str]
     rate_limit_per_minute: int
+    runs_per_day: int
+    runs_per_user_per_day: int
     max_parallel_calls: int
     ledger_double_read: bool
     version: str
@@ -79,6 +81,10 @@ class Settings:
             storage_bucket=env.get("STORAGE_BUCKET") or None,
             cors_origins=_split(env.get("CORS_ORIGINS", "http://localhost:5173")),
             rate_limit_per_minute=int(env.get("RATE_LIMIT_PER_MINUTE", "10")),
+            # Analyses and re-checks a day, for the whole demo and for one visitor. The free tier's
+            # writer models allow about 80 calls a day, two per run, so 35 leaves room for retries.
+            runs_per_day=int(env.get("RUNS_PER_DAY", "35" if api_key else "500")),
+            runs_per_user_per_day=int(env.get("RUNS_PER_USER_PER_DAY", "6")),
             # Calls are paced per model on the free tier; this only caps how many are in flight.
             max_parallel_calls=int(env.get("MAX_PARALLEL_CALLS", "4" if api_key else "8")),
             ledger_double_read=env.get("LEDGER_DOUBLE_READ", "true").lower() == "true",

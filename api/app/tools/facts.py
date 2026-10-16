@@ -16,7 +16,10 @@ FactKind = Literal["rupiah", "percent", "ratio", "count"]
 
 _PLACEHOLDER = re.compile(r"\[\[([a-z0-9_]+)\]\]")
 _NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
-_UNIT_AFTER = re.compile(r"^\s*(?:%|rb\b|ribu\b|jt\b|juta\b|k\b|x\b|×|million|thousand|billion)")
+_UNIT_AFTER = re.compile(
+    r"^\s*(?P<unit>%|rb\b|ribu\b|jt\b|juta\b|k\b|x\b|×|million|thousand|billion)", re.IGNORECASE
+)
+_UNIT_NAMES = {"ribu": "rb", "juta": "jt", "×": "x", "thousand": "rb", "million": "jt"}
 
 
 class Fact(BaseModel):
@@ -79,6 +82,37 @@ class FactTable:
             return fact.display if fact else "[unknown figure]"
 
         return _PLACEHOLDER.sub(fill, template)
+
+
+def _phrase(token: str, after: str) -> str:
+    """An amount as one comparable phrase: the digits and their unit, e.g. "1,5jt" or "13%"."""
+    unit = _UNIT_AFTER.match(after)
+    name = unit.group("unit").lower() if unit else ""
+    return token + _UNIT_NAMES.get(name, name)
+
+
+def amount_phrases(texts: list[str]) -> set[str]:
+    """Every amount in some texts, as phrases; the writers may quote these exactly."""
+    return {
+        _phrase(m.group(), text[m.end() :])
+        for text in texts
+        for m in _NUMBER.finditer(_PLACEHOLDER.sub(" ", text))
+    }
+
+
+def stray_amounts(template: str, quoted: set[str]) -> list[str]:
+    """Amounts the model wrote that are neither a [[key]] nor quoted exactly from the evidence.
+
+    "2,1jt" may be quoted if the notebook says "2,1 jt"; "Rp 600" may not, even if "600rb" is
+    written somewhere, because the digits alone are not what the evidence says.
+    """
+    text = _PLACEHOLDER.sub(" ", template)
+    stray = set(stray_numbers(template))
+    return [
+        m.group()
+        for m in _NUMBER.finditer(text)
+        if m.group() in stray and _phrase(m.group(), text[m.end() :]) not in quoted
+    ]
 
 
 def stray_numbers(template: str) -> list[str]:

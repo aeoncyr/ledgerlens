@@ -73,6 +73,7 @@ class EvidenceItem:
     captured_at: datetime
     label: str = ""
     key: str = ""
+    submitted_by: str = "officer"  # or "owner": sent from the owner's phone, not taken on a visit
 
 
 @dataclass
@@ -735,6 +736,16 @@ async def run_pipeline(
     ):
         checks[f"check-{len(checks) + 1}"] = finding
     present = {r.item.type for r in readable}
+    qris = [r for r in readable if r.item.type is EvidenceType.QRIS_HISTORY]
+    if qris and all(r.item.submitted_by == "owner" for r in qris):
+        checks[f"check-{len(checks) + 1}"] = Finding(
+            kind="low_confidence",
+            severity="medium",
+            source="code",
+            text="The QRIS history was sent by the owner, not captured on a visit. Confirm it in "
+            "the merchant app before relying on it as hard evidence.",
+            citations=[_cite(r.item, "whole screenshot") for r in qris],
+        )
     if EvidenceType.QRIS_HISTORY not in present:
         checks[f"check-{len(checks) + 1}"] = Finding(
             kind="missing_evidence",
@@ -760,6 +771,7 @@ async def run_pipeline(
                 "type": r.item.type.value,
                 "tier": TIER_BY_TYPE[r.item.type].value,
                 "captured": r.item.captured_at.date().isoformat(),
+                "submitted_by": r.item.submitted_by,
                 "reading": r.digest,
             }
             for r in readable

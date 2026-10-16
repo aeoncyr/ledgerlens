@@ -30,11 +30,12 @@ from app.analysis.pipeline import (
 )
 from app.auth import User, current_user
 from app.config import get_settings
-from app.gemini import Gemini, get_gemini
-from app.routers.applications import _audit, _owned_application
+from app.gemini import Gemini, GeminiQuotaExhausted, get_gemini
+from app.routers.applications import EITHER, _audit, _owned_application
 from app.schemas import AnalyzeResponse, ApplicationStatus, EvidenceType, FollowUpAnswerRequest
 from app.store import get_firestore
 from app.tools.camel import camelize
+from app.usage import claim_run
 
 router = APIRouter(prefix="/api/applications", tags=["analysis"])
 
@@ -79,7 +80,7 @@ async def analyze(
     gemini: Annotated[Gemini, Depends(get_gemini)],
     store: Annotated[EvidenceStore, Depends(get_evidence_store)],
 ) -> AnalyzeResponse:
-    ref, data = await _owned_application(db, application_id, user)
+    ref, data = await _owned_application(db, application_id, user, EITHER)
     if not (data.get("consent") or {}).get("given"):
         raise HTTPException(status.HTTP_409_CONFLICT, "Record the owner's consent first")
     if _is_running(data):
@@ -94,12 +95,14 @@ async def analyze(
                 type=EvidenceType(evidence["type"]),
                 storage_path=evidence["storagePath"],
                 captured_at=evidence["capturedAt"],
+                submitted_by=evidence.get("submittedBy") or "officer",
             )
         )
     if not items:
         raise HTTPException(status.HTTP_409_CONFLICT, "Add some evidence first")
 
     settings = get_settings()
+    await claim_run(db, user.uid, settings)
     return await _run(
         ref,
         user,
@@ -126,7 +129,7 @@ async def answer_follow_up(
     db: Annotated[firestore.AsyncClient, Depends(get_firestore)],
 ) -> None:
     """Record the owner's answer to one follow-up question, as the officer heard it."""
-    ref, _ = await _owned_application(db, application_id, user)
+    ref, _ = await _owned_application(db, application_id, user, EITHER)
     if not body.text:
         raise HTTPException(
             status.HTTP_422_UNPROCESSABLE_CONTENT, "Type the owner's answer; voice notes come later"
@@ -138,6 +141,14 @@ async def answer_follow_up(
         raise HTTPException(status.HTTP_404_NOT_FOUND, "There is no such question")
     findings[index] = {**findings[index], "answer": body.text.strip()}
     await memo_ref.update({"findings": findings})
+    owner_ref = ref.collection("owner").document("summary")
+    owner_summary = await owner_ref.get()
+    if owner_summary.exists:
+        questions = [
+            {**q, "answer": body.text.strip()} if q.get("index") == index else q
+            for q in (owner_summary.to_dict() or {}).get("questions", [])
+        ]
+        await owner_ref.update({"questions": questions})
     await _audit(ref, user, "follow_up_answered", question=findings[index]["followUpQuestion"])
 
 
@@ -149,7 +160,7 @@ async def reverify(
     gemini: Annotated[Gemini, Depends(get_gemini)],
 ) -> AnalyzeResponse:
     """Check the file again with the owner's answers, without reading the evidence again."""
-    ref, data = await _owned_application(db, application_id, user)
+    ref, data = await _owned_application(db, application_id, user, EITHER)
     if _is_running(data):
         raise HTTPException(status.HTTP_409_CONFLICT, "An analysis is already running")
     memo = await ref.collection("memo").document("current").get()
@@ -169,6 +180,7 @@ async def reverify(
     ]
     if not answers:
         raise HTTPException(status.HTTP_409_CONFLICT, "Record at least one of the owner's answers")
+    await claim_run(db, user.uid, get_settings())
     context = context.model_copy(update={"round": context.round + 1})
     return await _run(
         ref,
@@ -216,6 +228,12 @@ async def _run(
             {"state": "failed", "error": str(exc), "finishedAt": datetime.now(UTC)}
         )
         await ref.update({"status": failed_status.value})
+        if isinstance(exc, GeminiQuotaExhausted):
+            raise HTTPException(
+                status.HTTP_503_SERVICE_UNAVAILABLE,
+                "Gemini's free daily quota is used up for today. It resets at 07:00 UTC; the "
+                "sample files on the home page show finished analyses meanwhile.",
+            ) from exc
         raise HTTPException(status.HTTP_502_BAD_GATEWAY, "The analysis failed; try again") from exc
 
     for evidence_id, extraction in result.extractions.items():
@@ -237,6 +255,36 @@ async def _run(
         ref.collection("memo")
         .document("current")
         .set({"runId": run_ref.id, **camelize(stored), "generatedAt": firestore.SERVER_TIMESTAMP})
+    )
+    # What the owner may read: the summary written for them and the questions put to them, never
+    # the officer's findings, figures or outcome.
+    summary = result.memo.get("owner_summary") or {}
+    await (
+        ref.collection("owner")
+        .document("summary")
+        .set(
+            {
+                "status": "needs_answers" if needs_answers and can_ask else "ready",
+                "verified": summary.get("verified", ""),
+                "missing": summary.get("missing", ""),
+                "tips": summary.get("tips", []),
+                "verifiedEn": summary.get("verified_en", ""),
+                "missingEn": summary.get("missing_en", ""),
+                "tipsEn": summary.get("tips_en", []),
+                "questions": [
+                    {
+                        "index": index,
+                        "question": f.follow_up_question,
+                        "questionEn": f.follow_up_question_en,
+                        "answer": f.answer,
+                    }
+                    for index, f in enumerate(result.findings)
+                    if f.follow_up_question and not f.resolved
+                ],
+                "evidenceCount": len(result.context.evidence_ids),
+                "updatedAt": firestore.SERVER_TIMESTAMP,
+            }
+        )
     )
     # Kept as the pipeline wrote it, for re-checking with the owner's answers.
     await ref.collection("memo").document("context").set(result.context.model_dump(mode="json"))

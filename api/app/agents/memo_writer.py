@@ -29,6 +29,9 @@ class OwnerSummary(BaseModel):
     verified: str = Field(description="What the evidence confirmed, in Bahasa Indonesia")
     missing: str = Field(description="What is missing or unclear, in Bahasa Indonesia")
     tips: list[str] = Field(description="Three practical ways to strengthen the file, in Bahasa")
+    verified_en: str = Field(description="The same as verified, in plain English")
+    missing_en: str = Field(description="The same as missing, in plain English")
+    tips_en: list[str] = Field(description="The same tips, in plain English")
 
 
 class MemoDraft(BaseModel):
@@ -61,7 +64,8 @@ Write the five Cs:
 Cite the evidence for every claim. If evidence for a C is missing, say so plainly instead of
 guessing. Then give the officer two to four next steps, and write the owner's summary in simple,
 friendly Bahasa Indonesia with three practical tips (for example "minta nota dari agen setiap
-belanja").
+belanja"), and the same summary in plain English. The owner reads this summary themselves: speak to
+them directly and kindly, never mention scores, outcomes or the lender's policy, and never accuse.
 
 {FIGURE_RULES}
 """

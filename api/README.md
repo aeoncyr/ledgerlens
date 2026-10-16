@@ -55,11 +55,15 @@ It reads every page with both prompt variants and passes when at least 80% of am
 | `app/main.py` | App factory and route registration |
 | `app/config.py` | Settings from environment variables |
 | `app/schemas.py` | The API contract shared with the web app (camelCase JSON) |
-| `app/gemini.py` | Gemini client: structured output, retries, fallback model |
+| `app/gemini.py` | Gemini client: structured output, retries, per-model pacing and the model chains |
 | `app/agents/` | One module per agent: its prompt and output schema |
-| `app/tools/` | Deterministic code: rupiah parsing, scoring. The model never does arithmetic |
+| `app/agents/writing.py` | The `[[key]]` figure guard for the verifier and memo writer |
+| `app/analysis/` | The pipeline (readers, calculator, verifier, policy, memo writer) and where evidence files come from |
+| `app/tools/` | Deterministic code: rupiah parsing, cash flow, lender policy, the fact table, scoring. The model never does arithmetic |
+| `app/store.py` | Firestore access; only the backend writes |
 | `app/auth.py` | Firebase ID-token verification |
 | `app/routers/` | HTTP routes under `/api` |
+| `scripts/` | Handwriting test, receipt evaluation on CORD, and `run_sample` for a whole sample file |
 
 ## Deploy to Cloud Run
 

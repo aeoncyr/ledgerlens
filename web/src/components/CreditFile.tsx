@@ -292,8 +292,17 @@ export default function CreditFile({
             {file.evidence.map((item) => (
               <li key={item.id}>
                 <button type="button" onClick={() => setOpen({ item, locator: null })}>
-                  <img src={item.image} alt="" loading="lazy" />
-                  <span>{label(item.id)}</span>
+                  {item.type === 'interview_audio' ? (
+                    <span className="audio-tile" aria-hidden="true">
+                      ▶ Recording
+                    </span>
+                  ) : (
+                    <img src={item.image} alt="" loading="lazy" />
+                  )}
+                  <span>
+                    {label(item.id)}
+                    {item.submittedBy === 'owner' && <span className="tag owner-tag">sent by owner</span>}
+                  </span>
                 </button>
               </li>
             ))}

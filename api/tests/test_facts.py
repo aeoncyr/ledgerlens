@@ -1,6 +1,6 @@
 import pytest
 
-from app.tools.facts import FactTable, stray_numbers
+from app.tools.facts import FactTable, amount_phrases, stray_amounts, stray_numbers
 
 
 def table() -> FactTable:
@@ -55,3 +55,32 @@ def test_allows_counts_dates_and_years(text):
 )
 def test_catches_numbers_the_model_wrote_itself(text, expected):
     assert stray_numbers(text) == expected
+
+
+WRITTEN = amount_phrases(
+    ["1,5 jt", "600rb", "Rp 585.000", "Claimed sales are 5.6x purchases; QRIS 13%."]
+)
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "The notebook writes 1,5jt on line 2.",
+        "Line 4 says 1,5 juta.",
+        "A sale of Rp 585.000 on line 3.",
+        "Sales are 5.6× purchases and QRIS covers 13%.",
+    ],
+)
+def test_amounts_quoted_as_written_are_allowed(text):
+    assert stray_amounts(text, WRITTEN) == []
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("Daily sales of Rp 500.000 to Rp 600.", ["500.000", "600"]),  # 600rb is written, not 600
+        ("About 1.500.000 a day.", ["1.500.000"]),  # written as 1,5 jt, so it must be a [[key]]
+    ],
+)
+def test_amounts_not_written_that_way_are_caught(text, expected):
+    assert stray_amounts(text, WRITTEN) == expected

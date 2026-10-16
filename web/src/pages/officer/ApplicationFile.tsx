@@ -245,6 +245,7 @@ export default function ApplicationFile() {
       type: e.type,
       image: urls.get(e.id) ?? '',
       capturedAt: '',
+      submittedBy: e.submittedBy,
       reading: (e.extraction as CreditFileData['evidence'][number]['reading']) ?? {
         label: e.label,
       },

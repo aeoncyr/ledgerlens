@@ -43,6 +43,18 @@ cd api && .venv/bin/python -m scripts.run_sample --sample ../data/samples/pak-he
 
 `run_sample` runs the whole analysis and prints each figure it read next to the truth.
 
+### Owner interviews
+
+`synth_interview.py` writes a short conversation in Bahasa Indonesia between the officer and the
+owner, reads it aloud with Gemini's text-to-speech (two voices) and adds the recording to the
+sample's manifest. Bu Sari's and Pak Joko's answers fit their books; Pak Hendra's own figure for his
+daily sales is a third of what his notebook claims, which the verifier reports with the moment he
+said it.
+
+```bash
+GEMINI_API_KEY=... .venv/bin/python eval/synth_interview.py --sample data/samples/pak-hendra
+```
+
 ## Running the reader against them
 
 The handwriting test in `api/scripts/` sends every page to the ledger reader twice, once with each prompt
@@ -63,6 +75,24 @@ cd api
 The two misses in variant 0 were both crossed-out corrections, where the reader returned the struck
 amount and the final one together. The reader now returns the final amount and keeps any crossed-out one
 in a separate field.
+
+### The three sample files
+
+Each sample covers two months: 6 notebook pages, 8 supplier receipts and, for the businesses that
+have QRIS, 2 QRIS screenshots. `run_sample` read every monthly notebook, QRIS and receipt total
+exactly, and each file got the outcome its evidence supports:
+
+| Sample | Business | Outcome | Why |
+|---|---|---|---|
+| `bu-sari` | Warung Bu Sari, grocery stall, Bekasi | Verified | Evidence strength 90/100; the requested instalment of Rp 1.290.996 is within the policy maximum of Rp 1.414.800 |
+| `pak-joko` | Penjahit Pak Joko, tailor, Yogyakarta | Partially verified | No QRIS history; evidence strength 55/100 |
+| `pak-hendra` | Warung Makan Hendra, food stall, Bandung | Inconsistent | The notebook claims 5.6× what supplier purchases support; QRIS shows 13% of claimed sales; no instalment suggested; in the interview the owner himself puts daily sales at Rp 500.000, a third of what the notebook says |
+
+On the Gemini free tier a full analysis of 14 to 16 items took 30 to 220 seconds, depending on load.
+`export_samples.py` publishes these analysed files to the web app, where anyone can open them at
+`/samples/<slug>` without spending quota.
+
+### Real handwriting
 
 These pages are fonts, not real handwriting. They test robustness to layout, shorthand and photo quality.
 Only pages written by a real hand test real handwriting, and those results will be added here when the

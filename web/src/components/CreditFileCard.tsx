@@ -18,7 +18,13 @@ function findingsNote(sample: SampleSummary): string {
 
 // The first page of a credit file, set as a document an officer would sign. Every figure on it
 // was computed by code from cited evidence.
-export default function CreditFileCard({ sample }: { sample: SampleSummary }) {
+export default function CreditFileCard({
+  sample,
+  compact = false,
+}: {
+  sample: SampleSummary
+  compact?: boolean
+}) {
   const tone = ASSESSMENT_TONE[sample.assessment]
   return (
     <figure className="file-figure">
@@ -76,10 +82,12 @@ export default function CreditFileCard({ sample }: { sample: SampleSummary }) {
           </span>
         </div>
       </article>
+      {!compact && (
       <figcaption className="file-caption">
         A real file for a fictional business. Gemini read the evidence; code computed every figure;
         the decision is left to a person.
       </figcaption>
+      )}
     </figure>
   )
 }

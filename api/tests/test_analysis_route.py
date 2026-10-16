@@ -242,3 +242,33 @@ def test_the_owner_is_asked_at_most_twice(client, fake_db, answered_file):
     response = client.post(f"/api/applications/{app_id}/reverify")
 
     assert response.status_code == 409
+
+
+def test_a_visitor_can_run_only_so_many_analyses_a_day(client, ready_application, monkeypatch):
+    from dataclasses import replace
+
+    from app.config import get_settings
+
+    app_id, _, _ = ready_application
+    limited = replace(get_settings(), runs_per_user_per_day=2)
+    monkeypatch.setattr(analysis, "get_settings", lambda: limited)
+
+    codes = [client.post(f"/api/applications/{app_id}/analyze").status_code for _ in range(3)]
+
+    assert codes == [200, 200, 429]
+
+
+def test_a_spent_gemini_quota_gets_a_clear_message(client, ready_application, monkeypatch):
+    from app.gemini import GeminiQuotaExhausted
+
+    app_id, _, _ = ready_application
+
+    async def exhausted(**_):
+        raise GeminiQuotaExhausted("spent")
+
+    monkeypatch.setattr(analysis, "run_pipeline", exhausted)
+
+    response = client.post(f"/api/applications/{app_id}/analyze")
+
+    assert response.status_code == 503
+    assert "free daily quota" in response.json()["detail"]

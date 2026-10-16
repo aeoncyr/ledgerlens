@@ -102,6 +102,53 @@ function Reading({ item, locator }: { item: EvidenceItem; locator: string | null
     )
   }
 
+  if (item.type === 'interview_audio') {
+    return (
+      <>
+        {reading.summaryEn ? <p className="fine">{String(reading.summaryEn)}</p> : null}
+        <table className="ledger compact">
+          <thead>
+            <tr>
+              <th scope="col">At</th>
+              <th scope="col">The owner said</th>
+              <th scope="col" className="num">
+                Rupiah
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rowsOf(reading, 'claims').map((claim, index) => (
+              <tr
+                key={index}
+                className={locator && claim.timeText === locator ? 'marked' : undefined}
+              >
+                <td className="col-line">{String(claim.timeText ?? '')}</td>
+                <td>
+                  <span lang="id">“{String(claim.quote)}”</span>
+                  <span className="kind"> {String(claim.statementEn)}</span>
+                </td>
+                <td className="num">
+                  {claim.amountRp == null ? '' : money(claim.amountRp)}
+                  {claim.period ? <span className="kind"> /{String(claim.period)}</span> : null}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  }
+
+  if (item.type === 'shop_photo') {
+    return (
+      <ul>
+        {rowsOf(reading, 'observations').map((o, index) => (
+          <li key={index}>{String(o)}</li>
+        ))}
+      </ul>
+    )
+  }
+
   return <pre className="reading-raw">{JSON.stringify(reading, null, 1)}</pre>
 }
 
@@ -115,11 +162,27 @@ export default function EvidenceViewer({
   onClose: () => void
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
+  const player = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
     if (item) dialog.current?.showModal()
     else dialog.current?.close()
   }, [item])
+
+  // A citation such as "0:04" plays the recording from just before that moment.
+  useEffect(() => {
+    const audio = player.current
+    const at = locator?.match(/^(\d+):(\d{2})$/)
+    if (!audio || !at) return
+    const start = Math.max(0, Number(at[1]) * 60 + Number(at[2]) - 1)
+    const play = () => {
+      audio.currentTime = start
+      audio.play().catch(() => undefined)
+    }
+    if (audio.readyState >= 1) play()
+    else audio.addEventListener('loadedmetadata', play, { once: true })
+    return () => audio.removeEventListener('loadedmetadata', play)
+  }, [item, locator])
 
   return (
     <dialog ref={dialog} className="viewer" onClose={onClose} aria-label="Evidence">
@@ -135,7 +198,14 @@ export default function EvidenceViewer({
             </button>
           </div>
           <div className="viewer-body">
-            <img src={item.image} alt={`${item.reading?.label ?? 'Evidence'} as photographed`} />
+            {item.type === 'interview_audio' ? (
+              <div className="recording">
+                <p className="fine">The interview as recorded, in Bahasa Indonesia.</p>
+                <audio ref={player} controls preload="metadata" src={item.image} />
+              </div>
+            ) : (
+              <img src={item.image} alt={`${item.reading?.label ?? 'Evidence'} as photographed`} />
+            )}
             <div>
               <h4>What the reader extracted</h4>
               <Reading item={item} locator={locator} />

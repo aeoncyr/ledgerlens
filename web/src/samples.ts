@@ -18,16 +18,16 @@ export const SAMPLES: SampleSummary[] = [
     "maxInstallment": 1414800,
     "requestedInstallment": 1290996,
     "withinPolicy": true,
-    "evidenceStrength": 80,
-    "evidenceCount": 16,
+    "evidenceStrength": 90,
+    "evidenceCount": 17,
     "findings": [
       {
         "severity": "low",
-        "text": "Shop photos and an interview recording were not included in the application file."
+        "text": "Shop photos were not collected to physically verify the business location and stock levels."
       }
     ],
-    "headline": "The application is verified and within policy because hard QRIS inflows and regular supplier receipts adequately support debt service capacity.",
-    "preparedAt": "2026-10-15"
+    "headline": "The loan application is verified and within policy because proven QRIS inflows and regular supplier receipts substantiate the business turnover and debt capacity.",
+    "preparedAt": "2026-10-16"
   },
   {
     "slug": "pak-joko",
@@ -44,16 +44,16 @@ export const SAMPLES: SampleSummary[] = [
     "maxInstallment": 688950,
     "requestedInstallment": 688531,
     "withinPolicy": true,
-    "evidenceStrength": 45,
-    "evidenceCount": 14,
+    "evidenceStrength": 55,
+    "evidenceCount": 15,
     "findings": [
       {
         "severity": "medium",
         "text": "There is no QRIS or e-wallet history, so no sales are confirmed by a payment provider and the low end of cash flow rests on receipts alone."
       }
     ],
-    "headline": "The application is partially verified and meets policy criteria because the requested instalment is fully covered by haircutted cash flow, though revenue lacks independent electronic confirmation.",
-    "preparedAt": "2026-10-15"
+    "headline": "The application is partially verified and meets policy criteria, with the requested monthly repayment fitting within capacity limits despite an absence of digital banking evidence.",
+    "preparedAt": "2026-10-16"
   },
   {
     "slug": "pak-hendra",
@@ -70,19 +70,23 @@ export const SAMPLES: SampleSummary[] = [
     "maxInstallment": null,
     "requestedInstallment": 2216031,
     "withinPolicy": false,
-    "evidenceStrength": 80,
-    "evidenceCount": 16,
+    "evidenceStrength": 90,
+    "evidenceCount": 17,
     "findings": [
       {
         "severity": "high",
-        "text": "Claimed sales are 5.6× supplier purchases, well above the plausible markup for an eatery. Hard inflows in QRIS cover only 13% of claimed sales."
+        "text": "Claimed sales are 5.6× supplier purchases, which exceeds expected operational margins."
+      },
+      {
+        "severity": "high",
+        "text": "The owner stated daily sales of Rp 500.000, equal to Rp 13.000.000 monthly, but notebook entries list daily sales around 1,5jt to 1,7jt totaling Rp 45.850.000 per month."
       },
       {
         "severity": "low",
-        "text": "The file lacks shop photos and an interview recording to verify physical business premises and trade context."
+        "text": "Shop photos are missing from the application file."
       }
     ],
-    "headline": "The application is marked inconsistent due to claimed sales exceeding plausible margins relative to supplier receipts and low digital transaction coverage.",
-    "preparedAt": "2026-10-15"
+    "headline": "The loan application is marked inconsistent due to major contradictions between interview claims, notebook records, and hard evidence.",
+    "preparedAt": "2026-10-16"
   }
 ]

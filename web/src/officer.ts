@@ -44,7 +44,10 @@ export type Application = {
   evidenceStrength?: number
   flagCount?: number
   currentRunId?: string
-  consent: { given: boolean } | null
+  consent: { given: boolean; by?: 'owner' | 'officer' } | null
+  ownerUid?: string | null
+  origin?: 'owner' | 'officer'
+  shareCode?: string | null
   decision?: { action: string; reason: string }
   createdAt?: Timestamp
 }
@@ -55,6 +58,7 @@ export type StoredEvidence = {
   storagePath: string
   label?: string
   extraction?: Record<string, unknown> | null
+  submittedBy?: 'owner' | 'officer'
 }
 
 export type RunStep = { agent: string; message: string; state: string; at: Timestamp }

@@ -15,7 +15,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from app.gemini import Gemini
-from app.tools.facts import FactTable, stray_numbers
+from app.tools.facts import FactTable, amount_phrases, stray_amounts
 
 log = logging.getLogger(__name__)
 
@@ -51,7 +51,7 @@ def _strings(value: Any, path: str = "") -> list[tuple[str, str]]:
 def problems(output: BaseModel, facts: FactTable, quoted: set[str]) -> list[str]:
     found = []
     for path, text in _strings(output):
-        stray = [n for n in stray_numbers(text) if n not in quoted]
+        stray = stray_amounts(text, quoted)
         if stray:
             found.append(f"{path}: wrote {', '.join(stray)} instead of a [[key]]")
         unknown = facts.unknown_keys(text)
@@ -61,9 +61,8 @@ def problems(output: BaseModel, facts: FactTable, quoted: set[str]) -> list[str]
 
 
 def _scrub(text: str, quoted: set[str]) -> str:
-    for number in stray_numbers(text):
-        if number not in quoted:
-            text = re.sub(rf"(?<![\d.,]){re.escape(number)}(?![\d.,])", "[figure removed]", text)
+    for number in stray_amounts(text, quoted):
+        text = re.sub(rf"(?<![\d.,]){re.escape(number)}(?![\d.,])", "[figure removed]", text)
     return text
 
 
@@ -116,8 +115,8 @@ async def generate_checked[T: BaseModel](
 
 
 def number_tokens(texts: list[str]) -> set[str]:
-    """Every number as written in the evidence, which the writers may quote with a citation."""
-    return {token for text in texts for token in re.findall(r"\d+(?:[.,]\d+)*", text)}
+    """Every amount as written in the evidence, which the writers may quote with a citation."""
+    return amount_phrases(texts)
 
 
 def render(value: Any, facts: FactTable) -> Any:
