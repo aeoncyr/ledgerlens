@@ -162,11 +162,27 @@ export default function EvidenceViewer({
   onClose: () => void
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
+  const player = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
     if (item) dialog.current?.showModal()
     else dialog.current?.close()
   }, [item])
+
+  // A citation such as "0:04" plays the recording from just before that moment.
+  useEffect(() => {
+    const audio = player.current
+    const at = locator?.match(/^(\d+):(\d{2})$/)
+    if (!audio || !at) return
+    const start = Math.max(0, Number(at[1]) * 60 + Number(at[2]) - 1)
+    const play = () => {
+      audio.currentTime = start
+      audio.play().catch(() => undefined)
+    }
+    if (audio.readyState >= 1) play()
+    else audio.addEventListener('loadedmetadata', play, { once: true })
+    return () => audio.removeEventListener('loadedmetadata', play)
+  }, [item, locator])
 
   return (
     <dialog ref={dialog} className="viewer" onClose={onClose} aria-label="Evidence">
@@ -185,7 +201,7 @@ export default function EvidenceViewer({
             {item.type === 'interview_audio' ? (
               <div className="recording">
                 <p className="fine">The interview as recorded, in Bahasa Indonesia.</p>
-                <audio controls preload="none" src={item.image} />
+                <audio ref={player} controls preload="metadata" src={item.image} />
               </div>
             ) : (
               <img src={item.image} alt={`${item.reading?.label ?? 'Evidence'} as photographed`} />
