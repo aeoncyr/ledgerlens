@@ -30,6 +30,7 @@ import {
   type Finding,
 } from '../../types.ts'
 import Decision, { SignoffPanel } from './Decision.tsx'
+import HandOff from './HandOff.tsx'
 import OfficerShell, { type OfficerStep } from './OfficerShell.tsx'
 
 function useImageUrls(evidence: StoredEvidence[]): Map<string, string> {
@@ -548,6 +549,7 @@ export default function ApplicationFile() {
           </Link>
         )}
       </div>
+      <HandOff id={id} file={file} />
       {app.status === 'analyzing' && <LiveTrace run={run} />}
       {editable && app.status !== 'analyzing' && (
         <FollowUp id={id} findings={file.findings} round={file.round ?? 0} />
