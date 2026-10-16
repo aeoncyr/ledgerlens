@@ -41,6 +41,12 @@ class FactTable:
     def __init__(self) -> None:
         self._facts: dict[str, Fact] = {}
 
+    @classmethod
+    def from_facts(cls, facts: list[Fact]) -> FactTable:
+        table = cls()
+        table._facts = {fact.key: fact for fact in facts}
+        return table
+
     def add(
         self,
         key: str,

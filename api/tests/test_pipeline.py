@@ -8,8 +8,8 @@ from app.agents.memo_writer import MemoDraft, MemoSection, OwnerSummary
 from app.agents.qris_reader import QrisReading, QrisRow, QrisTotal
 from app.agents.receipt_reader import ReceiptItem, ReceiptReading
 from app.agents.verifier import CitationOut, Confirmation, Verification, VerifierFinding
-from app.analysis.pipeline import Application, EvidenceItem, reconcile, run_pipeline
-from app.schemas import Assessment, EvidenceType, LedgerLineOut
+from app.analysis.pipeline import Application, EvidenceItem, judge, reconcile, run_pipeline
+from app.schemas import Assessment, EvidenceType, Finding, LedgerLineOut
 
 CAPTURED = datetime(2026, 10, 6, 9, 0, tzinfo=UTC)
 
@@ -317,3 +317,54 @@ def test_a_single_read_saves_calls_on_the_free_tier():
     )
 
     assert gemini.calls.count(LedgerReading) == 1
+
+
+def test_an_answer_resolves_a_question_but_not_a_material_contradiction():
+    first, gemini, _ = run(Verification(findings=[], confirmations=[]))
+    context = first.context.model_copy(
+        update={
+            "checks": {
+                "check-1": first.context.checks.get("check-1")
+                or Finding(kind="discrepancy", severity="high", source="code", text="5.6x")
+            }
+        }
+    )
+    answers = [
+        {"finding": "Saturday sales", "question": "Kenapa?", "answer": "Sabtu hari pasar."},
+        {"finding": "5.6x", "question": "Kenapa?", "answer": "Beli bahan tanpa nota."},
+    ]
+    gemini.answers[Verification] = Verification(
+        findings=[
+            VerifierFinding(
+                kind="discrepancy",
+                severity="medium",
+                text="Saturday sales are higher.",
+                citations=[],
+                resolved=True,
+                answered_by=1,
+            ),
+            VerifierFinding(
+                check_id="check-1",
+                kind="discrepancy",
+                severity="low",
+                text="Sales are high.",
+                citations=[],
+                resolved=True,
+                answered_by=2,
+            ),
+        ],
+        confirmations=[],
+    )
+
+    async def progress(*_):
+        pass
+
+    result = asyncio.run(judge(gemini=gemini, context=context, progress=progress, answers=answers))
+
+    by_text = {f.text: f for f in result.findings}
+    assert by_text["Saturday sales are higher."].resolved is True
+    assert by_text["Saturday sales are higher."].answer == "Sabtu hari pasar."
+    material = by_text["Sales are high."]
+    assert (material.severity, material.resolved) == ("high", False)
+    assert material.answer == "Beli bahan tanpa nota."
+    assert result.assessment is Assessment.INCONSISTENT

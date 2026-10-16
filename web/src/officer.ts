@@ -113,6 +113,20 @@ export async function runAnalysis(id: string): Promise<void> {
   await apiFetch(`/api/applications/${id}/analyze`, { method: 'POST' }, base)
 }
 
+export async function answerQuestion(id: string, index: number, text: string): Promise<void> {
+  await apiFetch(`/api/applications/${id}/findings/${index}/answer`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  })
+}
+
+/** Check the file again with the owner's answers; only the verifier and memo writer run. */
+export async function recheck(id: string): Promise<void> {
+  const base = import.meta.env.VITE_ANALYZE_BASE || ''
+  await apiFetch(`/api/applications/${id}/reverify`, { method: 'POST' }, base)
+}
+
 export async function recordDecision(id: string, action: string, reason: string): Promise<void> {
   await apiFetch(`/api/applications/${id}/decision`, {
     method: 'POST',

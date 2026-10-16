@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import {
   ASSESSMENT_LABEL,
   ASSESSMENT_TONE,
   type Citation,
   type CreditFileData,
   type EvidenceItem,
+  type Finding,
 } from '../types.ts'
 import EvidenceViewer from './EvidenceViewer.tsx'
 
@@ -41,7 +42,14 @@ function month(key: string): string {
 
 // A credit file as LedgerLens produces it: outcome, figures, findings, the 5C memo and the evidence,
 // with every citation opening the evidence it points to.
-export default function CreditFile({ file }: { file: CreditFileData }) {
+export default function CreditFile({
+  file,
+  findingExtra,
+}: {
+  file: CreditFileData
+  // The officer's file adds an answer box under each open question.
+  findingExtra?: (finding: Finding, index: number) => ReactNode
+}) {
   const [open, setOpen] = useState<{ item: EvidenceItem; locator: string | null } | null>(null)
   const byId = new Map(file.evidence.map((item) => [item.id, item]))
   const factsByKey = new Map(file.facts.map((fact) => [fact.key, fact]))
@@ -137,6 +145,7 @@ export default function CreditFile({ file }: { file: CreditFileData }) {
                   <span className="severity">
                     {SEVERITY_LABEL[finding.severity]}
                     {finding.source === 'code' && ' · arithmetic check'}
+                    {finding.resolved && <span className="resolved"> · explained by the owner</span>}
                   </span>
                   <p>{finding.text}</p>
                   {finding.followUpQuestion && (
@@ -145,7 +154,13 @@ export default function CreditFile({ file }: { file: CreditFileData }) {
                       {finding.followUpQuestionEn && <p className="fine">{finding.followUpQuestionEn}</p>}
                     </blockquote>
                   )}
+                  {finding.answer && (
+                    <p className="answer">
+                      <strong>Owner’s answer:</strong> <span lang="id">{finding.answer}</span>
+                    </p>
+                  )}
                   <Cite citations={finding.citations} />
+                  {findingExtra?.(finding, index)}
                 </li>
               ))}
             </ol>

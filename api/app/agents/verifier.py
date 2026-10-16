@@ -35,6 +35,12 @@ class VerifierFinding(BaseModel):
         default=None, description="A polite question for the owner, in Bahasa Indonesia"
     )
     follow_up_question_en: str | None = Field(default=None, description="The question in English")
+    resolved: bool = Field(
+        default=False, description="True if one of the owner's answers explains this finding"
+    )
+    answered_by: int | None = Field(
+        default=None, description="The number of the owner's answer that addresses it, if any"
+    )
 
 
 class Confirmation(BaseModel):
@@ -82,6 +88,13 @@ and a follow-up question. Then add any other findings the evidence supports. Do 
 same point twice. Most files have between one and six findings.
 
 Also list confirmations: the main points where the sources agree, with citations.
+
+The case file may include owner_answers: the owner's replies to earlier follow-up questions. For
+each finding an answer addresses, set answered_by to the answer's number. Set resolved to true only
+if the answer is a plausible, specific explanation that fits the rest of the evidence, and say in
+the text how it explains the finding and what would confirm it. An answer is the owner's word, not
+evidence: it can explain a gap or a misfiled line, but it cannot make unsupported figures true.
+Keep every finding, resolved or not, so the officer sees the whole history.
 
 {FIGURE_RULES}
 Write plainly, in short sentences. Explain each finding so an officer could act on it.

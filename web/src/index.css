@@ -1526,6 +1526,54 @@ textarea:focus {
   }
 }
 
+/* Follow-up loop */
+.follow-up {
+  max-width: 900px;
+  margin-bottom: 28px;
+  padding: 18px 22px;
+  border: 1px solid #c9d3e6;
+  border-top: 4px solid var(--partial);
+  background: var(--paper-raised);
+}
+
+.follow-up h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.follow-up p {
+  max-width: 75ch;
+  margin: 0 0 10px;
+}
+
+.answer-box {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: var(--paper);
+}
+
+.answer-box label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.answer-box .button {
+  justify-self: start;
+}
+
+.answer {
+  margin: 6px 0 8px;
+  font-size: 15px;
+}
+
+.resolved {
+  color: var(--verified);
+}
+
 /* Status page */
 .status-list {
   margin: 0;

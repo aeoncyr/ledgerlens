@@ -17,7 +17,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from collections.abc import Awaitable, Callable
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from typing import Any
 
@@ -97,6 +97,23 @@ class ItemResult:
     error: str | None = None
 
 
+class Context(BaseModel):
+    """Everything the judging stage needs, saved so a file can be re-checked without re-reading."""
+
+    application: dict[str, Any]
+    case_file: dict[str, Any]
+    facts: list[Fact]
+    summary: CashFlowSummary
+    checks: dict[str, Finding]
+    present: list[EvidenceType]
+    quoted: list[str]
+    evidence_ids: list[str]
+    extractions: dict[str, dict[str, Any]]
+    unreadable: list[str]
+    reader_models: list[str]
+    round: int = 0
+
+
 class AnalysisResult(BaseModel):
     assessment: Assessment
     policy: PolicyResult
@@ -109,6 +126,8 @@ class AnalysisResult(BaseModel):
     unreadable: list[str]
     models: list[str]
     figure_problems: list[str]
+    round: int = 0
+    context: Context
 
 
 def _rp(value: int | None) -> str:
@@ -611,9 +630,18 @@ def add_summary_facts(facts: FactTable, summary: CashFlowSummary, application: A
 
 
 def merge_findings(
-    checks: dict[str, Finding], drafts: list[Any], facts: FactTable, evidence_ids: set[str]
+    checks: dict[str, Finding],
+    drafts: list[Any],
+    facts: FactTable,
+    evidence_ids: set[str],
+    answers: list[dict[str, str]] | None = None,
 ) -> list[Finding]:
-    """Combine the verifier's findings with code's checks; code keeps the final say on severity."""
+    """Combine the verifier's findings with code's checks; code keeps the final say.
+
+    Code decides severity for its own checks, and an owner's answer may never resolve a material
+    contradiction that code found in the figures: that needs evidence, not an explanation.
+    """
+    answers = answers or []
     merged: list[Finding] = []
     explained: set[str] = set()
     for draft in drafts:
@@ -627,10 +655,17 @@ def merge_findings(
             for c in draft.citations
             if c.evidence_id in evidence_ids
         ]
+        severity = check.severity if check else _verifier_severity(draft)
+        material_check = check is not None and severity == "high"
+        answered = (
+            answers[draft.answered_by - 1] if 0 < (draft.answered_by or 0) <= len(answers) else None
+        )
         merged.append(
             Finding(
                 kind=check.kind if check else draft.kind,
-                severity=check.severity if check else _verifier_severity(draft),
+                severity=severity,
+                resolved=bool(draft.resolved and answered and not material_check),
+                answer=answered["answer"] if answered else None,
                 source="code" if check else "verifier",
                 text=facts.render(draft.text),
                 citations=citations or (check.citations if check else []),
@@ -742,13 +777,55 @@ async def run_pipeline(
             for check_id, c in checks.items()
         ],
     }
-    quoted = number_tokens([w for r in results for w in r.written])
-    quoted |= number_tokens([c.text for c in checks.values()])
-    evidence_ids = {r.item.id for r in results}
+    context = Context(
+        application=asdict(application),
+        case_file=case_file,
+        facts=facts.all(),
+        summary=summary,
+        checks=checks,
+        present=sorted(present),
+        quoted=sorted(
+            number_tokens([w for r in results for w in r.written])
+            | number_tokens([c.text for c in checks.values()])
+        ),
+        evidence_ids=[r.item.id for r in results],
+        extractions={r.item.id: {"label": r.item.label, **(r.extraction or {})} for r in results},
+        unreadable=[r.item.label for r in results if r.error],
+        reader_models=sorted({m for r in results for m in r.models}),
+    )
+    return await judge(gemini=gemini, context=context, progress=progress, policy=policy)
+
+
+async def judge(
+    *,
+    gemini: Gemini,
+    context: Context,
+    progress: Progress,
+    policy: LenderPolicy | None = None,
+    answers: list[dict[str, str]] | None = None,
+) -> AnalysisResult:
+    """Cross-check, apply the policy and write the memo, from readings already made.
+
+    ``answers`` are the owner's replies to earlier follow-up questions; the verifier weighs them,
+    and code decides which findings an answer may resolve.
+    """
+    policy = policy or LenderPolicy()
+    application = Application(**context.application)
+    facts = FactTable.from_facts(context.facts)
+    summary, checks = context.summary, context.checks
+    present = set(context.present)
+    quoted = set(context.quoted)
+    evidence_ids = set(context.evidence_ids)
+    case_file = dict(context.case_file)
+    if answers:
+        case_file["owner_answers"] = [
+            {"number": n, **answer} for n, answer in enumerate(answers, start=1)
+        ]
+        quoted |= number_tokens([a["answer"] for a in answers])
 
     await progress("verifier", "Cross-checking the sources against each other", "running")
     verification, verifier_model, verifier_problems = await verify(gemini, case_file, facts, quoted)
-    findings = merge_findings(checks, verification.findings, facts, evidence_ids)
+    findings = merge_findings(checks, verification.findings, facts, evidence_ids, answers or [])
     confirmations = [
         {
             "text": facts.render(c.text),
@@ -757,9 +834,13 @@ async def run_pipeline(
         }
         for c in verification.confirmations
     ]
+    resolved = sum(f.resolved for f in findings)
     await progress(
         "verifier",
-        f"{len(findings)} finding(s), {len(confirmations)} point(s) where the sources agree",
+        f"{len(findings)} finding(s), {resolved} explained by the owner, "
+        f"{len(confirmations)} point(s) where the sources agree"
+        if answers
+        else f"{len(findings)} finding(s), {len(confirmations)} point(s) where the sources agree",
         "done",
     )
 
@@ -795,7 +876,10 @@ async def run_pipeline(
     memo, memo_model, memo_problems = await write_memo(
         gemini,
         case_file,
-        [f.model_dump(include={"kind", "severity", "text", "citations"}) for f in findings],
+        [
+            f.model_dump(include={"kind", "severity", "text", "citations", "resolved", "answer"})
+            for f in findings
+        ],
         {
             "assessment": result.assessment.value,
             "within_policy": result.within_policy,
@@ -811,7 +895,6 @@ async def run_pipeline(
     )
     await progress("memo_writer", "Credit memo ready", "done")
 
-    models = sorted({m for r in results for m in r.models} | {verifier_model, memo_model})
     return AnalysisResult(
         assessment=result.assessment,
         policy=result,
@@ -820,10 +903,12 @@ async def run_pipeline(
         confirmations=confirmations,
         memo=rendered_memo,
         facts=[_fact_out(f) for f in facts.all()],
-        extractions={r.item.id: {"label": r.item.label, **(r.extraction or {})} for r in results},
-        unreadable=[r.item.label for r in results if r.error],
-        models=models,
+        extractions=context.extractions,
+        unreadable=context.unreadable,
+        models=sorted(set(context.reader_models) | {verifier_model, memo_model}),
         figure_problems=verifier_problems + memo_problems,
+        round=context.round,
+        context=context,
     )
 
 
