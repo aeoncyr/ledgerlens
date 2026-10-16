@@ -239,16 +239,16 @@ keeps each agent a small, testable function with one prompt and one output schem
 | --- | --- | --- |
 | Receipt reader | First 30 receipts of the CORD test split: real photos from Indonesian shops and restaurants | Total paid read exactly on 28 of 29 labelled receipts (97%); 69 of 69 item amounts found |
 | Notebook reader | 9 synthetic pages from 3 fictional businesses in 8 handwriting fonts, photographed with tilt, blur and uneven light | 162 of 162 amounts read exactly with the better prompt variant (the other read 160; both misses were crossed-out corrections, since fixed) |
-| Whole pipeline | 3 sample credit files, two months each: 6 notebook pages, 8 receipts and, where the business has QRIS, 2 QRIS screenshots | Every monthly notebook, QRIS and receipt total read exactly, and each file got the outcome its evidence supports (below) |
+| Whole pipeline | 3 sample credit files, two months each: 6 notebook pages, 8 receipts, a 30-second owner interview in Bahasa Indonesia and, where the business has QRIS, 2 QRIS screenshots | Every monthly notebook, QRIS and receipt total read exactly, and each file got the outcome its evidence supports (below) |
 | Real handwriting | Pages written and photographed by our team | In progress |
 
 The three sample files:
 
 | Business | Outcome | Why |
 | --- | --- | --- |
-| Warung Bu Sari, a grocery stall in Bekasi | **Verified** | Evidence strength 80/100; the requested instalment of Rp 1.290.996 is within the policy maximum of Rp 1.414.800 |
-| Penjahit Pak Joko, a tailor in Yogyakarta | **Partially verified** | No QRIS history, so the low end rests on receipts alone; evidence strength 45/100 |
-| Warung Makan Hendra, a food stall in Bandung | **Inconsistent** | The notebook claims 5.6 times what supplier purchases support, and QRIS shows 13% of claimed sales; no instalment is suggested |
+| Warung Bu Sari, a grocery stall in Bekasi | **Verified** | Evidence strength 90/100; the requested instalment of Rp 1.290.996 is within the policy maximum of Rp 1.414.800 |
+| Penjahit Pak Joko, a tailor in Yogyakarta | **Partially verified** | No QRIS history, so the low end rests on receipts alone; evidence strength 55/100 |
+| Warung Makan Hendra, a food stall in Bandung | **Inconsistent** | The notebook claims 5.6 times what supplier purchases support, QRIS shows 13% of claimed sales, and in the interview the owner himself puts daily sales at Rp 500.000, a third of what the notebook says; no instalment is suggested |
 
 On the free tier a full analysis of 14 to 16 items takes 30 to 220 seconds, depending on Gemini's load, and a
 re-check with the owner's answers needs only about 7 seconds of verifier time. The prototype runs on Gemini's
@@ -260,6 +260,7 @@ To reproduce these results (see [`eval/README.md`](eval/README.md) and [`api/REA
 | --- | --- |
 | `eval/synth_notebooks.py` | Writes synthetic notebook pages with their true amounts |
 | `eval/synth_evidence.py` | Writes a complete two-month sample file: notebook pages, receipts and QRIS screenshots |
+| `eval/synth_interview.py` | Records a short owner interview in Bahasa Indonesia with Gemini's text-to-speech |
 | `api/scripts/handwriting_test.py` | Reads notebook pages with both prompt variants and scores them against the truth |
 | `api/scripts/receipt_eval.py` | Scores the receipt reader on CORD (`cd api && python -m scripts.receipt_eval --count 30`) |
 | `api/scripts/run_sample.py` | Runs the whole analysis on a sample file and prints each figure next to the truth |
