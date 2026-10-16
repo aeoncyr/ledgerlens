@@ -106,7 +106,12 @@ MEMO = MemoDraft(
     conditions=section("Working capital."),
     officer_next_steps=["Confirm the market-day sales."],
     owner_summary=OwnerSummary(
-        verified="Penjualan cocok.", missing="Tidak ada.", tips=["Simpan nota."]
+        verified="Penjualan cocok.",
+        missing="Tidak ada.",
+        tips=["Simpan nota."],
+        verified_en="Sales match.",
+        missing_en="Nothing.",
+        tips_en=["Keep your receipts."],
     ),
 )
 
@@ -368,3 +373,34 @@ def test_an_answer_resolves_a_question_but_not_a_material_contradiction():
     assert (material.severity, material.resolved) == ("high", False)
     assert material.answer == "Beli bahan tanpa nota."
     assert result.assessment is Assessment.INCONSISTENT
+
+
+def test_qris_only_the_owner_sent_needs_an_officer_to_confirm_it():
+    gemini = ScriptedGemini(Verification(findings=[], confirmations=[]), MEMO)
+    items = [
+        EvidenceItem(
+            "ev-page", EvidenceType.LEDGER_PAGE, "page.jpg", CAPTURED, submitted_by="owner"
+        ),
+        EvidenceItem(
+            "ev-receipt", EvidenceType.RECEIPT, "receipt.jpg", CAPTURED, submitted_by="owner"
+        ),
+        EvidenceItem(
+            "ev-qris", EvidenceType.QRIS_HISTORY, "qris.png", CAPTURED, submitted_by="owner"
+        ),
+    ]
+
+    async def progress(*_):
+        pass
+
+    result = asyncio.run(
+        run_pipeline(
+            gemini=gemini,
+            store=BytesStore(),
+            application=APPLICATION,
+            items=items,
+            progress=progress,
+        )
+    )
+
+    assert any("sent by the owner" in f.text for f in result.findings)
+    assert result.assessment is Assessment.PARTIALLY_VERIFIED

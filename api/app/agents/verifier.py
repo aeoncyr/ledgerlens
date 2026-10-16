@@ -62,6 +62,11 @@ Evidence tiers: QRIS and e-wallet history is hard evidence (a payment provider s
 Supplier receipts are medium. The notebook and the owner's interview are soft: they are what is
 being checked. Shop photos are physical: they test plausibility only.
 
+Who captured each item matters. Evidence with submitted_by "owner" was sent from the owner's phone;
+it is real evidence, but the owner chose what to send and could have edited it. Evidence with
+submitted_by "officer" was captured on a visit. Say so when a conclusion rests only on what the
+owner sent.
+
 What is normal, and not a finding: most warung sales are cash, so QRIS covering a fifth to a half of
 the notebook's sales is expected. Code already checks the share of sales seen in QRIS and the
 ratio of sales to purchases against the lender's limits; if those checks did not fire, the
