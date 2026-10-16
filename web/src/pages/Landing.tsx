@@ -1,71 +1,72 @@
 import { Link } from 'react-router-dom'
 import CreditFileCard from '../components/CreditFileCard.tsx'
 import SiteNav from '../components/SiteNav.tsx'
+import Specimen from '../components/Specimen.tsx'
 import { SAMPLES } from '../samples.ts'
-import {
-  SPECIMEN_LINES,
-  SPECIMEN_MATCHED,
-  SPECIMEN_MODEL,
-  SPECIMEN_TRUE_AMOUNTS,
-  type SpecimenLine,
-} from '../specimen.ts'
 import { ASSESSMENT_LABEL, ASSESSMENT_TONE } from '../types.ts'
 
-const KIND_LABEL: Record<SpecimenLine['kind'], string> = {
-  sale: 'sale',
-  purchase: 'purchase',
-  receivable: 'customer credit',
-  expense: 'expense',
-  other: '',
-}
+type Actor = 'Owner' | 'Officer' | 'Gemini' | 'Code'
 
-// What each sample file was built from; the outcome and findings come from the real analysis.
-const EVIDENCE_ON_FILE: Record<string, string> = {
-  'bu-sari': 'Notebook, QRIS history, supplier receipts, interview',
-  'pak-joko': 'Notebook, fabric receipts, interview; no QRIS',
-  'pak-hendra': 'Notebook, QRIS history, market receipts, interview',
-}
-
-type Actor = 'Officer' | 'Gemini' | 'Code'
-
-const STEPS: { title: string; actor: Actor; text: string }[] = [
+const JOURNEY: { title: string; actor: Actor[]; text: string }[] = [
   {
     title: 'Capture',
-    actor: 'Officer',
-    text: 'With the owner’s consent, photographs the notebook, QRIS history, receipts and the shop, and records a two-minute interview in Bahasa Indonesia.',
+    actor: ['Owner', 'Officer'],
+    text: 'Photos of the notebook, supplier receipts and QRIS history, plus a short voice interview in Bahasa Indonesia, taken by the owner on their phone or by the officer on a visit.',
   },
   {
     title: 'Read',
-    actor: 'Gemini',
-    text: 'One reader per kind of evidence copies what is written, exactly, with a confidence for every value. Each page is read twice with different instructions; where the readings disagree, the value is flagged.',
+    actor: ['Gemini'],
+    text: 'One reader per kind of evidence copies what is written and what is said, exactly, with where it is: page and line, or the moment in the recording.',
   },
   {
     title: 'Calculate',
-    actor: 'Code',
-    text: 'Turns “1,2jt” into Rp 1.200.000, adds up the months, and works out the instalment the business can carry under the lender’s own policy. The model never does arithmetic.',
+    actor: ['Code'],
+    text: 'Plain, tested code turns “1,5jt” into Rp 1.500.000, builds monthly cash flow and applies the lender’s own policy. The model never does arithmetic.',
   },
   {
     title: 'Cross-check',
-    actor: 'Gemini',
-    text: 'Compares the sources against each other, cites every discrepancy to its page and line, and writes polite follow-up questions for the owner.',
+    actor: ['Gemini'],
+    text: 'A verifier compares every source with the others, cites each finding, and writes polite questions the owner can answer.',
   },
   {
     title: 'Decide',
-    actor: 'Officer',
-    text: 'Approves, declines or asks for more, always with a written reason that goes into the audit log.',
+    actor: ['Officer'],
+    text: 'The lender reads a file where every figure points to its evidence, and decides with a written reason in an audit log.',
   },
 ]
 
-const rupiah = new Intl.NumberFormat('id-ID')
-function total(kind: SpecimenLine['kind']): number {
-  return SPECIMEN_LINES.filter((line) => line.kind === kind).reduce(
-    (sum, line) => sum + (line.rupiah ?? 0),
-    0,
-  )
+const SAMPLE_NOTE: Record<string, string> = {
+  'bu-sari': 'Notebook, receipts and QRIS agree, and so does the owner’s interview.',
+  'pak-joko': 'Honest books but no QRIS history, so only part of the cash flow is proven.',
+  'pak-hendra': 'The notebook claims three times what the owner says out loud.',
 }
 
-function isHeading(line: SpecimenLine): boolean {
-  return line.written === null && line.kind === 'other'
+function HeroVisual() {
+  return (
+    <div className="hero-visual" aria-hidden="true">
+      <img
+        className="hv-page"
+        src="/specimen/bu-sari-page-1.webp"
+        width={720}
+        height={1018}
+        alt=""
+      />
+      <div className="hv-chip hv-chip-a">
+        <span className="hv-written">“2,1jt”</span>
+        <span className="hv-arrow">→</span>
+        <strong>Rp 2.100.000</strong>
+        <small>Notebook page 1 · line 7</small>
+      </div>
+      <div className="hv-chip hv-chip-b">
+        <span className="hv-wave" />
+        <span lang="id">“Sehari biasanya laku…”</span>
+        <small>Interview · 0:04</small>
+      </div>
+      <div className="hv-file">
+        <CreditFileCard sample={SAMPLES[0]} compact />
+      </div>
+    </div>
+  )
 }
 
 export default function Landing() {
@@ -76,314 +77,244 @@ export default function Landing() {
       <main>
         <div className="hero-band">
           <header className="container hero">
-            <div>
-              <h1>Credit files for businesses that keep their books in a notebook.</h1>
+            <div className="hero-copy">
+              <h1>Turn a notebook into a credit file a lender can trust.</h1>
               <p className="lead">
-                LedgerLens reads a micro business’s notebook, QRIS payments (Indonesia’s national QR
-                payments) and supplier receipts with Gemini, checks them against each other, and
-                gives the credit officer a file in which every figure points back to its evidence.
+                Most Indonesian micro businesses (UMKM) keep their books by hand, so banks can’t
+                judge them. LedgerLens reads the notebook, receipts, QRIS payments (Indonesia’s
+                national QR payments) and the owner’s own words with Gemini, checks them against
+                each other, and gives the lender a file in which every figure is cited.
               </p>
-              <p>
-                For rural banks, cooperatives and microfinance lenders. It is{' '}
-                <strong>not a credit score</strong>: it verifies evidence, says how strong it is,
-                and leaves every decision to a person.
-              </p>
-              <div className="hero-actions">
-                <Link className="button on-dark" to={`/samples/${SAMPLES[0].slug}`}>
-                  Open a sample credit file
+              <div className="doors-mini">
+                <Link className="button on-dark" to="/owner">
+                  I run a business
+                  <span className="button-sub">Build my file</span>
                 </Link>
-                <Link className="link-on-dark" to="/app/new">
-                  Try it as a loan officer
+                <Link className="button ghost-on-dark" to="/app/new">
+                  I’m a loan officer
+                  <span className="button-sub">Assess a business</span>
                 </Link>
               </div>
+              <p className="hero-aside">
+                Just looking? <Link to={`/samples/${SAMPLES[2].slug}`}>Open a finished file</Link>{' '}
+                in one click. It is <strong>not a credit score</strong>: a person always decides.
+              </p>
             </div>
-            <CreditFileCard sample={SAMPLES[0]} />
+            <HeroVisual />
           </header>
         </div>
 
-        <section className="proof" aria-label="What every file guarantees">
-          <ul className="container">
-            <li>
-              <strong>Every figure cited</strong>
-              Each amount links to the page, line or receipt it came from.
-            </li>
-            <li>
-              <strong>Arithmetic by code</strong>
-              Gemini reads and reasons; tested code does every calculation.
-            </li>
-            <li>
-              <strong>Four honest outcomes</strong>
-              Verified, partly verified, insufficient or inconsistent. Never a score.
-            </li>
-            <li>
-              <strong>On Google Cloud</strong>
-              Gemini, Firebase, Firestore and Cloud Run, with records in Jakarta.
-            </li>
-          </ul>
+        <section className="container doors" aria-labelledby="doors-heading">
+          <h2 id="doors-heading" className="visually-hidden">
+            Who LedgerLens is for
+          </h2>
+          <article className="door owner-door">
+            <span className="door-label">For business owners</span>
+            <h3>Show what your business really earns.</h3>
+            <ol>
+              <li>
+                <strong>Photograph your records</strong> on your phone: notebook pages, supplier
+                receipts, QRIS history, and a short voice note.
+              </li>
+              <li>
+                <strong>See what was confirmed</strong> and what is missing, with tips to make your
+                file stronger, in English or Bahasa Indonesia.
+              </li>
+              <li>
+                <strong>Share it with the lender you choose</strong>, with a link you can withdraw
+                at any time.
+              </li>
+            </ol>
+            <Link className="button" to="/owner">
+              Start my file
+            </Link>
+            <p className="fine">Free, no account needed. Use a sample business to try it.</p>
+          </article>
+          <article className="door lender-door">
+            <span className="door-label">For lenders</span>
+            <h3>Assess businesses that have no financial statements.</h3>
+            <ol>
+              <li>
+                <strong>Receive a file</strong> an owner shared, or start one on a visit and
+                photograph the records yourself.
+              </li>
+              <li>
+                <strong>Watch the agents work</strong>: Gemini reads and cross-checks every source,
+                code computes every figure.
+              </li>
+              <li>
+                <strong>Read a cited credit file</strong>, put questions to the owner, and decide
+                with a written reason.
+              </li>
+            </ol>
+            <Link className="button" to="/app/new">
+              Open the officer app
+            </Link>
+            <p className="fine">
+              For rural banks (BPR), cooperatives and microfinance lenders without their own tools.
+            </p>
+          </article>
         </section>
 
-        <section className="container specimen" aria-labelledby="specimen-heading">
+        <section id="how" className="how-band" aria-labelledby="how-heading">
+          <div className="container section">
+            <div className="section-head">
+              <h2 id="how-heading">How a file is made</h2>
+              <p>
+                Gemini reads, listens and reasons. Plain, tested code does every calculation. A
+                person makes every decision.
+              </p>
+            </div>
+            <ol className="journey">
+              {JOURNEY.map((step, index) => (
+                <li key={step.title}>
+                  <span className="journey-node">{index + 1}</span>
+                  <h3>{step.title}</h3>
+                  <span className="journey-actors">
+                    {step.actor.map((a) => (
+                      <span key={a} className={`actor ${a.toLowerCase()}`}>
+                        {a}
+                      </span>
+                    ))}
+                  </span>
+                  <p>{step.text}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <section id="samples" className="container section" aria-labelledby="samples-heading">
           <div className="section-head">
-            <h2 id="specimen-heading">How a page is read</h2>
+            <h2 id="samples-heading">Open a finished file</h2>
+            <p>
+              Three fictional businesses, each with two months of notebook pages, receipts, a short
+              interview with the owner and, where they have it, QRIS history. These are the files
+              LedgerLens produced, unedited. Click any citation to see the evidence behind it.
+            </p>
+          </div>
+          <div className="sample-cards">
+            {SAMPLES.map((sample) => (
+              <Link key={sample.slug} to={`/samples/${sample.slug}`} className="sample-card">
+                <span className="sample-head">
+                  <span className="mono">{sample.fileNumber}</span>
+                  <span className={`stamp mini ${ASSESSMENT_TONE[sample.assessment]}`}>
+                    {ASSESSMENT_LABEL[sample.assessment]}
+                  </span>
+                </span>
+                <strong className="sample-name">{sample.alias}</strong>
+                <span className="sub">
+                  {sample.businessType}, {sample.city}
+                </span>
+                <span className="sample-note">{SAMPLE_NOTE[sample.slug]}</span>
+                <span className="sample-foot">
+                  <span className="strength">
+                    <span className="strength-bar" aria-hidden="true">
+                      <span style={{ width: `${sample.evidenceStrength}%` }} />
+                    </span>
+                    Evidence {sample.evidenceStrength}/100
+                  </span>
+                  <span className="open">Open file →</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="container section specimen" aria-labelledby="specimen-heading">
+          <div className="section-head">
+            <h2 id="specimen-heading">Look inside: how a page is read</h2>
             <p>
               The reader copies what is written, exactly as written. Code turns it into rupiah and
               adds it up, so the arithmetic can be checked line by line.
             </p>
           </div>
-          <figure>
-            <div className="specimen-grid">
-              <img
-                className="specimen-photo"
-                src="/specimen/bu-sari-page-1.webp"
-                width={720}
-                height={1018}
-                alt="A photographed notebook page: two weeks of daily sales, two supplier purchases, a customer credit and an arisan payment, with one amount crossed out and rewritten."
-              />
-              <table className="ledger">
-                <thead>
-                  <tr>
-                    <th scope="col" className="col-line">
-                      Line
-                    </th>
-                    <th scope="col">As written</th>
-                    <th scope="col" className="num written">
-                      Amount
-                    </th>
-                    <th scope="col" className="num">
-                      Rupiah
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {SPECIMEN_LINES.map((line) =>
-                    isHeading(line) ? (
-                      <tr key={line.line} className="ledger-heading">
-                        <td className="col-line">{line.line}</td>
-                        <th scope="rowgroup">{line.description}</th>
-                        <td className="written" />
-                        <td />
-                      </tr>
-                    ) : (
-                      <tr key={line.line}>
-                        <td className="col-line">{line.line}</td>
-                        <td>
-                          {line.date && <span className="date">{line.date} </span>}
-                          {line.description}
-                          {KIND_LABEL[line.kind] && (
-                            <span className="kind"> · {KIND_LABEL[line.kind]}</span>
-                          )}
-                        </td>
-                        <td className="num written">{line.written}</td>
-                        <td className="num">
-                          {line.rupiah === null ? '—' : rupiah.format(line.rupiah)}
-                        </td>
-                      </tr>
-                    ),
-                  )}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td className="col-line" />
-                    <th scope="row" colSpan={2}>
-                      Sales on this page
-                    </th>
-                    <td className="num">{rupiah.format(total('sale'))}</td>
-                  </tr>
-                  <tr>
-                    <td className="col-line" />
-                    <th scope="row" colSpan={2}>
-                      Supplier purchases
-                    </th>
-                    <td className="num">{rupiah.format(total('purchase'))}</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-            <figcaption>
-              <span>
-                Left, a notebook page photographed at an angle. Right, what {SPECIMEN_MODEL} copied
-                from it, unedited: {SPECIMEN_MATCHED} of {SPECIMEN_TRUE_AMOUNTS} amounts match the
-                page exactly, and on the last line it took the rewritten 200rb, not the crossed-out
-                1200rb. The rupiah column and the totals are computed by code.
-              </span>
-              <span className="fine">
-                The page is synthetic, made by our generator so that its true amounts are known.
-              </span>
-            </figcaption>
-          </figure>
+          <Specimen />
         </section>
 
-        <section id="samples" className="container section" aria-labelledby="samples-heading">
-          <div className="section-head">
-            <h2 id="samples-heading">Three sample files</h2>
-            <p>
-              Three fictional businesses, each with two months of notebook pages, receipts, a short
-              interview with the owner and, where they have it, QRIS history. These are the files LedgerLens produced from them,
-              unedited.
-            </p>
-          </div>
-          <div className="table-scroll">
-            <table className="register">
-              <thead>
-                <tr>
-                  <th scope="col">Business</th>
-                  <th scope="col">Evidence on file</th>
-                  <th scope="col">What the analyst concluded</th>
-                  <th scope="col">Outcome</th>
-                </tr>
-              </thead>
-              <tbody>
-                {SAMPLES.map((sample) => (
-                  <tr key={sample.slug}>
-                    <th scope="row">
-                      <Link to={`/samples/${sample.slug}`}>{sample.alias}</Link>
-                      <span className="sub">
-                        {sample.businessType}, {sample.city}
-                      </span>
-                    </th>
-                    <td data-label="Evidence on file">{EVIDENCE_ON_FILE[sample.slug]}</td>
-                    <td data-label="What the analyst concluded">{sample.headline}</td>
-                    <td data-label="Outcome">
-                      <span className={`outcome ${ASSESSMENT_TONE[sample.assessment]}`}>
-                        {ASSESSMENT_LABEL[sample.assessment]}
-                      </span>
-                      <Link className="open-file" to={`/samples/${sample.slug}`}>
-                        Open file
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="fine">
-            The businesses and their records are fictional, generated so that their true figures
-            are known.
-          </p>
-        </section>
-
-        <section id="how" className="container section" aria-labelledby="how-heading">
-          <div className="section-head">
-            <h2 id="how-heading">Who does what</h2>
-            <p>
-              Gemini reads and reasons; plain, tested code does every calculation; a person makes
-              every decision.
-            </p>
-          </div>
-          <ol className="steps">
-            {STEPS.map((step, index) => (
-              <li key={step.title}>
-                <span className="step-number">{index + 1}</span>
-                <h3>{step.title}</h3>
-                <span className={`actor ${step.actor.toLowerCase()}`}>{step.actor}</span>
-                <p>{step.text}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section id="accuracy" className="container section" aria-labelledby="accuracy-heading">
-          <div className="section-head">
-            <h2 id="accuracy-heading">Measured, not claimed</h2>
-            <p>
-              Each reader is tested on evidence whose true values we know. The harness and its data
-              are in the repository, so anyone can run it again.
-            </p>
-          </div>
-          <dl className="stats">
-            <div>
-              <dd>28 of 29</dd>
-              <dt>receipt totals read exactly from real photographed receipts (CORD dataset)</dt>
+        <section id="accuracy" className="accuracy-band" aria-labelledby="accuracy-heading">
+          <div className="container section">
+            <div className="section-head">
+              <h2 id="accuracy-heading">Measured, not claimed</h2>
+              <p>
+                Each reader is tested on evidence whose true values are known. The harness and its
+                data are in the repository, so anyone can run it again.
+              </p>
             </div>
-            <div>
-              <dd>162 of 162</dd>
-              <dt>notebook amounts read exactly from photographed pages in eight handwriting fonts</dt>
-            </div>
-            <div>
-              <dd>3 of 3</dd>
-              <dt>sample files given the outcome their evidence supports, with every total read exactly</dt>
-            </div>
-          </dl>
-          <div className="table-scroll">
-            <table className="register">
-              <thead>
-                <tr>
-                  <th scope="col">Test</th>
-                  <th scope="col">What was read</th>
-                  <th scope="col">Result</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">Notebook pages, synthetic</th>
-                  <td data-label="What was read">
-                    9 pages from three fictional businesses in eight handwriting fonts, photographed
-                    with tilt, blur and uneven light
-                  </td>
-                  <td data-label="Result">
-                    <span className="figure">162</span> of 162 amounts read exactly. The other
-                    prompt wording got 160; both misses were crossed-out corrections, since fixed.
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">Receipts, real</th>
-                  <td data-label="What was read">
-                    30 receipts photographed in Indonesian shops and restaurants, from the public
-                    CORD dataset
-                  </td>
-                  <td data-label="Result">
-                    Total paid read exactly on <span className="figure">28</span> of 29; all{' '}
-                    <span className="figure">69</span> item amounts found.
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">Notebook pages, real handwriting</th>
-                  <td data-label="What was read">Pages written by hand by our team</td>
-                  <td data-label="Result" className="pending">In progress</td>
-                </tr>
-              </tbody>
-            </table>
+            <dl className="stats">
+              <div>
+                <dd>28 of 29</dd>
+                <dt>receipt totals read exactly from real photographed receipts (CORD dataset)</dt>
+              </div>
+              <div>
+                <dd>162 of 162</dd>
+                <dt>notebook amounts read exactly from photographed pages in eight handwriting fonts</dt>
+              </div>
+              <div>
+                <dd>3 of 3</dd>
+                <dt>sample files with every monthly total read exactly and the right outcome</dt>
+              </div>
+            </dl>
+            <p className="fine on-dark">
+              Real handwriting from our own notebooks is being measured next. All businesses here are
+              fictional.
+            </p>
           </div>
         </section>
 
         <section id="safeguards" className="container section" aria-labelledby="safeguards-heading">
           <div className="section-head">
             <h2 id="safeguards-heading">Made for a regulated lender</h2>
-            <p>
-              The questions a lender’s risk and compliance team asks first, answered before they
-              ask.
-            </p>
+            <p>The questions a lender’s risk and compliance team asks first, answered up front.</p>
           </div>
           <dl className="safeguards">
             <div>
               <dt>Not a credit score</dt>
               <dd>
-                Predicting repayment needs real repayment history, which these businesses don’t
-                have yet. LedgerLens verifies evidence and says how strong it is.
+                Predicting repayment needs repayment history these businesses don’t have yet.
+                LedgerLens verifies evidence and says how strong it is.
               </dd>
             </div>
             <div>
               <dt>Consent first</dt>
               <dd>
-                The owner agrees on screen before anything is captured and can withdraw at any
-                time. We keep a business alias, never a legal name or national ID number.
+                The owner agrees before anything is captured and can withdraw at any time. We keep a
+                business alias, never a legal name or national ID number.
               </dd>
             </div>
             <div>
               <dt>Where data lives</dt>
               <dd>
-                Records stay in Google Cloud’s Jakarta region and photos in the United States.
-                Gemini reads them through Google’s global endpoint.
+                Records stay in Google Cloud’s Jakarta region; photos and recordings in the United
+                States. Gemini reads them through Google’s global endpoint.
               </dd>
             </div>
             <div>
               <dt>A person decides</dt>
               <dd>
-                There are no automatic rejections. Every decision needs a credit officer and a
-                written reason, kept in an audit log.
+                No automatic rejections. Every decision needs a credit officer and a written reason,
+                kept in an audit log.
               </dd>
             </div>
           </dl>
+        </section>
+
+        <section className="cta-band" aria-labelledby="cta-heading">
+          <div className="container">
+            <h2 id="cta-heading">See it work in five minutes.</h2>
+            <p>
+              Start from a sample business, add its records in one click, and watch Gemini build
+              the file.
+            </p>
+            <div className="doors-mini">
+              <Link className="button on-dark" to="/owner">
+                I run a business
+              </Link>
+              <Link className="button ghost-on-dark" to="/app/new">
+                I’m a loan officer
+              </Link>
+            </div>
+          </div>
         </section>
       </main>
 

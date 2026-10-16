@@ -1810,3 +1810,610 @@ textarea:focus {
     border-top: 1px solid var(--rule);
   }
 }
+
+/* ---------------------------------------------------------------------------------------------
+ * Landing, second pass: two clear doors (owners and lenders), a layered hero that shows a notebook
+ * becoming a cited credit file, and bands that give the page depth without decoration for its own
+ * sake.
+ * ------------------------------------------------------------------------------------------- */
+:root {
+  --shadow-1: 0 1px 2px rgb(12 34 30 / 0.08), 0 6px 18px -8px rgb(12 34 30 / 0.18);
+  --shadow-2: 0 2px 4px rgb(12 34 30 / 0.08), 0 22px 44px -18px rgb(12 34 30 / 0.35);
+  --brass-light: #e6c987;
+  --owner: #9a6b12;
+}
+
+.nav-links .nav-cta {
+  padding: 8px 16px;
+  border: 1px solid var(--brass);
+  border-radius: 999px;
+  color: var(--brand-ink);
+}
+
+.nav-links .nav-cta:hover {
+  background: var(--brass);
+  color: var(--brand-deep);
+  text-decoration: none;
+}
+
+.hero-band {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 70% at 85% 15%, rgb(176 138 62 / 0.22), transparent 60%),
+    radial-gradient(50% 60% at 0% 100%, rgb(64 160 140 / 0.18), transparent 60%),
+    repeating-linear-gradient(to bottom, transparent 0 39px, rgb(255 255 255 / 0.03) 39px 40px),
+    linear-gradient(160deg, #0f4339 0%, var(--brand) 45%, var(--brand-deep) 100%);
+}
+
+.hero {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 32px 56px;
+  padding-block: 80px 128px;
+}
+
+.hero-copy h1 {
+  margin: 0 0 22px;
+  font-size: clamp(40px, 5.2vw, 68px);
+}
+
+.doors-mini {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.doors-mini .button {
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 200px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 17px;
+}
+
+.button-sub {
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.button.ghost-on-dark {
+  border: 1px solid rgb(238 242 238 / 0.55);
+  background: rgb(255 255 255 / 0.04);
+  color: var(--brand-ink);
+}
+
+.button.ghost-on-dark:hover {
+  border-color: var(--brand-ink);
+  background: rgb(255 255 255 / 0.1);
+  color: #ffffff;
+}
+
+.hero .hero-aside {
+  margin-top: 22px;
+  font-size: 14px;
+}
+
+.hero-aside a {
+  color: var(--brass-light);
+}
+
+/* The hero picture: a photographed page, two citations lifted off it, and the file they become. */
+.hero-visual {
+  position: relative;
+  min-height: 540px;
+}
+
+.hv-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 48%;
+  height: auto;
+  border-radius: 3px;
+  transform: rotate(-5deg);
+  box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.6);
+}
+
+.hv-file {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 70%;
+  z-index: 2;
+}
+
+.hv-file .file-card {
+  box-shadow: 0 40px 80px -24px rgb(0 0 0 / 0.65);
+}
+
+.hv-chip {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 2px 8px;
+  align-items: baseline;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 14px;
+  box-shadow: var(--shadow-2);
+  animation: drift 6s ease-in-out infinite;
+}
+
+.hv-chip small {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.hv-chip-a {
+  top: 24%;
+  left: -7%;
+}
+
+.hv-written {
+  font-family: var(--serif);
+  font-style: italic;
+  color: #1c2f7a;
+}
+
+.hv-arrow {
+  color: var(--brass);
+}
+
+.hero .hv-chip strong {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.hv-chip-b {
+  bottom: 6%;
+  left: -8%;
+  grid-template-columns: auto auto;
+  background: var(--brass-light);
+  animation-delay: -3s;
+}
+
+.hv-wave {
+  width: 22px;
+  height: 14px;
+  background:
+    linear-gradient(var(--brand-deep), var(--brand-deep)) 0 50% / 3px 6px no-repeat,
+    linear-gradient(var(--brand-deep), var(--brand-deep)) 6px 50% / 3px 14px no-repeat,
+    linear-gradient(var(--brand-deep), var(--brand-deep)) 12px 50% / 3px 9px no-repeat,
+    linear-gradient(var(--brand-deep), var(--brand-deep)) 18px 50% / 3px 12px no-repeat;
+}
+
+@keyframes drift {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hv-chip {
+    animation: none;
+  }
+}
+
+/* Two doors, lifted over the bottom edge of the hero. */
+.doors {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: -72px;
+}
+
+.door {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px 30px 26px;
+  border-radius: 14px;
+  background: var(--paper-raised);
+  box-shadow: var(--shadow-2);
+  border-top: 5px solid var(--brand);
+}
+
+.owner-door {
+  border-top-color: var(--brass);
+}
+
+.door-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+
+.owner-door .door-label {
+  color: var(--owner);
+}
+
+.door h3 {
+  margin: 0;
+  font-size: clamp(24px, 2.4vw, 30px);
+  line-height: 1.15;
+}
+
+.door ol {
+  display: grid;
+  gap: 12px;
+  margin: 4px 0 6px;
+  padding: 0;
+  list-style: none;
+  counter-reset: door;
+}
+
+.door li {
+  position: relative;
+  padding-left: 42px;
+  color: var(--ink-soft);
+  counter-increment: door;
+}
+
+.door li::before {
+  content: counter(door);
+  position: absolute;
+  top: -1px;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-family: var(--serif);
+  font-size: 15px;
+}
+
+.owner-door li::before {
+  background: var(--brass);
+  color: var(--brand-deep);
+}
+
+.door li strong {
+  color: var(--ink);
+}
+
+.door .button {
+  align-self: flex-start;
+  border-radius: 10px;
+}
+
+.owner-door .button {
+  border-color: var(--brass);
+  background: var(--brass);
+  color: var(--brand-deep);
+}
+
+.owner-door .button:hover {
+  background: #9d7a33;
+  color: #ffffff;
+}
+
+.door .fine {
+  margin: 0;
+}
+
+/* How a file is made: a journey of five stages. */
+.how-band {
+  margin-top: 56px;
+  background: linear-gradient(180deg, var(--paper) 0%, #e9efeb 100%);
+  border-block: 1px solid var(--rule);
+}
+
+.journey {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journey::before {
+  content: '';
+  position: absolute;
+  top: 22px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--brass), var(--brand));
+}
+
+.journey li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.journey-node {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 3px solid var(--paper);
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-family: var(--serif);
+  font-size: 20px;
+  box-shadow: var(--shadow-1);
+}
+
+.journey h3 {
+  margin: 6px 0 0;
+  font-size: 22px;
+}
+
+.journey p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.journey-actors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.journey-actors .actor {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgb(12 58 50 / 0.08);
+  font-size: 12px;
+}
+
+.actor.owner {
+  color: var(--owner);
+}
+
+/* Finished files, as small documents. */
+.sample-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.sample-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 22px 18px;
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--brand);
+  border-radius: 6px;
+  background: var(--paper-raised);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: var(--shadow-1);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.sample-card:hover {
+  color: var(--ink);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2);
+}
+
+.sample-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stamp.mini {
+  position: static;
+  padding: 3px 8px 2px;
+  font-size: 11px;
+  transform: rotate(-3deg);
+}
+
+.sample-name {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.sample-card .sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.sample-note {
+  flex: 1;
+  margin: 8px 0 12px;
+  color: var(--ink-soft);
+}
+
+.sample-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+}
+
+.sample-foot .strength-bar {
+  width: 64px;
+  height: 5px;
+}
+
+.sample-foot .open {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Measured results on a dark band. */
+.accuracy-band {
+  background:
+    radial-gradient(50% 80% at 100% 0%, rgb(176 138 62 / 0.18), transparent 60%),
+    var(--brand-deep);
+  color: var(--brand-ink);
+}
+
+.accuracy-band .section-head p,
+.accuracy-band .fine.on-dark {
+  color: var(--brand-muted);
+}
+
+.accuracy-band .stats {
+  border-top-color: rgb(238 242 238 / 0.35);
+}
+
+.accuracy-band .stats div + div {
+  border-left-color: rgb(238 242 238 / 0.15);
+}
+
+.accuracy-band .stats dd {
+  color: var(--brass-light);
+}
+
+.accuracy-band .stats dt {
+  color: var(--brand-ink);
+}
+
+.cta-band {
+  padding-block: 64px;
+  background: linear-gradient(120deg, var(--brand) 0%, #145247 60%, #3b5a2b 100%);
+  color: var(--brand-ink);
+  text-align: center;
+}
+
+.cta-band h2 {
+  margin: 0 0 10px;
+  font-size: clamp(30px, 3.6vw, 44px);
+}
+
+.cta-band p {
+  margin: 0 auto;
+  max-width: 56ch;
+  color: var(--brand-muted);
+}
+
+.cta-band .doors-mini {
+  justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: 48px 112px;
+  }
+
+  .hero-visual {
+    min-height: 0;
+    padding-top: 150px;
+  }
+
+  .hv-page {
+    width: 42%;
+    max-width: 280px;
+  }
+
+  .hv-file {
+    position: relative;
+    width: 86%;
+    max-width: 520px;
+    margin-left: auto;
+  }
+
+  .hv-chip-a {
+    top: 40px;
+    left: 34%;
+  }
+
+  .hv-chip-b {
+    bottom: auto;
+    top: 100px;
+    left: 44%;
+  }
+
+  .doors,
+  .sample-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .journey {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .journey::before {
+    top: 10px;
+    bottom: 10px;
+    left: 22px;
+    right: auto;
+    width: 2px;
+    height: auto;
+    background: linear-gradient(180deg, var(--brass), var(--brand));
+  }
+
+  .journey li {
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 4px 16px;
+  }
+
+  .journey li > :not(.journey-node) {
+    grid-column: 2;
+  }
+
+  .journey-node {
+    grid-row: span 3;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-visual {
+    padding-top: 110px;
+  }
+
+  .hv-page {
+    width: 48%;
+  }
+
+  .hv-file {
+    width: 94%;
+  }
+
+  .hv-chip-b {
+    display: none;
+  }
+
+  .hv-chip-a {
+    top: 24px;
+    left: 28%;
+  }
+
+  .doors-mini .button {
+    flex: 1 1 100%;
+  }
+
+  .door {
+    padding: 22px 18px;
+  }
+}
