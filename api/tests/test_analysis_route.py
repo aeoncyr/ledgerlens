@@ -93,7 +93,7 @@ def ready_application(client, fake_db, monkeypatch):
         f"/api/applications/{app_id}/evidence",
         json={
             "type": "ledger_page",
-            "storagePath": f"evidence/{app_id}/p1.jpg",
+            "storagePath": f"evidence/{app_id}/judge-1/p1.jpg",
             "capturedAt": CAPTURED.isoformat(),
         },
     )

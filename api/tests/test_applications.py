@@ -13,7 +13,7 @@ NEW_APPLICATION = {
 def evidence(application_id, **overrides):
     body = {
         "type": "qris_history",
-        "storagePath": f"evidence/{application_id}/qris-1.png",
+        "storagePath": f"evidence/{application_id}/judge-1/qris-1.png",
         "capturedAt": "2026-10-15T09:30:00+07:00",
         "gps": {"lat": -6.24, "lng": 106.99},
     }
@@ -83,6 +83,17 @@ def test_evidence_must_live_under_its_application(client, application_id):
     response = client.post(
         f"/api/applications/{application_id}/evidence",
         json=evidence(application_id, storagePath="evidence/someone-else/qris.png"),
+    )
+
+    assert response.status_code == 422
+
+
+def test_evidence_must_be_in_the_officers_own_folder(client, application_id):
+    give_consent(client, application_id)
+
+    response = client.post(
+        f"/api/applications/{application_id}/evidence",
+        json=evidence(application_id, storagePath=f"evidence/{application_id}/other-uid/q.png"),
     )
 
     assert response.status_code == 422

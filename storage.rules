@@ -1,19 +1,15 @@
 rules_version = '2';
 
-// Evidence photos and recordings live under evidence/{applicationId}/. Only the officer who owns the
-// application can upload or view them, uploads must be images or audio under 15 MB, and nothing can be
-// overwritten or deleted from the browser.
+// Evidence photos and recordings live under evidence/{applicationId}/{uid}/. Each signed-in user may
+// upload into and read only their own folder; the API registers a file only if the application is
+// theirs and the path is under their folder. Uploads must be images or audio under 15 MB, and
+// nothing can be overwritten or deleted from the browser.
 service firebase.storage {
   match /b/{bucket}/o {
-    function ownsApplication(appId) {
-      return request.auth != null
-        && firestore.get(/databases/(default)/documents/applications/$(appId)).data.officerUid
-          == request.auth.uid;
-    }
-
-    match /evidence/{appId}/{fileName} {
-      allow read: if ownsApplication(appId);
-      allow create: if ownsApplication(appId)
+    match /evidence/{appId}/{uid}/{fileName} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null
+        && request.auth.uid == uid
         && request.resource.size < 15 * 1024 * 1024
         && request.resource.contentType.matches('(image|audio)/.*');
     }
