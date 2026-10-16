@@ -1,9 +1,10 @@
 """Applications: created by an officer, or by a business owner who later shares them with a lender.
 
-A file has up to two people on it. The officer (the lender's) decides; the owner (the business's)
-can start the file, consent, add evidence and share it with one lender at a time. Each route says
-which of them may call it. Every change is written to the application's audit log, and evidence
-can't be registered until consent is recorded.
+A file has up to three people on it. The officer (the lender's) recommends a decision; the owner
+(the business's) can start the file, consent, add evidence and share it with one lender at a time;
+a reviewer, a second person at the lender, signs off an approval or a decline (see
+``decisions.py``). Each route says which of them may call it. Every change is written to the
+application's audit log, and evidence can't be registered until consent is recorded.
 """
 
 from __future__ import annotations
@@ -20,8 +21,6 @@ from app.schemas import (
     ConsentRequest,
     CreateApplicationRequest,
     CreateApplicationResponse,
-    DecisionAction,
-    DecisionRequest,
     RegisterEvidenceRequest,
     RegisterEvidenceResponse,
 )
@@ -35,16 +34,18 @@ Db = Annotated[firestore.AsyncClient, Depends(get_firestore)]
 CurrentUser = Annotated[User, Depends(current_user)]
 
 
-OFFICER, OWNER = "officer", "owner"
+OFFICER, OWNER, REVIEWER = "officer", "owner", "reviewer"
 EITHER = (OFFICER, OWNER)
 
 
 def role_of(data: dict[str, Any], user: User) -> str | None:
-    """Whether the user is this file's officer or its owner (an officer wins if they are both)."""
+    """Whether the user is this file's officer, its owner or its reviewer (in that order)."""
     if data.get("officerUid") == user.uid:
         return OFFICER
     if data.get("ownerUid") == user.uid:
         return OWNER
+    if data.get("reviewerUid") == user.uid:
+        return REVIEWER
     return None
 
 
@@ -172,36 +173,3 @@ async def register_evidence(
     )
     await _audit(ref, user, "evidence_added", type=body.type.value, evidenceId=evidence_ref.id)
     return RegisterEvidenceResponse(evidence_id=evidence_ref.id)
-
-
-@router.post("/{application_id}/decision", status_code=status.HTTP_204_NO_CONTENT)
-async def record_decision(
-    application_id: str, body: DecisionRequest, user: CurrentUser, db: Db
-) -> None:
-    ref, data = await _owned_application(db, application_id, user)
-    decidable = (
-        ApplicationStatus.READY,
-        ApplicationStatus.NEEDS_FOLLOW_UP,
-        ApplicationStatus.IN_REVIEW,
-    )
-    if data.get("status") not in {s.value for s in decidable}:
-        raise HTTPException(
-            status.HTTP_409_CONFLICT, "Check the evidence before recording a decision."
-        )
-    new_status = (
-        ApplicationStatus.COLLECTING
-        if body.action is DecisionAction.REQUEST_MORE
-        else ApplicationStatus.DECIDED
-    )
-    await ref.update(
-        {
-            "status": new_status.value,
-            "decision": {
-                "action": body.action.value,
-                "reason": body.reason,
-                "by": user.uid,
-                "at": firestore.SERVER_TIMESTAMP,
-            },
-        }
-    )
-    await _audit(ref, user, f"decision_{body.action.value}", reason=body.reason)

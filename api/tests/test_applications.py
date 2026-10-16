@@ -110,7 +110,11 @@ def test_other_officers_cannot_see_the_application(client_as, application_id):
 def test_decision_needs_an_analysed_application(client, application_id):
     response = client.post(
         f"/api/applications/{application_id}/decision",
-        json={"action": "approve", "reason": "Cash flow supports the instalment"},
+        json={
+            "action": "approve",
+            "reason": "Cash flow supports the instalment",
+            "offer": {"amountRp": 10_000_000, "tenorMonths": 12, "annualRatePct": 6},
+        },
     )
 
     assert response.status_code == 409
@@ -124,11 +128,11 @@ def test_decision_is_recorded_with_its_reason(client, fake_db, application_id):
         json={"action": "request_more", "reason": "Ask for three months of supplier receipts"},
     )
 
-    assert response.status_code == 204
+    assert response.status_code == 200
     stored = fake_db.docs_in("applications")[application_id]
     assert stored["status"] == "collecting"
     assert stored["decision"]["reason"] == "Ask for three months of supplier receipts"
     actions = [
         e["action"] for e in fake_db.docs_in("applications", application_id, "audit").values()
     ]
-    assert actions[-1] == "decision_request_more"
+    assert actions[-2:] == ["decision_request_more", "decision_sent_to_owner"]

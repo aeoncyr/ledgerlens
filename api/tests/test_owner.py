@@ -85,11 +85,15 @@ def test_only_the_owner_shares_and_only_the_officer_decides(owner, officer, fake
     code = owner.post(f"/api/applications/{file_id}/share").json()["shareCode"]
     officer.post(f"/api/shared/{code}")
     fake_db.docs[("applications", file_id)]["status"] = "ready"
-    decision = {"action": "approve", "reason": "Cash flow covers the instalment."}
+    decision = {
+        "action": "approve",
+        "reason": "Cash flow covers the instalment.",
+        "offer": {"amountRp": 15_000_000, "tenorMonths": 12, "annualRatePct": 6},
+    }
 
     assert officer.post(f"/api/applications/{file_id}/share").status_code == 404
     assert owner.post(f"/api/applications/{file_id}/decision", json=decision).status_code == 404
-    assert officer.post(f"/api/applications/{file_id}/decision", json=decision).status_code == 204
+    assert officer.post(f"/api/applications/{file_id}/decision", json=decision).status_code == 200
 
 
 def test_an_owner_check_writes_a_summary_for_the_owner(owner, fake_db, file_id, monkeypatch):
