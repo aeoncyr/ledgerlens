@@ -11,6 +11,7 @@ import {
 } from '../../decision.ts'
 import { rupiah, type Lang, type OwnerStrings } from '../../i18n/owner.ts'
 import { errorText, type OwnerEvidence } from '../../owner.ts'
+import WhatsAppButton from '../../components/WhatsAppButton.tsx'
 import { TickIcon } from './icons.tsx'
 import '../../decision.css'
 
@@ -47,6 +48,8 @@ export default function DecisionCard({
   const { offer, state } = decision
   const count = (type: string) => evidence.filter((item) => item.type === type).length
   const newRecords = evidence.length - (decision.evidenceCountAtDecision ?? 0)
+  // Where the loan officer opens this file.
+  const fileUrl = `${window.location.origin}/app/${id}`
 
   async function act(work: () => Promise<void>) {
     setBusy(true)
@@ -151,9 +154,14 @@ export default function DecisionCard({
         <p className="ow-banner ow-decision-answer" role="status">
           <TickIcon size={20} />
           <span>{t.offerAccepted}</span>
-          {/* The lead adds a WhatsApp hand-off here: tell the officer the offer is accepted. */}
-          <span data-handoff="offer.accepted" data-application-id={id} />
         </p>
+      )}
+      {state === 'accepted' && (
+        <WhatsAppButton
+          className="ow-button ow-button-whatsapp ow-button-wide"
+          label={t.tellOfficer}
+          text={t.waAccepted(fileUrl)}
+        />
       )}
       {state === 'declined_by_owner' && <p className="ow-fine">{t.offerDeclined}</p>}
 
@@ -181,11 +189,10 @@ export default function DecisionCard({
                       </p>
                     )}
                     {condition.met && (
-                      // The lead adds a WhatsApp hand-off here: tell the officer it is done.
-                      <span
-                        data-handoff="condition.met"
-                        data-application-id={id}
-                        data-index={index}
+                      <WhatsAppButton
+                        className="ow-wa-link"
+                        label={t.tellOfficer}
+                        text={t.waConditionMet(condition.text, fileUrl)}
                       />
                     )}
                   </div>
@@ -239,9 +246,14 @@ export default function DecisionCard({
             <p className="ow-banner ow-decision-answer" role="status">
               <TickIcon size={20} />
               <span>{t.sentToLender(decision.sentCount ?? newRecords)}</span>
-              {/* The lead adds a WhatsApp hand-off here: tell the officer the records are in. */}
-              <span data-handoff="evidence.requested_received" data-application-id={id} />
             </p>
+          )}
+          {state === 'sent' && (
+            <WhatsAppButton
+              className="ow-button ow-button-whatsapp ow-button-wide"
+              label={t.tellOfficer}
+              text={t.waRecordsSent(fileUrl)}
+            />
           )}
         </div>
       )}

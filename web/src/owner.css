@@ -221,6 +221,21 @@
   background: #17623b;
 }
 
+.ow-button-whatsapp {
+  gap: 8px;
+}
+
+/* A small WhatsApp link beside a ticked condition. */
+.ow-wa-link {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  min-height: 44px;
+  color: #1f7a4a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .ow-button-danger {
   border-color: #f0c9b8;
   background: #fbefe9;

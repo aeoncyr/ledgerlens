@@ -272,6 +272,13 @@ const EN = {
   copy: 'Copy link',
   copied: 'Copied',
   whatsapp: 'Send on WhatsApp',
+  tellOfficer: 'Tell my loan officer on WhatsApp',
+  waAccepted: (url: string) =>
+    `Hello, I have accepted the loan offer for my business on LedgerLens. My file: ${url}`,
+  waConditionMet: (text: string, url: string) =>
+    `Hello, I have done what you asked before the loan: "${text}". My file on LedgerLens: ${url}`,
+  waRecordsSent: (url: string) =>
+    `Hello, I have sent the records you asked for on LedgerLens. My file: ${url}`,
   whatsappText: (url: string, code: string) =>
     `Hello, here is the credit file for my business on LedgerLens. It shows my records and what was checked. Open: ${url} (code ${code})`,
   stopSharing: 'Stop sharing',
@@ -574,6 +581,13 @@ const ID: OwnerStrings = {
   copy: 'Salin tautan',
   copied: 'Tersalin',
   whatsapp: 'Kirim lewat WhatsApp',
+  tellOfficer: 'Kabari petugas kredit lewat WhatsApp',
+  waAccepted: (url: string) =>
+    `Halo, saya sudah menerima tawaran pinjaman untuk usaha saya di LedgerLens. Berkas saya: ${url}`,
+  waConditionMet: (text: string, url: string) =>
+    `Halo, saya sudah memenuhi syarat sebelum pencairan: "${text}". Berkas saya di LedgerLens: ${url}`,
+  waRecordsSent: (url: string) =>
+    `Halo, saya sudah mengirim catatan yang Bapak/Ibu minta di LedgerLens. Berkas saya: ${url}`,
   whatsappText: (url: string, code: string) =>
     `Halo, ini berkas kredit usaha saya di LedgerLens. Isinya catatan saya dan hasil pemeriksaannya. Buka: ${url} (kode ${code})`,
   stopSharing: 'Berhenti berbagi',

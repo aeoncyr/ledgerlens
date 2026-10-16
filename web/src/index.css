@@ -4224,3 +4224,16 @@ textarea:focus {
     break-inside: avoid;
   }
 }
+
+/* WhatsApp hand-offs: the message is written; the person only picks who gets it. */
+.button.whatsapp {
+  gap: 8px;
+  margin: 12px 0 4px;
+  border-color: #1f7a4a;
+  background: #1f7a4a;
+  color: #ffffff;
+}
+
+.button.whatsapp:hover {
+  background: #17623b;
+}

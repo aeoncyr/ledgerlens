@@ -3,6 +3,7 @@
 // it shows the same recommendation.
 import { useState, type FormEvent } from 'react'
 import OfferSchedule from '../../components/OfferSchedule.tsx'
+import WhatsAppButton from '../../components/WhatsAppButton.tsx'
 import {
   answerOffer,
   markConditionMet,
@@ -482,8 +483,11 @@ function WaitingForSignoff({ app, code }: { app: Application; code: string }) {
         off or send it back to you with a note.
       </p>
       <CopyLink url={url} code={code} />
-      {/* The lead adds a WhatsApp hand-off here. */}
-      <div data-handoff="signoff" data-application-id={app.id} data-code={code} data-url={url} />
+      <WhatsAppButton
+        className="button whatsapp"
+        label="Send to a colleague on WhatsApp"
+        text={`Mohon sign-off kedua untuk berkas kredit ${app.business.alias} di LedgerLens. Second sign-off needed, please: ${url} (kode/code ${code})`}
+      />
       <p className="fine">
         Trying LedgerLens alone? Open the link in a private window: it signs in as a different
         person.
@@ -557,11 +561,14 @@ function DecisionOutcome({ app, readOnly }: { app: Application; readOnly?: boole
             </div>
             <p lang={lang}>{sent.letter[lang]}</p>
           </div>
-          {/* The lead adds a WhatsApp hand-off here: tell the owner the decision is in. */}
-          <div
-            data-handoff="decision.final"
-            data-application-id={app.id}
-            data-action={sent.action}
+          <WhatsAppButton
+            className="button whatsapp"
+            label="Tell the owner on WhatsApp"
+            text={
+              app.ownerUid
+                ? `Halo, keputusan pinjaman untuk ${app.business.alias} sudah ada di LedgerLens. Silakan buka berkas Anda: ${window.location.origin}/owner/${app.id}\n\n(Your loan decision is ready in LedgerLens.)`
+                : `${sent.letter.id}\n\n${sent.letter.en}`
+            }
           />
           <ConditionList
             conditions={sent.conditions}
