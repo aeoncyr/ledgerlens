@@ -8,18 +8,39 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function ownsApplication(appId) {
-      return signedIn()
-        && get(/databases/$(database)/documents/applications/$(appId)).data.officerUid
-          == request.auth.uid;
+    function application(appId) {
+      return get(/databases/$(database)/documents/applications/$(appId)).data;
+    }
+
+    // The lender's officer on this file.
+    function isOfficer(appId) {
+      return signedIn() && application(appId).officerUid == request.auth.uid;
+    }
+
+    // The business owner who started this file.
+    function isOwner(appId) {
+      return signedIn() && application(appId).ownerUid == request.auth.uid;
     }
 
     match /applications/{appId} {
-      allow read: if signedIn() && resource.data.officerUid == request.auth.uid;
+      allow read: if signedIn()
+        && (resource.data.officerUid == request.auth.uid
+          || resource.data.ownerUid == request.auth.uid);
 
-      // Evidence, runs, findings, the memo and the audit log follow their application.
+      // The owner sees their evidence, the progress of a check, and the summary written for them.
+      match /evidence/{doc} {
+        allow read: if isOfficer(appId) || isOwner(appId);
+      }
+      match /runs/{doc} {
+        allow read: if isOfficer(appId) || isOwner(appId);
+      }
+      match /owner/{doc} {
+        allow read: if isOfficer(appId) || isOwner(appId);
+      }
+
+      // The credit memo, findings and audit log are the lender's.
       match /{child=**} {
-        allow read: if ownsApplication(appId);
+        allow read: if isOfficer(appId);
       }
     }
 

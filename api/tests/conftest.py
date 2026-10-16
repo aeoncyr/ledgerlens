@@ -78,6 +78,9 @@ class FakeDocument:
     async def set(self, data: dict) -> None:
         self._db.docs[self._path] = dict(data)
 
+    async def delete(self) -> None:
+        self._db.docs.pop(self._path, None)
+
     async def get(self) -> FakeSnapshot:
         return FakeSnapshot(self._db.docs.get(self._path))
 

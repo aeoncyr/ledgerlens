@@ -1,7 +1,9 @@
-"""The officer's flow: create an application, record consent, register evidence, decide.
+"""Applications: created by an officer, or by a business owner who later shares them with a lender.
 
-Every change is written to the application's audit log. Officers only ever see their own
-applications, and evidence can't be registered until the owner has given consent.
+A file has up to two people on it. The officer (the lender's) decides; the owner (the business's)
+can start the file, consent, add evidence and share it with one lender at a time. Each route says
+which of them may call it. Every change is written to the application's audit log, and evidence
+can't be registered until consent is recorded.
 """
 
 from __future__ import annotations
@@ -33,12 +35,30 @@ Db = Annotated[firestore.AsyncClient, Depends(get_firestore)]
 CurrentUser = Annotated[User, Depends(current_user)]
 
 
-async def _owned_application(db: firestore.AsyncClient, application_id: str, user: User):
-    """Return the application's reference and data, or 404 if it doesn't exist or isn't theirs."""
+OFFICER, OWNER = "officer", "owner"
+EITHER = (OFFICER, OWNER)
+
+
+def role_of(data: dict[str, Any], user: User) -> str | None:
+    """Whether the user is this file's officer or its owner (an officer wins if they are both)."""
+    if data.get("officerUid") == user.uid:
+        return OFFICER
+    if data.get("ownerUid") == user.uid:
+        return OWNER
+    return None
+
+
+async def _owned_application(
+    db: firestore.AsyncClient,
+    application_id: str,
+    user: User,
+    roles: tuple[str, ...] = (OFFICER,),
+):
+    """Return the application's reference and data, or 404 if the user has no allowed role on it."""
     ref = db.collection("applications").document(application_id)
     snapshot = await ref.get()
     data = snapshot.to_dict() if snapshot.exists else None
-    if not data or data.get("officerUid") != user.uid:
+    if not data or role_of(data, user) not in roles:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Application not found")
     return ref, data
 
@@ -68,6 +88,9 @@ async def create_application(
         {
             "lenderId": DEMO_LENDER_ID,
             "officerUid": user.uid,
+            "ownerUid": None,
+            "origin": OFFICER,
+            "shareCode": None,
             "business": {
                 "alias": body.alias,
                 "type": body.business_type,
@@ -90,7 +113,7 @@ async def create_application(
 async def record_consent(
     application_id: str, body: ConsentRequest, user: CurrentUser, db: Db
 ) -> None:
-    ref, _ = await _owned_application(db, application_id, user)
+    ref, data = await _owned_application(db, application_id, user, EITHER)
     new_status = ApplicationStatus.COLLECTING if body.given else ApplicationStatus.DRAFT
     await ref.update(
         {
@@ -98,6 +121,7 @@ async def record_consent(
                 "given": body.given,
                 "version": body.consent_version,
                 "at": firestore.SERVER_TIMESTAMP,
+                "by": role_of(data, user),
             },
             "status": new_status.value,
         }
@@ -118,7 +142,7 @@ async def record_consent(
 async def register_evidence(
     application_id: str, body: RegisterEvidenceRequest, user: CurrentUser, db: Db
 ) -> RegisterEvidenceResponse:
-    ref, data = await _owned_application(db, application_id, user)
+    ref, data = await _owned_application(db, application_id, user, EITHER)
     if not (data.get("consent") or {}).get("given"):
         raise HTTPException(status.HTTP_409_CONFLICT, "Record the owner's consent first")
     # The browser uploads into its own folder; Storage rules check that folder against the user's
@@ -139,6 +163,8 @@ async def register_evidence(
             "gps": body.gps.model_dump() if body.gps else None,
             "quality": None,
             "extraction": None,
+            # A photo an officer takes on a visit is harder to fake than one the owner sends.
+            "submittedBy": role_of(data, user),
         }
     )
     await _audit(ref, user, "evidence_added", type=body.type.value, evidenceId=evidence_ref.id)
