@@ -281,6 +281,58 @@ const EN = {
   stopping: 'Stopping…',
   shareNeedsCheck: 'Check your records first, then you can share the file.',
 
+  // The lender's decision
+  waitingTitle: 'Your lender is deciding',
+  waitingText:
+    'A loan officer has made a recommendation, and a second person at the lender is checking it. The decision will appear here.',
+  decisionTitle: {
+    approve: 'Your loan offer',
+    decline: 'Your lender’s decision',
+    request_more: 'Your lender asks for more records',
+  } as Record<string, string>,
+  letterFrom: 'From your lender',
+  letterNote: 'The amounts are calculated from the offer, not written by AI.',
+  offerAmount: 'Loan',
+  offerInstalment: 'Each month',
+  offerMonths: 'For',
+  monthsValue: (n: number) => `${n} months`,
+  offerRate: 'Interest a year',
+  offerTotal: 'Total you repay',
+  schedule: {
+    summary: 'See every month',
+    caption: 'What you pay each month, the interest in it, and what you still owe after it.',
+    month: 'Month',
+    instalment: 'Payment',
+    interest: 'Interest',
+    principal: 'Loan repaid',
+    balance: 'Still owed',
+  },
+  acceptOffer: 'Accept the offer',
+  declineOffer: 'Decline the offer',
+  declineConfirm: 'Decline this offer? Your lender will be told. Your file stays yours.',
+  declineYes: 'Yes, decline',
+  declineNo: 'Go back',
+  answering: 'Sending…',
+  offerAccepted: 'You accepted the offer. Your lender will contact you about the next steps.',
+  offerDeclined: 'You declined the offer. Your lender has been told.',
+  conditionsTitle: 'Before the money is paid out',
+  conditionsLead:
+    'Your lender asks for these. When one needs a record, send it under Your records below, then tap Done.',
+  conditionsAfterAccept: 'Accept the offer first, then tick these off.',
+  conditionDone: 'Done',
+  conditionMet: 'Done',
+  conditionNeeds: (kind: string) => `This needs a new record (${kind}). Send it under Your records first.`,
+  allConditionsMet: 'Everything your lender asked for is done.',
+  requestedTitle: 'What your lender asks for',
+  requestedLead:
+    'Nothing has been decided yet. Add these under Your records below, then tell your lender.',
+  sendToLender: 'Send to my lender',
+  sendNeedsRecords: 'Add at least one new record below first.',
+  sentToLender: (n: number) =>
+    `Sent. Your lender knows you added ${n === 1 ? 'one new record' : `${n} new records`}.`,
+  checkLocked:
+    'Your lender is deciding on the file as it is now, so it can’t be checked again. You can still send the records your lender asks for.',
+
   status: {
     draft: 'Needs your agreement',
     collecting: 'Sending records',
@@ -288,6 +340,7 @@ const EN = {
     needs_follow_up: 'Questions for you',
     ready: 'Checked',
     in_review: 'With the lender',
+    awaiting_signoff: 'The lender is deciding',
     decided: 'The lender has decided',
   } as Record<string, string>,
 }
@@ -530,6 +583,59 @@ const ID: OwnerStrings = {
   stopping: 'Menghentikan…',
   shareNeedsCheck: 'Periksa catatan Anda dulu, lalu berkas bisa dibagikan.',
 
+  waitingTitle: 'Pemberi pinjaman sedang memutuskan',
+  waitingText:
+    'Petugas kredit sudah memberi rekomendasi, dan orang kedua di pemberi pinjaman sedang memeriksanya. Keputusannya akan muncul di sini.',
+  decisionTitle: {
+    approve: 'Tawaran pinjaman Anda',
+    decline: 'Keputusan pemberi pinjaman',
+    request_more: 'Pemberi pinjaman meminta catatan tambahan',
+  },
+  letterFrom: 'Dari pemberi pinjaman Anda',
+  letterNote: 'Angka-angka dihitung dari tawaran, bukan ditulis oleh AI.',
+  offerAmount: 'Pinjaman',
+  offerInstalment: 'Per bulan',
+  offerMonths: 'Selama',
+  monthsValue: (n: number) => `${n} bulan`,
+  offerRate: 'Bunga per tahun',
+  offerTotal: 'Total yang Anda bayar',
+  schedule: {
+    summary: 'Lihat setiap bulan',
+    caption: 'Yang Anda bayar setiap bulan, bunga di dalamnya, dan sisa pinjaman setelahnya.',
+    month: 'Bulan',
+    instalment: 'Cicilan',
+    interest: 'Bunga',
+    principal: 'Pokok',
+    balance: 'Sisa pinjaman',
+  },
+  acceptOffer: 'Terima tawaran',
+  declineOffer: 'Tolak tawaran',
+  declineConfirm:
+    'Tolak tawaran ini? Pemberi pinjaman akan diberi tahu. Berkas ini tetap milik Anda.',
+  declineYes: 'Ya, tolak',
+  declineNo: 'Kembali',
+  answering: 'Mengirim…',
+  offerAccepted:
+    'Anda menerima tawaran ini. Pemberi pinjaman akan menghubungi Anda untuk langkah berikutnya.',
+  offerDeclined: 'Anda menolak tawaran ini. Pemberi pinjaman sudah diberi tahu.',
+  conditionsTitle: 'Sebelum dana dicairkan',
+  conditionsLead:
+    'Pemberi pinjaman meminta hal-hal ini. Jika perlu catatan, kirim di Catatan Anda di bawah, lalu ketuk Selesai.',
+  conditionsAfterAccept: 'Terima tawaran dulu, lalu centang satu per satu.',
+  conditionDone: 'Selesai',
+  conditionMet: 'Selesai',
+  conditionNeeds: (kind: string) => `Ini perlu catatan baru (${kind}). Kirim dulu di Catatan Anda.`,
+  allConditionsMet: 'Semua yang diminta pemberi pinjaman sudah selesai.',
+  requestedTitle: 'Yang diminta pemberi pinjaman',
+  requestedLead:
+    'Belum ada keputusan. Tambahkan catatan ini di Catatan Anda di bawah, lalu beri tahu pemberi pinjaman.',
+  sendToLender: 'Kirim ke pemberi pinjaman',
+  sendNeedsRecords: 'Tambahkan setidaknya satu catatan baru di bawah dulu.',
+  sentToLender: (n: number) =>
+    `Terkirim. Pemberi pinjaman tahu Anda menambah ${n} catatan baru.`,
+  checkLocked:
+    'Pemberi pinjaman sedang memutuskan berdasarkan berkas saat ini, jadi berkas tidak bisa diperiksa ulang. Anda tetap bisa mengirim catatan yang diminta.',
+
   status: {
     draft: 'Menunggu persetujuan Anda',
     collecting: 'Mengirim catatan',
@@ -537,6 +643,7 @@ const ID: OwnerStrings = {
     needs_follow_up: 'Ada pertanyaan untuk Anda',
     ready: 'Sudah diperiksa',
     in_review: 'Ditinjau pemberi pinjaman',
+    awaiting_signoff: 'Pemberi pinjaman sedang memutuskan',
     decided: 'Pemberi pinjaman sudah memutuskan',
   },
 }

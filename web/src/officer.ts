@@ -13,6 +13,7 @@ import {
 import { ref, uploadBytes } from 'firebase/storage'
 import { useEffect, useState } from 'react'
 import { apiFetch } from './api.ts'
+import type { RecordedDecision } from './decision.ts'
 import { db, ensureSignedIn, storage } from './firebase.ts'
 import type { Assessment, EvidenceType } from './types.ts'
 
@@ -23,6 +24,7 @@ export type ApplicationStatus =
   | 'needs_follow_up'
   | 'ready'
   | 'in_review'
+  | 'awaiting_signoff'
   | 'decided'
 
 export const STATUS_LABEL: Record<ApplicationStatus, string> = {
@@ -32,6 +34,7 @@ export const STATUS_LABEL: Record<ApplicationStatus, string> = {
   needs_follow_up: 'Questions for the owner',
   ready: 'Ready for decision',
   in_review: 'In review',
+  awaiting_signoff: 'Waiting for a second sign-off',
   decided: 'Decided',
 }
 
@@ -49,7 +52,9 @@ export type Application = {
   ownerUid?: string | null
   origin?: 'owner' | 'officer'
   shareCode?: string | null
-  decision?: { action: string; reason: string }
+  decision?: RecordedDecision
+  // The second person at the lender signing off a recommendation.
+  reviewerUid?: string | null
   createdAt?: Timestamp
 }
 
@@ -190,14 +195,6 @@ export async function confirmReading(
 export async function recheck(id: string): Promise<void> {
   const base = import.meta.env.VITE_ANALYZE_BASE || ''
   await apiFetch(`/api/applications/${id}/reverify`, { method: 'POST' }, base)
-}
-
-export async function recordDecision(id: string, action: string, reason: string): Promise<void> {
-  await apiFetch(`/api/applications/${id}/decision`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action, reason }),
-  })
 }
 
 /** Remember which sample business an application was started from, for the evidence step. */

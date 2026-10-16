@@ -35,9 +35,11 @@ import {
   TickIcon,
   UndoIcon,
 } from './icons.tsx'
+import DecisionCard, { WaitingCard } from './OwnerDecision.tsx'
 import OwnerShell from './OwnerShell.tsx'
 import VoiceRecorder from '../../components/VoiceRecorder.tsx'
 import { answerByVoice, declineQuestion } from '../../officer.ts'
+import { useOwnerDecision } from '../../decision.ts'
 
 const MAX_BYTES = 15 * 1024 * 1024
 
@@ -71,6 +73,7 @@ export default function OwnerFile() {
   const { data: evidence } = useEvidence(id)
   const { data: summary } = useOwnerSummary(id)
   const { data: run } = useRun(id, app?.currentRunId)
+  const decision = useOwnerDecision(id)
   const [busy, setBusy] = useState<Busy>(null)
   const [progress, setProgress] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -169,6 +172,20 @@ export default function OwnerFile() {
         </p>
       )}
 
+      {app.status === 'awaiting_signoff' ? (
+        <WaitingCard t={t} />
+      ) : (
+        decision && (
+          <DecisionCard
+            id={id}
+            decision={decision}
+            evidence={evidence as OwnerEvidence[]}
+            lang={lang}
+            t={t}
+          />
+        )
+      )}
+
       {!consented ? (
         <div className="ow-narrow">
           <ConsentCard
@@ -218,6 +235,11 @@ export default function OwnerFile() {
             summary={summary}
             busy={busy}
             progress={progress}
+            // While the lender decides, or with a loan on offer, the file stays as decided on.
+            locked={
+              app.status === 'awaiting_signoff' ||
+              (app.status === 'decided' && decision?.action === 'approve')
+            }
             onPick={onPick}
             onSample={(slug) => act('upload', () => sendSample(slug))}
             onCheck={() => act('check', () => runCheck(id))}
@@ -323,6 +345,7 @@ function Records({
   summary,
   busy,
   progress,
+  locked,
   onPick,
   onSample,
   onCheck,
@@ -333,6 +356,7 @@ function Records({
   summary: OwnerSummary | null
   busy: Busy
   progress: string | null
+  locked: boolean
   onPick: (type: EvidenceType, event: ChangeEvent<HTMLInputElement>) => void
   onSample: (slug: string) => void
   onCheck: () => void
@@ -485,7 +509,8 @@ function Records({
       {!(remembered && evidence.length === 0) && samplePicker}
 
       <div className="ow-sticky">
-        {(!summary || newSinceCheck) && (
+        {locked && <p className="ow-fine">{t.checkLocked}</p>}
+        {!locked && (!summary || newSinceCheck) && (
           <button
             className="ow-button ow-button-wide"
             onClick={onCheck}

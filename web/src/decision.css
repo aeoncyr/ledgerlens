@@ -1,0 +1,437 @@
+/*
+ * The decision loop: the officer's offer and conditions, the second sign-off, the repayment
+ * schedule, and the owner's decision card. Uses the shared tokens in index.css.
+ */
+
+/* --- Officer: the decision form ----------------------------------------------------------- */
+.decision fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.decision legend {
+  margin-bottom: 6px;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* The radios stay focusable for keyboards; the whole card shows the focus. */
+.decision .choice input {
+  display: block;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.decision .choice {
+  position: relative;
+  min-height: 44px;
+}
+
+.decision .choice:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.decision .button,
+.signoff-link .button,
+.decision .button.quiet {
+  min-height: 44px;
+}
+
+.decision-offer,
+.decision-conditions {
+  display: grid;
+  gap: 12px;
+}
+
+.decision-offer label,
+.decision-conditions label {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.decision-conditions ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.decision-conditions li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 220px) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.decision-conditions .button {
+  justify-self: start;
+}
+
+.decision-suggest {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.instalment-preview {
+  padding: 12px 14px;
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--insufficient);
+  background: var(--paper);
+}
+
+.instalment-preview.within {
+  border-left-color: var(--verified);
+}
+
+.instalment-preview.above {
+  border-left-color: var(--inconsistent);
+}
+
+.instalment-preview dl,
+.offer-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px 20px;
+  margin: 0 0 6px;
+}
+
+.instalment-preview dt,
+.offer-figures dt {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.instalment-preview dd,
+.offer-figures dd {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.offer-flag {
+  display: block;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.offer-figures dd.above {
+  color: var(--inconsistent);
+}
+
+.offer-figures dd.within {
+  color: var(--verified);
+}
+
+.instalment-preview .fine {
+  margin: 0;
+}
+
+.decision-returned,
+.decision-earlier {
+  margin: 0;
+  padding: 10px 14px;
+  border-left: 4px solid var(--brass);
+  background: #f4ead2;
+  color: #4a3c17;
+}
+
+.decision-earlier {
+  border-left-color: var(--partial);
+  background: #eef2f9;
+  color: var(--ink-soft);
+}
+
+/* --- Officer: waiting for sign-off, the outcome, the reviewer ----------------------------- */
+.decision.waiting {
+  border-top-color: var(--brass);
+}
+
+.decision.signoff {
+  border-top-color: var(--partial);
+}
+
+.decision h3 {
+  margin: 8px 0 4px;
+  font-size: 18px;
+}
+
+.signoff-link {
+  display: grid;
+  gap: 6px;
+}
+
+.signoff-link label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.signoff-link input {
+  flex: 1 1 260px;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+.signoff-link strong {
+  letter-spacing: 0.08em;
+}
+
+.decision-condition-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.decision-condition-list li.met {
+  color: var(--verified);
+}
+
+.decision-sent {
+  display: grid;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+
+.decision-letter {
+  padding: 12px 16px;
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--brand);
+  background: var(--paper);
+}
+
+.decision-letter p {
+  margin: 8px 0 0;
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.decision-letter-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.decision-letter-lang {
+  display: flex;
+  gap: 4px;
+}
+
+.decision-letter-lang button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.decision-letter-lang button[aria-pressed='true'] {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+
+.audit-row.by-second-person::after {
+  border-color: var(--partial);
+}
+
+/* --- The repayment schedule (both apps) --------------------------------------------------- */
+.offer-schedule summary {
+  min-height: 44px;
+  padding: 10px 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.offer-schedule-scroll {
+  overflow-x: auto;
+}
+
+.offer-schedule table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.offer-schedule caption {
+  padding-bottom: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: left;
+}
+
+.offer-schedule th,
+.offer-schedule td {
+  padding: 6px 10px 6px 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.offer-schedule th:first-child {
+  text-align: left;
+}
+
+.offer-schedule thead th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* --- Owner: the decision card --------------------------------------------------------------- */
+.ow-decision {
+  border-top: 4px solid var(--brand);
+}
+
+.ow-decision-waiting {
+  border-top-color: var(--brass);
+}
+
+.ow-decision-decline {
+  border-top-color: var(--insufficient);
+}
+
+.ow-letter {
+  margin: 0 0 16px;
+}
+
+.ow-letter blockquote {
+  margin: 4px 0 0;
+  padding: 12px 14px;
+  border-left: 4px solid var(--brass);
+  border-radius: var(--radius);
+  background: var(--ow-warm, #fbf8f1);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.ow-offer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 8px;
+}
+
+.ow-offer dt {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.ow-offer dd {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ow-offer .ow-offer-main {
+  grid-column: 1 / -1;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--ow-green-soft, #e6efe9);
+}
+
+.ow-offer .ow-offer-main dd {
+  font-size: 28px;
+  color: var(--verified);
+}
+
+.ow-schedule {
+  margin: 4px 0 8px;
+}
+
+.ow-decision-actions {
+  margin-top: 16px;
+}
+
+.ow-decision-actions .ow-confirm p {
+  margin: 0 0 10px;
+}
+
+.ow-decision-answer {
+  align-items: center;
+}
+
+.ow-conditions {
+  margin-top: 8px;
+}
+
+.ow-conditions ul {
+  display: grid;
+  gap: 10px;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ow-conditions li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ow-conditions li p {
+  margin: 0;
+}
+
+.ow-condition-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #b9c0bb;
+  border-radius: 50%;
+}
+
+.ow-condition-met .ow-condition-mark {
+  border-color: var(--verified);
+  background: var(--verified);
+  color: #ffffff;
+}
+
+.ow-condition-done {
+  font-weight: 600;
+  color: var(--verified);
+}
+
+.ow-conditions .ow-button-quiet {
+  min-height: 44px;
+  padding: 8px 14px;
+  font-size: 15px;
+}
+
+@media (max-width: 640px) {
+  .decision-conditions li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

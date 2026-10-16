@@ -280,7 +280,8 @@
   white-space: nowrap;
 }
 
-.ow-pill-draft {
+.ow-pill-draft,
+.ow-pill-awaiting_signoff {
   background: var(--ow-brass-soft);
   color: #5b4a1f;
 }
