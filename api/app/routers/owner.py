@@ -27,6 +27,8 @@ from app.store import get_firestore
 
 router = APIRouter(prefix="/api", tags=["owner"])
 
+LINK_GONE = "This link no longer works. The owner may have stopped sharing; ask them for a new one."
+
 Db = Annotated[firestore.AsyncClient, Depends(get_firestore)]
 CurrentUser = Annotated[User, Depends(current_user)]
 
@@ -111,17 +113,25 @@ async def open_shared_file(code: str, user: CurrentUser, db: Db) -> ClaimRespons
     """A lender's officer opens a file an owner shared with them."""
     share_doc = await db.collection("shares").document(code.strip().upper()).get()
     if not share_doc.exists:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "This share link is not valid any more")
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            LINK_GONE,
+        )
     application_id = share_doc.to_dict()["applicationId"]
     ref = db.collection("applications").document(application_id)
     snapshot = await ref.get()
     data = snapshot.to_dict() if snapshot.exists else None
     if not data:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "This share link is not valid any more")
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            LINK_GONE,
+        )
     holder = data.get("officerUid")
     if holder and holder != user.uid:
         raise HTTPException(
-            status.HTTP_409_CONFLICT, "This file is already with another lender's officer"
+            status.HTTP_409_CONFLICT,
+            "Another loan officer has already opened this file. Only one lender can hold it "
+            "at a time.",
         )
     if not holder:
         await ref.update(

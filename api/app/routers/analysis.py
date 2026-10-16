@@ -94,7 +94,10 @@ async def analyze(
     if not (data.get("consent") or {}).get("given"):
         raise HTTPException(status.HTTP_409_CONFLICT, "Record the owner's consent first")
     if _is_running(data):
-        raise HTTPException(status.HTTP_409_CONFLICT, "An analysis is already running")
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "A check is already running on this file. Wait for it to finish.",
+        )
 
     items = []
     async for snapshot in ref.collection("evidence").stream():
@@ -109,7 +112,7 @@ async def analyze(
             )
         )
     if not items:
-        raise HTTPException(status.HTTP_409_CONFLICT, "Add some evidence first")
+        raise HTTPException(status.HTTP_409_CONFLICT, "Add at least one record before checking.")
 
     settings = get_settings()
     await claim_run(db, user.uid, settings)
@@ -147,7 +150,10 @@ async def answer_follow_up(
     snapshot = await memo_ref.get()
     findings = (snapshot.to_dict() or {}).get("findings", []) if snapshot.exists else []
     if not 0 <= index < len(findings) or not findings[index].get("followUpQuestion"):
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "There is no such question")
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            "We can't find that question. Refresh the page to see the current ones.",
+        )
     question = findings[index]["followUpQuestion"]
 
     answer: dict[str, Any] = {"answerBy": role_of(data, user), "declined": False}
@@ -163,7 +169,8 @@ async def answer_follow_up(
         if not spoken.audible:
             raise HTTPException(
                 status.HTTP_422_UNPROCESSABLE_CONTENT,
-                "The recording could not be understood; please record it again",
+                "We couldn't make out the recording. Try again somewhere quieter, "
+                "or type the answer.",
             )
         answer.update(
             answer=spoken.transcript, answerEn=spoken.transcript_en, answerAudio=body.audio_path
@@ -207,12 +214,15 @@ async def confirm_reading(
     context_ref = ref.collection("memo").document("context")
     saved = await context_ref.get()
     if not saved.exists:
-        raise HTTPException(status.HTTP_409_CONFLICT, "Run the analysis first")
+        raise HTTPException(status.HTTP_409_CONFLICT, "Check the evidence first.")
     context = Context.model_validate(saved.to_dict())
     extraction = context.extractions.get(evidence_id) or {}
     disputed = {d["line"] for d in extraction.get("disagreements", [])}
     if body.line not in disputed:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "That line is not in dispute")
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            "Both readings of that line already agree, so there is nothing to confirm.",
+        )
 
     confirmed = {k: dict(v) for k, v in context.confirmed.items()}
     confirmed.setdefault(evidence_id, {})[str(body.line)] = body.amount_rp
@@ -259,11 +269,14 @@ async def reverify(
     """Check the file again with the owner's answers, without reading the evidence again."""
     ref, data = await _owned_application(db, application_id, user, EITHER)
     if _is_running(data):
-        raise HTTPException(status.HTTP_409_CONFLICT, "An analysis is already running")
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "A check is already running on this file. Wait for it to finish.",
+        )
     memo = await ref.collection("memo").document("current").get()
     saved = await ref.collection("memo").document("context").get()
     if not (memo.exists and saved.exists):
-        raise HTTPException(status.HTTP_409_CONFLICT, "Run the analysis first")
+        raise HTTPException(status.HTTP_409_CONFLICT, "Check the evidence first.")
     context = Context.model_validate(saved.to_dict())
     answers = [
         {
@@ -283,7 +296,7 @@ async def reverify(
     if new_answers and context.round >= MAX_FOLLOW_UP_ROUNDS:
         raise HTTPException(
             status.HTTP_409_CONFLICT,
-            "The owner has been asked twice; collect more evidence instead",
+            "The owner has already answered two rounds of questions. Ask for more records instead.",
         )
     await claim_run(db, user.uid, get_settings())
     context = context.model_copy(
@@ -347,10 +360,15 @@ async def _run(
         if isinstance(exc, GeminiQuotaExhausted):
             raise HTTPException(
                 status.HTTP_503_SERVICE_UNAVAILABLE,
-                "Gemini's free daily quota is used up for today. It resets at 07:00 UTC; the "
-                "sample files on the home page show finished analyses meanwhile.",
+                "Gemini's free daily quota is used up for today. It resets at midnight Pacific "
+                "time (early afternoon in Jakarta); the sample files on the home page are always "
+                "open.",
             ) from exc
-        raise HTTPException(status.HTTP_502_BAD_GATEWAY, "The analysis failed; try again") from exc
+        raise HTTPException(
+            status.HTTP_502_BAD_GATEWAY,
+            "The check stopped partway, usually because Gemini was busy. Nothing is lost: "
+            "run it again in a minute.",
+        ) from exc
 
     for evidence_id, extraction in result.extractions.items():
         await (

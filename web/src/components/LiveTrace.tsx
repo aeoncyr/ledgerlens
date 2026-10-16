@@ -144,7 +144,21 @@ export default function LiveTrace({ run }: { run: Run | null }) {
           takes one to three minutes.
         </p>
       )}
-      {run.state === 'failed' && <p className="error">The analysis failed: {run.error}</p>}
+      {run.state === 'failed' && (
+        <div className="error" role="alert">
+          <p>
+            {/quota|RESOURCE_EXHAUSTED|429/i.test(run.error ?? '')
+              ? 'Gemini’s free daily quota ran out, so the check stopped. It comes back at midnight Pacific time (early afternoon in Jakarta). Nothing is lost; the sample files stay open meanwhile.'
+              : 'The check stopped partway, usually because Gemini was busy. Nothing is lost: run it again in a minute.'}
+          </p>
+          {run.error && (
+            <details>
+              <summary>Technical detail</summary>
+              <code>{run.error}</code>
+            </details>
+          )}
+        </div>
+      )}
     </div>
   )
 }

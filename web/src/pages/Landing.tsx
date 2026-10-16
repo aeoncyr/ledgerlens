@@ -65,18 +65,25 @@ const SAMPLE_NOTE: Record<string, string> = {
 function HeroVisual() {
   return (
     <div className="hero-visual" aria-hidden="true">
-      <img
-        className="hv-page"
-        src="/specimen/bu-sari-page-1.webp"
-        width={720}
-        height={1018}
-        alt=""
-      />
+      <div className="hv-page">
+        <img src="/specimen/bu-sari-page-1.webp" width={720} height={1018} alt="" />
+        {/* A pen mark, as an officer checking the page would make: drawn in the photo's own
+            coordinates so it stays on line 16 whatever the size. */}
+        <svg className="hv-mark" viewBox="0 0 720 1018" preserveAspectRatio="none">
+          <path
+            className="hv-loop"
+            pathLength={100}
+            d="M 140 726 C 300 712, 640 714, 700 740 C 730 756, 690 782, 520 784 C 330 788, 110 786, 88 762 C 72 744, 110 728, 200 722"
+          />
+          <path className="hv-pen" d="M 74 742 C 40 700, 34 580, 56 500" />
+          <path className="hv-pen" d="M 56 500 L 40 522 M 56 500 L 68 524" />
+        </svg>
+      </div>
       <div className="hv-chip hv-chip-a">
-        <span className="hv-written">“2,1jt”</span>
+        <span className="hv-written">“2,3 jt”</span>
         <span className="hv-arrow">→</span>
-        <strong>Rp 2.100.000</strong>
-        <small>Notebook page 1 · line 7</small>
+        <strong>Rp 2.300.000</strong>
+        <small>Notebook page 1 · line 16</small>
       </div>
       <div className="hv-chip hv-chip-b">
         <span className="hv-wave" />

@@ -25,15 +25,16 @@ async def claim_run(db: firestore.AsyncClient, uid: str, settings: Settings) -> 
     if mine >= settings.runs_per_user_per_day:
         raise HTTPException(
             status.HTTP_429_TOO_MANY_REQUESTS,
-            f"You have run {mine} analyses today, the demo's limit per visitor. The three sample "
-            "files on the home page show finished analyses at any time.",
+            f"You've used all {mine} checks this browser gets today. The checks run on Gemini's "
+            "free tier, so the demo has a daily limit. It resets at midnight UTC (07:00 in "
+            "Jakarta); the sample files on the home page are always open.",
         )
     if usage["total"] >= settings.runs_per_day:
         raise HTTPException(
             status.HTTP_429_TOO_MANY_REQUESTS,
-            "Today's demo capacity is used up (the prototype runs on Gemini's free tier). It "
-            "resets at 07:00 UTC; meanwhile the sample files on the home page show finished "
-            "analyses.",
+            "Today's demo checks are used up: LedgerLens runs on Gemini's free tier, which has a "
+            "daily limit. It resets at midnight UTC (07:00 in Jakarta); the sample files on the "
+            "home page are always open.",
         )
     usage["total"] += 1
     usage["byUser"][uid] = mine + 1

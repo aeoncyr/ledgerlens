@@ -218,7 +218,10 @@ const EN = {
   stepWorking: 'Working',
   stepFailed: 'Problem',
   stepNext: 'Waiting',
-  checkFailed: 'The check stopped before it finished.',
+  checkFailed:
+    'The check stopped before it finished, usually because Gemini was busy. Nothing you sent is lost: check again in a minute.',
+  checkQuota:
+    'Today’s free checking capacity is used up. It comes back in the early afternoon, Jakarta time, and your records are saved.',
 
   // Summary
   summaryTitle: 'Your summary',
@@ -248,6 +251,20 @@ const EN = {
   shareLead:
     'Send this link to the loan officer at your bank, koperasi or BPR. They see your records and what was checked. You can stop sharing at any time.',
   shareButton: 'Create my share link',
+  shareSeesTitle: 'The loan officer will see',
+  shareSees: [
+    'Your notebook pages, receipts, QRIS screenshots, photos and interview',
+    'What LedgerLens read from them, and what it checked',
+    'Your answers to the questions',
+    'Your monthly cash flow and the largest instalment it supports',
+  ],
+  shareNotTitle: 'They will not see',
+  shareNot: [
+    'Your legal name or ID number: we never ask for them',
+    'Your other files',
+    'Anything at all once you stop sharing',
+  ],
+  shareOneLender: 'One lender at a time: the first loan officer to open your link holds the file.',
   sharing: 'Creating…',
   shareLinkLabel: 'Your share link',
   shareCodeLabel: 'Or read out this code',
@@ -451,7 +468,10 @@ const ID: OwnerStrings = {
   stepWorking: 'Sedang berjalan',
   stepFailed: 'Bermasalah',
   stepNext: 'Menunggu',
-  checkFailed: 'Pemeriksaan berhenti sebelum selesai.',
+  checkFailed:
+    'Pemeriksaan berhenti sebelum selesai, biasanya karena Gemini sedang sibuk. Tidak ada yang hilang: periksa lagi sebentar lagi.',
+  checkQuota:
+    'Kapasitas pemeriksaan gratis hari ini sudah habis. Tersedia lagi siang hari waktu Jakarta, dan catatan Anda tetap tersimpan.',
 
   summaryTitle: 'Ringkasan Anda',
   summaryLead: 'Ditulis untuk Anda, dari catatan yang Anda kirim.',
@@ -479,6 +499,20 @@ const ID: OwnerStrings = {
   shareLead:
     'Kirim tautan ini ke petugas kredit di bank, koperasi atau BPR Anda. Mereka melihat catatan Anda dan hasil pemeriksaannya. Anda bisa berhenti berbagi kapan saja.',
   shareButton: 'Buat tautan berbagi',
+  shareSeesTitle: 'Yang akan dilihat petugas kredit',
+  shareSees: [
+    'Foto buku catatan, nota, tangkapan layar QRIS, foto usaha dan wawancara Anda',
+    'Apa yang dibaca LedgerLens dari semua itu, dan apa yang diperiksa',
+    'Jawaban Anda atas pertanyaan',
+    'Arus kas bulanan Anda dan cicilan terbesar yang sanggup ditanggung',
+  ],
+  shareNotTitle: 'Yang tidak akan mereka lihat',
+  shareNot: [
+    'Nama lengkap atau NIK Anda: kami tidak pernah memintanya',
+    'Berkas Anda yang lain',
+    'Apa pun setelah Anda berhenti berbagi',
+  ],
+  shareOneLender: 'Satu pemberi pinjaman sekaligus: petugas kredit pertama yang membuka tautan Anda memegang berkasnya.',
   sharing: 'Membuat…',
   shareLinkLabel: 'Tautan berbagi Anda',
   shareCodeLabel: 'Atau bacakan kode ini',

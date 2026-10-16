@@ -186,6 +186,11 @@ export function useOwnerSummary(id: string): Live<OwnerSummary | null> {
   return state
 }
 
+/** True when a failed run stopped because Gemini's free daily quota ran out, not a passing error. */
+export function isQuotaError(error?: string | null): boolean {
+  return !!error && /quota|RESOURCE_EXHAUSTED|429/i.test(error)
+}
+
 /** Turn any thrown value into the message the API sent (its `detail`), or a plain one. */
 export function errorText(error: unknown): string {
   return error instanceof Error ? error.message : String(error)

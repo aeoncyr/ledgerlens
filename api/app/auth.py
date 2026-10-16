@@ -37,12 +37,16 @@ async def current_user(
     credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(_bearer)],
 ) -> User:
     if credentials is None:
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Missing bearer token")
+        raise HTTPException(
+            status.HTTP_401_UNAUTHORIZED, "You're not signed in. Refresh the page to continue."
+        )
     try:
         claims = await run_in_threadpool(
             firebase_auth.verify_id_token, credentials.credentials, _firebase_app()
         )
     except Exception as exc:  # invalid, expired or revoked token
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid token") from exc
+        raise HTTPException(
+            status.HTTP_401_UNAUTHORIZED, "Your session has expired. Refresh the page to continue."
+        ) from exc
     provider = claims.get("firebase", {}).get("sign_in_provider")
     return User(uid=claims["uid"], anonymous=provider == "anonymous")

@@ -5,6 +5,7 @@ import {
   addEvidence,
   answerQuestion,
   errorText,
+  isQuotaError,
   recheck,
   recordConsent,
   rememberedSample,
@@ -181,7 +182,7 @@ export default function OwnerFile() {
         <>
           {run?.state === 'failed' && (
             <p className="ow-error" role="alert">
-              {t.checkFailed} {run.error}
+              {isQuotaError(run.error) ? t.checkQuota : t.checkFailed}
             </p>
           )}
           {summary && (
@@ -564,7 +565,7 @@ function Checking({ run, t }: { run: Run | null; t: OwnerStrings }) {
       </ol>
       {run?.state === 'failed' && (
         <p className="ow-error" role="alert">
-          {t.checkFailed} {run.error}
+          {isQuotaError(run.error) ? t.checkQuota : t.checkFailed}
         </p>
       )}
     </section>
@@ -806,6 +807,25 @@ function ShareCard({ app, t }: { app: OwnerApplication; t: OwnerStrings }) {
         {t.shareTitle}
       </h2>
       <p>{t.shareLead}</p>
+      <div className="ow-share-scope">
+        <div>
+          <h3>{t.shareSeesTitle}</h3>
+          <ul className="ow-scope-yes">
+            {t.shareSees.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3>{t.shareNotTitle}</h3>
+          <ul className="ow-scope-no">
+            {t.shareNot.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <p>{t.shareOneLender}</p>
+      </div>
       {!code ? (
         <button className="ow-button ow-button-wide ow-button-light" onClick={create} disabled={!!busy}>
           {busy === 'share' ? t.sharing : t.shareButton}

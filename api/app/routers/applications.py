@@ -59,7 +59,10 @@ async def _owned_application(
     snapshot = await ref.get()
     data = snapshot.to_dict() if snapshot.exists else None
     if not data or role_of(data, user) not in roles:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Application not found")
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            "We can't find this file. The link may be wrong, or it was removed.",
+        )
     return ref, data
 
 
@@ -182,7 +185,9 @@ async def record_decision(
         ApplicationStatus.IN_REVIEW,
     )
     if data.get("status") not in {s.value for s in decidable}:
-        raise HTTPException(status.HTTP_409_CONFLICT, "Only analysed applications can be decided")
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, "Check the evidence before recording a decision."
+        )
     new_status = (
         ApplicationStatus.COLLECTING
         if body.action is DecisionAction.REQUEST_MORE
