@@ -4,8 +4,10 @@
 
 LedgerLens turns the evidence a small business already has (handwritten notebook pages, QRIS payment
 history, supplier receipts, photos of the shop and a short interview with the owner) into a verified credit
-file that a loan officer can trust. Every number in the file links back to the photo it came from, and a
-human always makes the lending decision.
+file that a loan officer can trust. It has two sides. A business owner can build the file on their own phone,
+see what it confirms and what is still missing, and share it with one lender of their choice; a loan officer
+can open that shared file, or build one on a visit. Every number in the file links back to the photo it came
+from, and a human at the lender always makes the decision.
 
 **Live prototype: [ledger-lens-511708.web.app](https://ledger-lens-511708.web.app)**. There is no login
 wall: the app signs you in anonymously in the background.
@@ -14,24 +16,37 @@ wall: the app signs you in anonymously in the background.
 > Fraud & Financial Experiences). Every business, notebook and receipt in the prototype is fictional.
 
 <p align="center">
-  <img src="assets/screens/landing.png" width="820" alt="LedgerLens landing page with a verified sample credit file for Warung Bu Sari">
+  <img src="assets/screens/landing.png" width="820" alt="LedgerLens landing page with two doors, I run a business and I'm a loan officer, beside a notebook page and a verified credit file for Warung Bu Sari">
 </p>
 
 ### Try it in two minutes
 
-1. **Read a finished credit file.** Open the [Warung Makan Hendra sample](https://ledger-lens-511708.web.app/samples/pak-hendra),
+There are three ways in. The first needs no waiting at all; the other two run the real analysis with Gemini.
+
+1. **Open a finished credit file.** Open the [Warung Makan Hendra sample](https://ledger-lens-511708.web.app/samples/pak-hendra),
    a food stall whose notebook claims far more than its purchases can support. Click any citation, such as
    *Notebook page 1, line 2*, to see the photographed page beside what Gemini read from it, with that line
    highlighted, or *Interview, 0:04* to hear the owner put his daily sales at a third of what his notebook
    claims. The other two samples are [Warung Bu Sari](https://ledger-lens-511708.web.app/samples/bu-sari)
    (verified) and [Penjahit Pak Joko](https://ledger-lens-511708.web.app/samples/pak-joko) (partially
    verified). These files were analysed in advance, so they open instantly.
-2. **Run one yourself as a loan officer** (about five minutes, most of it waiting on the free tier):
-   go to [/app/new](https://ledger-lens-511708.web.app/app/new), choose **Start from a sample business**, then
-   **Create and continue to consent** and **Record consent and continue**. On the evidence page, press
-   **Add these records** to upload that business's two months of photos, then **Run the analysis** and watch
-   the agents work. When the file is ready, type an answer under a question for the owner and press
-   **Re-check with the owner's answers**. Finish by recording a decision with a written reason.
+2. **Be the business owner** (on a phone if you have one; about five minutes, most of it waiting on the free
+   tier): go to [/owner](https://ledger-lens-511708.web.app/owner) and pick a business under **Try with a
+   sample business**. Press **Continue**, read who will see your file and agree with **I agree, let's start**,
+   then press **Add these sample records** and **Check my records**. When the check is done, read the summary
+   written for you, answer a question if you like, and press **Create my share link**. You get a link and an
+   8-character code to give a lender.
+3. **Be the loan officer.** Open the owner's share link in another browser or a private window, as a lender
+   would on their own device (or type the code on the [Applications](https://ledger-lens-511708.web.app/app)
+   page). The full credit file joins your list, marked *Shared by owner*. To try the officer-led flow
+   instead, go to [/app/new](https://ledger-lens-511708.web.app/app/new), choose **Start from a sample
+   business**, then **Create and continue to consent** and **Record consent and continue**. On the evidence
+   page, press **Add these records**, then **Run the analysis** and watch the agents work. When the file is
+   ready, type an answer under a question for the owner, press **Re-check with the owner's answers**, and
+   finish by recording a decision with a written reason.
+
+The demo runs on Gemini's free tier, so it has daily limits for the judging period: 35 analyses or re-checks
+a day across the site and 6 per visitor. Beyond that, the three sample files always open.
 
 ---
 
@@ -78,10 +93,16 @@ Indonesia's financial services authority, OJK, now requires lenders to make smal
 
 ## What LedgerLens does
 
-1. **Capture.** With the owner's consent, recorded on screen in Bahasa Indonesia and English, a loan officer
-   adds whatever records the business has: QRIS or e-wallet history, supplier receipts, notebook pages, a
-   short interview recording and photos of the shop. An evidence-strength meter shows how much the file can
-   prove before anything is analysed.
+LedgerLens has two sides that meet in one credit file. **Business owners** use a phone-first app, in English
+with a one-tap switch to Bahasa Indonesia, to photograph their own records, check them and see what they
+prove before they ever talk to a lender. **Lenders' loan officers** receive that file through a share link
+the owner chooses to send, or build a file themselves on a visit. Either way, the same Gemini pipeline does
+the work:
+
+1. **Capture.** With the owner's consent, either the owner sends records from their phone camera or a loan
+   officer captures them on a visit: QRIS or e-wallet history, supplier receipts, notebook pages, a short
+   voice note or interview recording and photos of the shop. Each item remembers who captured it. On the
+   officer's side, an evidence-strength meter shows how much the file can prove before anything is analysed.
 2. **Read.** Gemini agents read every item in parallel: messy handwriting and local shorthand (such as
    *"1,2jt"* for Rp 1.2 million), QRIS screenshots, receipts, shop photos and spoken Bahasa. Each notebook
    page is read twice and the two readings are compared.
@@ -89,11 +110,18 @@ Indonesia's financial services authority, OJK, now requires lenders to make smal
    runs arithmetic checks, such as "the QRIS rows can't add up to more than the printed total".
 4. **Cross-check.** A verifier compares the sources against each other. If the notebook claims several times
    what QRIS and supplier receipts support, that becomes a finding, with citations to the exact lines.
-5. **Ask.** Where an owner could explain a gap, LedgerLens writes a polite question in Bahasa. The officer
-   types the owner's answer and the file is checked again, just as a good credit officer would do it.
+5. **Ask.** Where an owner could explain a gap, LedgerLens writes a polite question in Bahasa. The owner can
+   answer it on their phone, or the officer types the answer on a visit, and the file is checked again, just
+   as a good credit officer would do it.
 6. **Cite and decide.** The file ends in a credit memo in the 5C format lenders already use (Character,
-   Capacity, Capital, Collateral, Conditions) and a summary for the owner in Bahasa. Every figure links to its
-   evidence, and the officer records the decision with a written reason.
+   Capacity, Capital, Collateral, Conditions) and a summary written for the owner in English and Bahasa.
+   Every figure links to its evidence, and the officer records the decision with a written reason.
+
+The two sides see different things on purpose. The owner sees their records, a plain summary of what could be
+confirmed and what is still missing, three tips to make the file stronger and the questions put to them. The
+lender sees the full credit file: the findings, every figure with its source, the outcome and the 5C memo.
+The owner never sees the officer's findings, figures or outcome label, so the summary can coach them without
+becoming a verdict.
 
 ## What it is not
 
@@ -114,6 +142,18 @@ When LedgerLens is unsure, the business is no worse off than it is today.
 
 All screenshots are of the deployed prototype, with fictional businesses.
 
+**The business owner's side**, on a phone:
+
+<table>
+  <tr>
+    <td width="33%" valign="top"><img src="assets/screens/owner-home.png" alt="The owner's home page: Show a lender what your notebook already proves, with three steps and a Start my file button"><br><sub><b>Start a file.</b> Three steps, no account or password, and sample businesses to try.</sub></td>
+    <td width="33%" valign="top"><img src="assets/screens/owner-summary.png" alt="The owner's summary for Warung Makan Hendra: what we could confirm, what's still missing and three tips"><br><sub><b>A summary for the owner.</b> What was confirmed, what is still missing and how to make the file stronger.</sub></td>
+    <td width="33%" valign="top"><img src="assets/screens/owner-share.png" alt="Share with a lender: a share link, Copy link and Send on WhatsApp buttons, an 8-character code and Stop sharing"><br><sub><b>Share with one lender.</b> A link or a code, also via WhatsApp, and sharing can be stopped at any time.</sub></td>
+  </tr>
+</table>
+
+**The lender's side**, in the officer app:
+
 <table>
   <tr>
     <td width="50%"><img src="assets/screens/evidence.png" alt="Evidence step with an evidence-strength meter and a sample business's records"><br><sub><b>Collect the evidence.</b> Each kind of evidence is marked hard, medium or soft, and the strength meter explains what the file can prove. A sample business's records can be added in one click.</sub></td>
@@ -130,8 +170,8 @@ All screenshots are of the deployed prototype, with fictional businesses.
 </table>
 
 <p align="center">
-  <img src="assets/screens/landing-phone.png" width="240" alt="The landing page at phone width"><br>
-  <sub>The app works at phone width, since officers work in the field.</sub>
+  <img src="assets/screens/landing-phone.png" width="240" alt="The landing page at phone width, with the I run a business and I'm a loan officer doors"><br>
+  <sub>Both sides work at phone width: owners use their own phones, and officers work in the field.</sub>
 </p>
 
 ## How it works
@@ -140,7 +180,7 @@ All screenshots are of the deployed prototype, with fictional businesses.
 
 ```mermaid
 flowchart LR
-    B["Officer's browser<br/>React app on Firebase Hosting<br/>anonymous Firebase Auth"] -- "/api calls" --> R["Cloud Run API (Jakarta)<br/>FastAPI + Gemini agents"]
+    B["Owner's phone or officer's browser<br/>React app on Firebase Hosting<br/>anonymous Firebase Auth"] -- "/api calls" --> R["Cloud Run API (Jakarta)<br/>FastAPI + Gemini agents"]
     R -- "prompts, structured output" --> G["Gemini<br/>Gemini Developer API"]
     B -- "uploads photos and audio" --> S[("Cloud Storage for Firebase<br/>United States")]
     R -- "reads evidence" --> S
@@ -148,9 +188,43 @@ flowchart LR
     F -- "live updates" --> B
 ```
 
-When the officer runs the analysis, the whole pipeline runs inside that one Cloud Run request. Each agent
-writes its progress to Firestore as it goes, and the app listens to that document, so the officer watches
-every step finish live. Browsers can only read from Firestore; every write goes through the API.
+When the owner or the officer starts a check, the whole pipeline runs inside that one Cloud Run request. Each
+agent writes its progress to Firestore as it goes, and the app listens to that document, so either side
+watches every step finish live. Browsers can only read from Firestore; every write goes through the API.
+
+### Two sides and the handover
+
+```mermaid
+flowchart LR
+    O["Business owner<br/>/owner on a phone"] -- "consent, records,<br/>Check my records" --> P["Same Gemini pipeline"]
+    P -- "summary, tips, questions" --> O
+    O -- "share link or<br/>8-character code" --> L["Loan officer<br/>/app/shared/{code}"]
+    P -- "full credit file" --> L
+    L -- "decision with a written reason" --> A[("Audit log")]
+```
+
+- **The owner holds the file.** An owner starts it at `/owner`, agrees to the consent text, sends records by
+  camera and runs **Check my records**. Their files are linked to the browser that started them, and nobody
+  else sees them until the owner shares.
+- **The handover is a share link.** **Create my share link** gives a link and an 8-character code, which the
+  owner can send by WhatsApp or read out. A loan officer opens it at `/app/shared/{code}`, or types the code
+  on the Applications page, and the file joins their list marked *Shared by owner*. Every item the owner
+  sent is tagged *sent by owner*. The owner's page then shows that a lender has opened it, and the owner can
+  stop sharing at any time.
+- **One lender at a time.** Once one officer has opened a link, a second officer opening the same link is
+  refused.
+- **Evidence the owner sends counts for less.** A photo taken by the owner is weaker evidence than one an
+  officer captures on a visit, and the verifier is told who captured each item. If the only QRIS history in
+  a file was sent by the owner, code adds a finding that asks the officer to confirm it in the merchant app,
+  so an owner-only file can be at most *Partially verified* until an officer has done so.
+- **Each side reads only its part.** The API and the Firestore security rules enforce it: the owner can read
+  their file, their evidence, the progress of a check and the summary written for them, while the lender's
+  memo, findings and audit log are for the officer only.
+- **No marketplace, on purpose.** LedgerLens has no lender directory and does not match borrowers with
+  lenders. In Indonesia, matching a borrower with several lenders or passing a credit file among lenders is
+  regulated by OJK, the financial services authority, through its rules for loan aggregators and credit
+  information providers (LPIP). So the owner holds the file and chooses one lender at a time, and LedgerLens
+  stays a tool that a single lender uses with the owner's permission.
 
 ### The agent pipeline
 
@@ -168,19 +242,23 @@ flowchart LR
 
 - **Readers** transcribe, they don't interpret. Each returns schema-validated JSON in which every amount
   carries a locator (a page and line, a receipt total or a QRIS row). Each notebook page is read twice;
-  where the two readings disagree, that becomes a finding for the officer to check.
+  where the two readings disagree, that becomes a finding for the officer to check. Owner and officer files
+  go through the same readers.
 - **The calculator** is plain Python: it parses rupiah shorthand, builds monthly cash flow and runs
   arithmetic checks across the sources.
 - **The verifier** (Gemini) cross-checks the sources, cites every finding and writes polite follow-up
-  questions in Bahasa.
+  questions in Bahasa. It is told whether the owner or an officer captured each item, and says so when a
+  conclusion rests only on what the owner sent.
 - **Lender policy** is plain Python: it sets the outcome, applies a haircut to cash flow and computes the
   largest instalment the policy allows.
-- **The memo writer** (Gemini) writes the 5C memo and the owner summary.
+- **The memo writer** (Gemini) writes the 5C memo for the lender and, separately, the owner's summary:
+  what could be confirmed, what is still missing and three tips.
 - **The model never produces a number.** The verifier and memo writer may refer to a figure only as a
   `[[key]]` placeholder, such as `[[revenue_low]]`, which code fills in from the calculator's fact table. A
   guard rejects any number the model writes itself: the agent is asked once more, and anything still stray
   is scrubbed.
-- **The follow-up loop.** The officer types the owner's answers and the file is checked again. Only the
+- **The follow-up loop.** The owner answers on their phone, or the officer types the owner's answers, and
+  the file is checked again. Only the
   verifier, policy and memo writer run; the evidence is not read again. An answer can explain a point, but
   code never lets it clear a material contradiction in the figures. The owner can be asked at most twice.
 - **The evidence viewer.** Every citation in the credit file opens the evidence photo beside what the reader
@@ -193,14 +271,14 @@ flowchart LR
 | --- | --- |
 | **Gemini** | Reads handwriting, QRIS screenshots, receipts, shop photos and Bahasa audio; cross-checks the sources; writes the follow-up questions, the 5C memo and the owner summary, always as schema-validated JSON. The prototype calls the Gemini Developer API (Google AI Studio) on its free tier, with a chain of models per role |
 | **Cloud Run** (Jakarta, `asia-southeast2`) | Hosts our FastAPI app and the agent pipeline. An analysis runs inside its request and streams progress through Firestore; request-based billing lets the service scale to zero when idle |
-| **Firestore** (Jakarta) | Stores applications, evidence readings, runs (the live trace), the credit file and the audit log, and streams live progress to the app |
-| **Firebase** | Hosting serves the web app and forwards `/api` to Cloud Run; anonymous Auth means judges meet no login wall; Cloud Storage holds the evidence; security rules let browsers only read, and let each user upload only into their own folder |
+| **Firestore** (Jakarta) | Stores applications, evidence readings, runs (the live trace), the credit file, the owner's summary, share links and the audit log, and streams live progress to both sides |
+| **Firebase** | Hosting serves the web app and forwards `/api` to Cloud Run; anonymous Auth means judges, owners and officers meet no login wall; Cloud Storage holds the evidence; security rules let browsers only read, let each user upload only into their own folder, and keep the lender's findings, memo and audit log away from the owner |
 
 ## Tech stack
 
 | Layer | What we use | Why |
 | --- | --- | --- |
-| Web app | React 19, Vite, TypeScript, plain CSS | Mobile-first screens for the officer, plus a public landing page and sample files |
+| Web app | React 19, Vite, TypeScript, plain CSS | Phone-first screens for the business owner (English with a Bahasa Indonesia switch) and mobile-first screens for the officer, plus a public landing page and sample files |
 | Firebase SDK | `firebase` 12.19.0 | Hosting, anonymous Auth, Storage uploads, Firestore listeners |
 | Backend | Python 3.12, FastAPI on Cloud Run | Our API and the agent pipeline |
 | AI agents | Google Gen AI SDK 2.30.1, structured output with Pydantic schemas | Five readers that run in parallel; a verifier and a memo writer that may cite figures only by `[[key]]` |
@@ -216,11 +294,18 @@ keeps each agent a small, testable function with one prompt and one output schem
 
 ## Responsible AI and data
 
-- **Consent first.** The owner agrees, on screen in Bahasa Indonesia and English, before any record is
-  captured. The consent and its time are stored, and the consent text says the owner may withdraw it at any
-  time.
+- **Consent first.** The owner agrees before any record is captured: on their own phone when they start the
+  file themselves (in English or Bahasa Indonesia), or on the officer's screen in both languages during a
+  visit. The consent and its time are stored. The text says who will see the file, where the data is kept,
+  that Gemini reads it, that a person at the lender decides, and that the owner may withdraw at any time.
+- **The owner controls sharing.** A file the owner starts is seen by nobody else until they create a share
+  link, and then by one lender only. The owner can stop sharing at any time from their phone.
+- **Each side sees only its part.** The API and the Firestore security rules enforce access: the owner reads
+  their own file, evidence, progress and summary, while the lender's findings, memo and audit log are for the
+  officer only.
 - **No personal identifiers.** We store a business alias, never an owner's legal name or national ID number.
-- **Where data lives.** Records are stored in Google Cloud's Jakarta region and photos in the United States.
+- **Where data lives.** Records are stored in Google Cloud's Jakarta region and photos and voice notes in the
+  United States.
   AI reading runs on Google's global endpoint. The consent screen says all of this plainly.
 - **Prototype versus production.** To keep the hackathon prototype free to run, it calls Gemini through the
   Gemini Developer API's free tier, where Google may use inputs to improve its products. It therefore
@@ -255,6 +340,10 @@ On the free tier a full analysis of 14 to 16 items takes 30 to 220 seconds, depe
 re-check with the owner's answers needs only about 7 seconds of verifier time. The prototype runs on Gemini's
 free tier and within the free allowances of Cloud Run, Firestore and Hosting.
 
+We also ran the owner's side end to end on the live site, on a 390-pixel-wide phone screen: the Warung Makan
+Hendra sample with 17 records was checked in about 106 seconds and gave a summary with 4 questions, and a
+separate lender browser opened the share link and saw the full file, marked Inconsistent.
+
 To reproduce these results (see [`eval/README.md`](eval/README.md) and [`api/README.md`](api/README.md)):
 
 | Script | What it does |
@@ -278,6 +367,10 @@ shorthand and photo quality, and results on the team's own handwritten pages wil
 - [x] End-to-end assessment on the live URL: capture, analysis with a live trace, credit file, follow-up
   questions, decision
 - [x] Evidence viewer, published sample files and measured accuracy on synthetic and public data
+- [x] The business owner's side: an owner-held file built on a phone, with the owner's own consent, a
+  summary and questions written for them, and a check of what they send
+- [x] Sharing with one lender by link or code, which the owner can stop at any time, with evidence the owner
+  sent marked as weaker and access enforced by Firestore rules
 - [ ] Real handwriting test on the team's own pages
 - [ ] Submission: deck, demo video and the live prototype kept up for judging
 
@@ -286,16 +379,19 @@ shorthand and photo quality, and results on the team's own handwritten pages wil
 1. **Shadow pilot** with one or two rural banks for 3–6 months, running alongside their officers without
    affecting decisions.
 2. **Assisted decisions** for small loans once the pilot proves itself.
-3. **An owner-held file** the business can share with another lender or withdraw, and a credit-committee view.
+3. **A credit-committee view** for lenders, and letting an owner move their file from one lender to the next.
 4. **An API** for licensed online lenders and financing companies.
-5. **A transparent risk model**, trained only on real repayment outcomes collected with consent and tested
+5. **Reaching more than one lender** only through a licensed partner, such as a loan aggregator, if OJK's
+   rules allow it. We will not run an unlicensed marketplace.
+6. **A transparent risk model**, trained only on real repayment outcomes collected with consent and tested
    for fairness, working with a licensed alternative-credit-rating partner where regulation requires it.
 
 ## Repository layout
 
 ```
-web/                React + Vite + TypeScript app (landing page, sample files, officer app)
-  src/pages/officer/  new application, consent, evidence, analysis and the credit file
+web/                React + Vite + TypeScript app (landing page, sample files, owner app, officer app)
+  src/pages/owner/    the business owner's side: home, new file, consent, records, summary and sharing
+  src/pages/officer/  new application, consent, evidence, analysis, shared files and the credit file
   public/samples/     the published sample files and their evidence photos
 api/                Python 3.12 FastAPI app and the agent pipeline
   app/agents/         one module per agent: its prompt and output schema
