@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import Logo from './Logo.tsx'
 
-export default function SiteNav({ home = false }: { home?: boolean }) {
-  const prefix = home ? '' : '/'
+// The public site's header: one page to read, and the two apps as a matched pair of doors. Sections
+// of the landing page are reached by scrolling it, not from here.
+export default function SiteNav() {
   return (
     <nav className="masthead" aria-label="Main">
       <div className="container">
@@ -11,11 +12,10 @@ export default function SiteNav({ home = false }: { home?: boolean }) {
           LedgerLens
         </Link>
         <div className="nav-links">
-          <a href={`${prefix}#how`}>How it works</a>
-          <Link to="/ai">How the AI works</Link>
-          <a href={`${prefix}#samples`}>Sample files</a>
-          <a href={`${prefix}#accuracy`}>Accuracy</a>
-          <Link to="/owner">For business owners</Link>
+          <NavLink to="/ai">How the AI works</NavLink>
+          <Link className="nav-cta nav-cta-owner" to="/owner">
+            Business owner app
+          </Link>
           <Link className="nav-cta" to="/app">
             Officer app
           </Link>

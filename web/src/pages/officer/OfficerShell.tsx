@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import Logo from '../../components/Logo.tsx'
+import AppBar from '../../components/AppBar.tsx'
 
 export type OfficerStep = 1 | 2 | 3 | 4
 
@@ -60,28 +60,22 @@ export default function OfficerShell({
 }) {
   return (
     <>
-      <nav className="masthead" aria-label="Officer workspace">
-        <div className="container">
-          <Link to="/" className="brand">
-            <Logo />
-            LedgerLens
-          </Link>
-          <div className="nav-links">
-            <NavLink to="/app" end>
-              Applications
-            </NavLink>
-            <NavLink to="/app/new" end>
-              New application
-            </NavLink>
-            <Link to="/">About</Link>
-          </div>
-        </div>
-      </nav>
-      <aside className="prototype-note" aria-label="Prototype notice">
-        <div className="container">
-          Prototype: use fictional businesses only. Photos are read by Gemini’s free tier.
-        </div>
-      </aside>
+      <AppBar
+        app="officer"
+        appName="Loan officer app"
+        appHome="/app"
+        homeLabel="Home"
+        notice="Prototype: use fictional businesses only. Photos are read by Gemini’s free tier."
+      >
+        <nav className="appbar-nav" aria-label="Officer workspace">
+          <NavLink to="/app" end>
+            Applications
+          </NavLink>
+          <NavLink to="/app/new" end>
+            New<span className="appbar-long"> application</span>
+          </NavLink>
+        </nav>
+      </AppBar>
       <main className="container officer-page">
         <p className="crumbs">
           <Link to="/app">Applications</Link>

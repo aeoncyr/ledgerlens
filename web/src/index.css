@@ -3653,7 +3653,7 @@ textarea:focus {
 }
 
 /* The officer's current page in the masthead. */
-.masthead[aria-label='Officer workspace'] .nav-links a[aria-current='page'] {
+.appbar-nav a[aria-current='page'] {
   color: var(--brand-ink);
   box-shadow: inset 0 -2px 0 var(--brass);
 }
@@ -3774,5 +3774,167 @@ textarea:focus {
 
   .facts-table td::before {
     font-family: var(--sans);
+  }
+}
+
+/* -------------------------------------------------------------------------------------------
+ * The app bar both apps share: back to the public site, the app's name, then its own tools. The
+ * chip's colour tells the two apps apart (brass for owners, green for officers); the frame is the same.
+ * ------------------------------------------------------------------------------------------- */
+.appbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--brand-deep);
+  color: var(--brand-ink);
+  border-bottom: 3px solid var(--brass);
+}
+
+.appbar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  align-items: center;
+  /* The same height in both apps, whether the tools are links or the owner's language switch. */
+  min-height: 68px;
+  padding-block: 8px;
+}
+
+.appbar-home {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid rgb(255 255 255 / 0.22);
+  border-radius: 999px;
+  color: var(--brand-muted);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.appbar-home:hover {
+  border-color: var(--brass);
+  color: var(--brand-ink);
+}
+
+.appbar-brand {
+  display: inline-flex;
+  gap: 9px;
+  align-items: center;
+  min-height: 44px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.appbar-brand:hover {
+  color: inherit;
+}
+
+.appbar-name {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.appbar-chip {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #2f6b55;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.appbar-owner .appbar-chip {
+  background: var(--brass-light);
+  color: var(--brand-deep);
+}
+
+.appbar-tools {
+  display: flex;
+  gap: 4px 22px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.appbar-nav {
+  display: flex;
+  gap: 4px 22px;
+}
+
+.appbar-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--brand-muted);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.appbar-nav a:hover {
+  color: var(--brand-ink);
+}
+
+/* On a phone: the brand gives way, so Home, the app's name and its tools fit on one line. */
+@media (max-width: 560px) {
+  .appbar-name,
+  .appbar-home-label,
+  .appbar-long {
+    display: none;
+  }
+
+  .appbar-inner {
+    flex-wrap: nowrap;
+  }
+
+  .appbar-home {
+    justify-content: center;
+    width: 44px;
+    padding: 0;
+    font-size: 18px;
+  }
+
+  .appbar-inner {
+    gap: 6px 10px;
+  }
+
+  .appbar-tools {
+    gap: 4px 14px;
+  }
+}
+
+/* The site nav's two doors: one per app, coloured like the app's chip. */
+.nav-links .nav-cta-owner {
+  border-color: var(--brass-light);
+  background: var(--brass-light);
+  color: var(--brand-deep);
+}
+
+.nav-links .nav-cta-owner:hover {
+  background: var(--brass);
+  border-color: var(--brass);
+}
+
+.nav-links a[aria-current='page'] {
+  color: var(--brand-ink);
+  box-shadow: inset 0 -2px 0 var(--brass);
+}
+
+/* On a phone the site nav takes two rows: the brand and the AI page, then the two apps side by side. */
+@media (max-width: 560px) {
+  .masthead[aria-label='Main'] .nav-links {
+    display: contents;
+  }
+
+  .masthead[aria-label='Main'] .nav-links > a:first-child {
+    margin-left: auto;
+  }
+
+  .masthead[aria-label='Main'] .nav-cta {
+    flex: 1 1 40%;
+    justify-content: center;
   }
 }
