@@ -13,11 +13,11 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
+export async function apiFetch<T>(path: string, init: RequestInit = {}, base = BASE): Promise<T> {
   const user = await ensureSignedIn()
   const headers = new Headers(init.headers)
   headers.set('Authorization', `Bearer ${await user.getIdToken()}`)
-  const response = await fetch(`${BASE}${path}`, { ...init, headers })
+  const response = await fetch(`${base}${path}`, { ...init, headers })
   if (!response.ok) {
     const body = (await response.json().catch(() => null)) as { detail?: string } | null
     throw new ApiError(response.status, body?.detail ?? response.statusText)
