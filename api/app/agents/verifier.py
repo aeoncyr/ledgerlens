@@ -100,6 +100,9 @@ if the answer is a plausible, specific explanation that fits the rest of the evi
 the text how it explains the finding and what would confirm it. An answer is the owner's word, not
 evidence: it can explain a gap or a misfiled line, but it cannot make unsupported figures true.
 Keep every finding, resolved or not, so the officer sees the whole history.
+An owner who preferred not to answer is recorded neutrally: it is not evidence either way, so
+leave that finding as it was. If the case file lists officer_confirmed readings, the officer checked
+those lines on the photo; treat the confirmed amounts as read correctly.
 
 {FIGURE_RULES}
 Write plainly, in short sentences. Explain each finding so an officer could act on it.

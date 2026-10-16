@@ -3,21 +3,34 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import CreditFile from '../../components/CreditFile.tsx'
 import LiveTrace from '../../components/LiveTrace.tsx'
-import { storage } from '../../firebase.ts'
+import VoiceRecorder from '../../components/VoiceRecorder.tsx'
+import { auth, storage } from '../../firebase.ts'
 import {
   STATUS_LABEL,
+  answerByVoice,
   answerQuestion,
+  confirmReading,
+  declineQuestion,
   recheck,
   recordDecision,
   useApplication,
+  useAudit,
   useCreditFileDoc,
   useEvidence,
   useRun,
   type Application,
+  type AuditEntry,
   type StoredEvidence,
 } from '../../officer.ts'
-import type { CreditFileData, Finding } from '../../types.ts'
-import OfficerShell from './OfficerShell.tsx'
+import {
+  ASSESSMENT_LABEL,
+  EVIDENCE_LABEL,
+  type Assessment,
+  type CreditFileData,
+  type EvidenceType,
+  type Finding,
+} from '../../types.ts'
+import OfficerShell, { type OfficerStep } from './OfficerShell.tsx'
 
 function useImageUrls(evidence: StoredEvidence[]): Map<string, string> {
   const [urls, setUrls] = useState(new Map<string, string>())
@@ -38,19 +51,27 @@ function useImageUrls(evidence: StoredEvidence[]): Map<string, string> {
 }
 
 function AnswerBox({ id, index, finding }: { id: string; index: number; finding: Finding }) {
-  const [text, setText] = useState(finding.answer ?? '')
+  const [text, setText] = useState(finding.declined ? '' : (finding.answer ?? ''))
   const [state, setState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+  const [message, setMessage] = useState<string | null>(null)
   if (!finding.followUpQuestion || finding.resolved) return null
 
-  async function save(event: FormEvent) {
-    event.preventDefault()
+  async function send(action: () => Promise<void>, done: string) {
     setState('saving')
+    setMessage(null)
     try {
-      await answerQuestion(id, index, text)
+      await action()
       setState('saved')
-    } catch {
+      setMessage(done)
+    } catch (e) {
       setState('error')
+      setMessage(e instanceof Error ? e.message : 'Could not save; try again.')
     }
+  }
+
+  function save(event: FormEvent) {
+    event.preventDefault()
+    void send(() => answerQuestion(id, index, text), 'Saved.')
   }
 
   return (
@@ -68,12 +89,175 @@ function AnswerBox({ id, index, finding }: { id: string; index: number; finding:
           placeholder="Tulis jawaban pemilik…"
         />
       </label>
-      <button className="button quiet" disabled={!text.trim() || state === 'saving'}>
-        {state === 'saving' ? 'Saving…' : 'Save answer'}
-      </button>
-      {state === 'saved' && <span className="fine">Saved.</span>}
-      {state === 'error' && <span className="error">Could not save; try again.</span>}
+      <div className="answer-actions">
+        <button className="button quiet" disabled={!text.trim() || state === 'saving'}>
+          {state === 'saving' ? 'Saving…' : 'Save answer'}
+        </button>
+        <VoiceRecorder
+          label="Record the owner’s answer"
+          busy={state === 'saving'}
+          onRecorded={(audio) =>
+            void send(
+              () => answerByVoice(id, index, audio),
+              'Recorded. Gemini transcribed it; the transcript appears above.',
+            )
+          }
+        />
+        <button
+          type="button"
+          className="link-button"
+          disabled={state === 'saving'}
+          onClick={() =>
+            void send(() => declineQuestion(id, index), 'Recorded neutrally: prefers not to answer.')
+          }
+        >
+          The owner prefers not to answer
+        </button>
+      </div>
+      {message && <span className={state === 'error' ? 'error' : 'fine'}>{message}</span>}
     </form>
+  )
+}
+
+type Disputed = {
+  evidence: StoredEvidence
+  line: number
+  first: number | null
+  second: number | null
+}
+
+const rupiahText = new Intl.NumberFormat('id-ID')
+
+function disputedLines(evidence: StoredEvidence[]): Disputed[] {
+  const found: Disputed[] = []
+  for (const item of evidence) {
+    const extraction = item.extraction as
+      | { lines?: { line: number; confirmedByOfficer?: boolean }[]; disagreements?: Disputed[] }
+      | null
+      | undefined
+    const confirmed = new Set(
+      (extraction?.lines ?? []).filter((l) => l.confirmedByOfficer).map((l) => l.line),
+    )
+    for (const d of extraction?.disagreements ?? []) {
+      if (!confirmed.has(d.line)) found.push({ ...d, evidence: item })
+    }
+  }
+  return found
+}
+
+// When the two readings of a notebook page disagree, the officer looks at the photo and settles it.
+function ConfirmReadings({
+  id,
+  evidence,
+  urls,
+}: {
+  id: string
+  evidence: StoredEvidence[]
+  urls: Map<string, string>
+}) {
+  const open = disputedLines(evidence)
+  const [confirmedCount, setConfirmedCount] = useState(0)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [other, setOther] = useState<Record<string, string>>({})
+  if (open.length === 0 && confirmedCount === 0) return null
+
+  async function confirm(item: Disputed, amount: number) {
+    setBusy(true)
+    setError(null)
+    try {
+      await confirmReading(id, item.evidence.id, item.line, amount)
+      setConfirmedCount((n) => n + 1)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e))
+    }
+    setBusy(false)
+  }
+
+  async function rerun() {
+    setBusy(true)
+    setError(null)
+    try {
+      await recheck(id)
+      setConfirmedCount(0)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e))
+    }
+    setBusy(false)
+  }
+
+  return (
+    <section className="confirm-readings" aria-labelledby="confirm-heading">
+      <h2 id="confirm-heading">Readings to confirm</h2>
+      <p>
+        Gemini read each notebook page twice with different instructions. Where the two readings
+        disagree, look at the photo and choose what is written. Code then recomputes the cash flow
+        with your answer.
+      </p>
+      <ul>
+        {open.map((item) => {
+          const key = `${item.evidence.id}-${item.line}`
+          const label = item.evidence.label ?? 'Notebook page'
+          return (
+            <li key={key}>
+              {urls.get(item.evidence.id) && (
+                <a href={urls.get(item.evidence.id)} target="_blank" rel="noreferrer">
+                  <img src={urls.get(item.evidence.id)} alt={`${label}, photographed`} />
+                </a>
+              )}
+              <div>
+                <strong>
+                  {label}, line {item.line}
+                </strong>
+                <span className="fine"> Which amount is written?</span>
+                <div className="answer-actions">
+                  {[item.first, item.second]
+                    .filter((v): v is number => v !== null)
+                    .map((value) => (
+                      <button
+                        key={value}
+                        type="button"
+                        className="button quiet mono"
+                        disabled={busy}
+                        onClick={() => void confirm(item, value)}
+                      >
+                        Rp {rupiahText.format(value)}
+                      </button>
+                    ))}
+                  <input
+                    inputMode="numeric"
+                    placeholder="Something else (Rp)"
+                    aria-label={`Another amount for ${label}, line ${item.line}`}
+                    value={other[key] ?? ''}
+                    onChange={(e) => setOther({ ...other, [key]: e.target.value.replace(/\D/g, '') })}
+                  />
+                  <button
+                    type="button"
+                    className="button quiet"
+                    disabled={busy || !other[key]}
+                    onClick={() => void confirm(item, Number(other[key]))}
+                  >
+                    Use this
+                  </button>
+                </div>
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+      {confirmedCount > 0 && (
+        <div className="answer-actions">
+          <button className="button" disabled={busy} onClick={() => void rerun()}>
+            {busy ? 'Checking…' : 'Re-check with the confirmed readings'}
+          </button>
+          <span className="fine">
+            Only the verifier, the policy and the memo writer run; this does not use up a question
+            for the owner.
+          </span>
+        </div>
+      )}
+      {error && <p className="error">{error}</p>}
+    </section>
   )
 }
 
@@ -191,6 +375,127 @@ function Decision({ app }: { app: Application }) {
   )
 }
 
+const AUDIT_LABEL: Record<string, string> = {
+  created: 'Application opened',
+  created_by_owner: 'File started by the business owner',
+  consent_given: 'Consent recorded',
+  consent_withdrawn: 'Consent withdrawn',
+  evidence_added: 'Evidence added',
+  analysis_completed: 'Analysis completed',
+  reverified_with_answers: 'Re-checked with the owner’s answers',
+  follow_up_answered: 'Answer to a question recorded',
+  reading_confirmed: 'A reading confirmed on the photo',
+  decision_approve: 'Decision: approve',
+  decision_decline: 'Decision: decline',
+  decision_request_more: 'Decision: ask for more evidence',
+  share_link_created: 'Share link created',
+  opened_by_lender: 'Opened from the owner’s share link',
+  share_withdrawn: 'Share withdrawn',
+}
+
+const auditTime = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  hour: '2-digit',
+  minute: '2-digit',
+})
+
+type AuditRow = { entry: AuditEntry; label: string; detail: string | null }
+
+// Consecutive uploads by the same person read as one line: "14 pieces of evidence added".
+function auditRows(entries: AuditEntry[]): AuditRow[] {
+  const rows: AuditRow[] = []
+  let i = 0
+  while (i < entries.length) {
+    const entry = entries[i]
+    if (entry.action === 'evidence_added') {
+      let j = i
+      const kinds = new Map<string, number>()
+      while (
+        j < entries.length &&
+        entries[j].action === 'evidence_added' &&
+        entries[j].actor === entry.actor
+      ) {
+        const type = entries[j].details?.type as EvidenceType | undefined
+        const name = (type && EVIDENCE_LABEL[type]) ?? 'Other'
+        kinds.set(name, (kinds.get(name) ?? 0) + 1)
+        j++
+      }
+      const count = j - i
+      rows.push({
+        entry: entries[j - 1],
+        label: count === 1 ? 'Evidence added' : `${count} pieces of evidence added`,
+        detail: [...kinds].map(([name, n]) => (n > 1 ? `${name} ×${n}` : name)).join(' · '),
+      })
+      i = j
+      continue
+    }
+    const details = entry.details ?? {}
+    const assessment = details.assessment as Assessment | undefined
+    const question = typeof details.question === 'string' ? details.question : null
+    const detail = entry.reason
+      ? `“${entry.reason}”`
+      : assessment && ASSESSMENT_LABEL[assessment]
+        ? `Outcome: ${ASSESSMENT_LABEL[assessment]}`
+        : question
+    rows.push({ entry, label: AUDIT_LABEL[entry.action] ?? entry.action, detail })
+    i++
+  }
+  return rows
+}
+
+function AuditLog({ app }: { app: Application }) {
+  const { data: entries, error } = useAudit(app.id)
+  const me = auth.currentUser?.uid
+  if (entries.length === 0 && !error) return null
+
+  function who(actor: string): string {
+    if (actor === me) return 'you'
+    if (app.ownerUid && actor === app.ownerUid) return 'owner'
+    return 'another officer'
+  }
+
+  return (
+    <section className="audit" aria-labelledby="audit-heading">
+      <h2 id="audit-heading">Audit log</h2>
+      <p className="fine">Written by the API on every action; nobody can edit it from the app.</p>
+      {error && <p className="error">The audit log could not be loaded.</p>}
+      <ol className="audit-log">
+        {auditRows(entries).map(({ entry, label, detail }) => {
+          const actor = who(entry.actor)
+          return (
+            <li key={entry.id} className={`audit-row by-${actor.replace(' ', '-')}`}>
+              <time className="audit-time mono" dateTime={entry.at?.toDate().toISOString()}>
+                {entry.at ? auditTime.format(entry.at.toDate()) : 'just now'}
+              </time>
+              <span className="audit-body">
+                <span className="audit-label">{label}</span>
+                <span className="audit-actor">by {actor}</span>
+                {detail && (
+                  <span
+                    className="audit-detail"
+                    lang={entry.action === 'follow_up_answered' ? 'id' : undefined}
+                  >
+                    {detail}
+                  </span>
+                )}
+              </span>
+            </li>
+          )
+        })}
+      </ol>
+    </section>
+  )
+}
+
+// Where the application stands in the officer's four steps.
+function stepOf(app: Application): OfficerStep {
+  if (app.status === 'draft' || app.status === 'collecting') return 1
+  if (app.status === 'analyzing') return 2
+  if (app.status === 'needs_follow_up') return 3
+  return 4
+}
+
 export default function ApplicationFile() {
   const { id = '' } = useParams()
   const { data: app, loading } = useApplication(id)
@@ -216,7 +521,7 @@ export default function ApplicationFile() {
         ? { to: `/app/${id}/consent`, label: 'Record the owner’s consent' }
         : { to: `/app/${id}/evidence`, label: 'Collect the evidence' }
     return (
-      <OfficerShell title={title} crumbs={crumbs}>
+      <OfficerShell title={title} crumbs={crumbs} step={stepOf(app)}>
         <p className="lead-text">{STATUS_LABEL[app.status]}.</p>
         {app.status === 'analyzing' ? (
           <LiveTrace run={run} />
@@ -262,7 +567,13 @@ export default function ApplicationFile() {
   }
 
   return (
-    <OfficerShell title={title} crumbs={crumbs}>
+    <OfficerShell
+      title={title}
+      crumbs={crumbs}
+      step={stepOf(app)}
+      done={app.status === 'decided'}
+      titleHidden
+    >
       <div className="page-actions">
         <span className="status-label">{STATUS_LABEL[app.status]}</span>
         {app.status !== 'decided' && (
@@ -275,8 +586,12 @@ export default function ApplicationFile() {
       {app.status !== 'analyzing' && app.status !== 'decided' && (
         <FollowUp id={id} findings={file.findings} round={file.round ?? 0} />
       )}
+      {app.status !== 'analyzing' && app.status !== 'decided' && (
+        <ConfirmReadings id={id} evidence={evidence} urls={urls} />
+      )}
       <CreditFile
         file={file}
+        titleLevel={2}
         findingExtra={
           app.status === 'decided' || app.status === 'analyzing' || (file.round ?? 0) >= 2
             ? undefined
@@ -284,6 +599,7 @@ export default function ApplicationFile() {
         }
       />
       <Decision app={app} />
+      <AuditLog app={app} />
     </OfficerShell>
   )
 }

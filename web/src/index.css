@@ -124,8 +124,11 @@ h3 {
   gap: 4px 22px;
 }
 
+/* 44px tall so every link is an easy tap target on a phone. */
 .nav-links a {
-  padding-block: 10px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-size: 14px;
   color: var(--brand-muted);
   text-decoration: none;
@@ -1232,6 +1235,19 @@ h3 {
   color: #7a2f0b;
 }
 
+.error > p {
+  margin: 0;
+}
+
+.error details {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.error details code {
+  overflow-wrap: anywhere;
+}
+
 .progress {
   font-weight: 500;
   color: var(--accent);
@@ -1911,10 +1927,70 @@ textarea:focus {
   top: 0;
   left: 0;
   width: 48%;
+  transform: rotate(-5deg);
+}
+
+.hv-page img {
+  display: block;
+  width: 100%;
   height: auto;
   border-radius: 3px;
-  transform: rotate(-5deg);
   box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.6);
+}
+
+/* A brass marker loop and pen arrow: the one hand-made mark on an otherwise ruled page. */
+.hv-mark {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hv-loop,
+.hv-pen {
+  fill: none;
+  stroke: #c79a3a;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hv-loop {
+  stroke-width: 6;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: draw-mark 1.1s 0.6s ease-out forwards;
+}
+
+.hv-pen {
+  stroke-width: 5;
+  opacity: 0;
+  animation: show-pen 0.3s 1.6s ease-out forwards;
+}
+
+@keyframes draw-mark {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes show-pen {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hv-loop {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .hv-pen {
+    animation: none;
+    opacity: 1;
+  }
 }
 
 .hv-file {
@@ -2334,6 +2410,11 @@ textarea:focus {
     max-width: 280px;
   }
 
+  /* The card sits over line 16 here, so the pen mark would point at nothing. */
+  .hv-mark {
+    display: none;
+  }
+
   .hv-file {
     position: relative;
     width: 86%;
@@ -2449,4 +2530,1249 @@ textarea:focus {
 .owner-tag {
   background: #f4ead2;
   color: var(--owner);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Quick wins (Oct 16): the officer's progress steps, the revenue range on the credit file,
+ * provenance badges, the evidence strength panel, the richer agent trace, the audit log, and the
+ * Google Cloud strip on the landing page.
+ * ------------------------------------------------------------------------------------------- */
+
+/* Officer progress: four numbered steps joined by a rule. */
+.officer-steps {
+  max-width: 720px;
+  margin: 0 0 22px;
+}
+
+.officer-steps ol {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.officer-steps li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.officer-steps li + li::before {
+  content: '';
+  position: absolute;
+  top: 13px;
+  right: calc(100% + 4px);
+  width: calc(100% - 36px);
+  height: 2px;
+  background: var(--rule);
+}
+
+.officer-steps li.done + li::before,
+.officer-steps li.done + li.current::before {
+  background: var(--brand);
+}
+
+.os-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--rule);
+  border-radius: 50%;
+  background: var(--paper-raised);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.officer-steps li.done .os-node {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+
+.officer-steps li.current .os-node {
+  border-color: var(--brass);
+  color: var(--ink);
+  box-shadow: 0 0 0 3px rgb(176 138 62 / 0.2);
+}
+
+.officer-steps li.current,
+.officer-steps li.done {
+  color: var(--ink);
+}
+
+.officer-steps li.current .os-label {
+  font-weight: 600;
+}
+
+.os-caption {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* Credit file header: revenue range beside the policy's instalment. */
+.file-figures-row {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule);
+}
+
+.range,
+.instalment {
+  padding: 16px 0 16px;
+}
+
+.range {
+  padding-right: 28px;
+}
+
+.instalment {
+  padding-left: 28px;
+  border-left: 1px solid var(--rule);
+}
+
+.range-title {
+  margin: 0 0 12px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.range-track {
+  position: relative;
+  height: 18px;
+  border-radius: 2px;
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.range-floor,
+.range-upper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.range-floor {
+  left: 0;
+  border-radius: 2px 0 0 2px;
+  background: var(--brand);
+}
+
+.range-upper {
+  border-radius: 0 4px 4px 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(176 138 62 / 0.55) 0 3px,
+    rgb(176 138 62 / 0.18) 3px 7px
+  );
+  box-shadow: inset 0 0 0 1px var(--brass);
+}
+
+.range-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.range-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin: 10px 0 0;
+}
+
+.range-legend dt {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.range-legend dd {
+  margin: 0;
+}
+
+.range-legend dd.mono {
+  font-size: 18px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.range-legend .fine {
+  margin: 0;
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+  border-radius: 1px;
+}
+
+.swatch.floor {
+  background: var(--brand);
+}
+
+.swatch.upper {
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(176 138 62 / 0.6) 0 2px,
+    rgb(176 138 62 / 0.2) 2px 4px
+  );
+  box-shadow: inset 0 0 0 1px var(--brass);
+}
+
+.instalment-value {
+  margin: 0 0 4px;
+  font-size: 26px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.instalment-value span {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.instalment .fine {
+  margin: 0;
+}
+
+.instalment-none {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.instalment-request {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px dashed var(--rule);
+  font-size: 14px;
+}
+
+.instalment-request .within,
+.instalment-request .outside {
+  display: inline;
+}
+
+/* Provenance badges: who made what, said quietly. */
+.outcome-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.prov-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.memo-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.file-main .memo-head h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Evidence strength on the officer's evidence step. */
+.strength-panel {
+  max-width: 900px;
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--brass);
+  background: var(--paper-raised);
+}
+
+.sp-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  align-items: baseline;
+}
+
+.sp-head h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.sp-label {
+  padding: 1px 9px;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sp-label.weak {
+  color: var(--inconsistent);
+}
+
+.sp-label.moderate {
+  color: var(--partial);
+}
+
+.sp-label.strong {
+  color: var(--verified);
+}
+
+.sp-score {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-weight: 500;
+}
+
+.strength-bar.sp-bar {
+  display: block;
+  width: 100%;
+  height: 8px;
+  margin: 10px 0;
+}
+
+.sp-tiers {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.sp-tiers .has {
+  color: var(--ink);
+}
+
+.sp-next {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.sp-next-label {
+  margin-right: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--owner);
+}
+
+.evidence-kinds li.suggested {
+  box-shadow: inset 3px 0 0 var(--brass);
+  padding-left: 14px;
+}
+
+.next-tag {
+  background: #f4ead2;
+  color: var(--owner);
+}
+
+/* The same hint on the owner's records step. */
+.ow-next {
+  margin: -6px 0 16px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--brass);
+  background: #f3ead6;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.ow-next-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--owner);
+}
+
+/* Agent trace: a clock, the run id, the engine of each agent, and samples of the output. */
+.trace-head {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.trace-title {
+  font-family: var(--serif);
+  font-size: 18px;
+}
+
+.trace-run {
+  margin-left: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.trace-clock {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.trace-step {
+  grid-template-columns: 3.5rem 13rem minmax(0, 1fr) 5.5rem;
+}
+
+.engine {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 6px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
+.engine.gemini {
+  background: #e3eaf6;
+  color: var(--partial);
+}
+
+.engine.python {
+  background: #e1ece7;
+  color: var(--accent);
+}
+
+.trace-model {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.trace-sample {
+  grid-column: 2 / -1;
+  margin: 4px 0 2px;
+}
+
+.trace-sample summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.trace-sample pre {
+  margin: 8px 0 4px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  border-left: 3px solid var(--partial);
+  background: #f2f4f6;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.trace-sample .fine {
+  margin: 0;
+}
+
+/* Audit log: a compact vertical timeline. */
+.audit {
+  max-width: 900px;
+  margin-top: 40px;
+}
+
+.audit h2 {
+  margin: 0 0 4px;
+}
+
+.audit-log {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.audit-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 2px 22px;
+  padding: 0 0 14px;
+}
+
+/* The rail and a node on it, between the time and the entry. */
+.audit-row::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  bottom: -8px;
+  left: calc(8.5rem + 12px);
+  width: 1px;
+  background: var(--brand-muted);
+}
+
+.audit-row:last-child::before {
+  display: none;
+}
+
+.audit-row::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: calc(8.5rem + 6px);
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--brand);
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.audit-row.by-owner::after {
+  border-color: var(--brass);
+}
+
+.audit-time {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+  padding-right: 4px;
+}
+
+.audit-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  align-items: baseline;
+  padding-left: 6px;
+  font-size: 14px;
+}
+
+.audit-label {
+  font-weight: 600;
+}
+
+.audit-actor {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.audit-detail {
+  flex-basis: 100%;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* Landing: what the product runs on. */
+.cloud-strip {
+  margin-top: 48px;
+}
+
+.cloud-title {
+  margin: 0 0 14px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cloud-cells {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule);
+}
+
+.cloud-cells div {
+  padding: 16px 20px 16px 0;
+}
+
+.cloud-cells div + div {
+  padding-left: 20px;
+  border-left: 1px solid var(--rule);
+}
+
+.cloud-cells dt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  margin-bottom: 6px;
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.cloud-where {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.cloud-cells dd {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.cloud-strip + .how-band {
+  margin-top: 48px;
+}
+
+@media (max-width: 900px) {
+  .file-figures-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .range {
+    padding-right: 0;
+  }
+
+  .instalment {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .cloud-cells {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cloud-cells div:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .cloud-cells div:nth-child(n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+}
+
+@media (max-width: 560px) {
+  .officer-steps .os-label {
+    font-size: 12px;
+  }
+
+  .outcome-box {
+    align-items: flex-start;
+  }
+
+  .trace-step {
+    grid-template-columns: 3rem minmax(0, 1fr);
+  }
+
+  .trace-sample {
+    grid-column: 1 / -1;
+  }
+
+  .audit-row {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 22px;
+  }
+
+  .audit-row::before {
+    left: 6px;
+  }
+
+  .audit-row::after {
+    left: 0;
+  }
+
+  .audit-time {
+    text-align: left;
+  }
+
+  .audit-body {
+    padding-left: 0;
+  }
+
+  .cloud-cells {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cloud-cells div,
+  .cloud-cells div + div {
+    padding: 14px 0;
+    border-left: 0;
+  }
+
+  .cloud-cells div + div {
+    border-top: 1px solid var(--rule);
+  }
+}
+
+/* Voice answers and confirming disputed readings */
+.answer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.answer-actions input {
+  width: 180px;
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.voice-button {
+  gap: 8px;
+}
+
+.voice-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--inconsistent);
+}
+
+.voice-button.recording .voice-dot {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.answer-en {
+  display: block;
+}
+
+.confirm-readings {
+  max-width: 900px;
+  margin-bottom: 28px;
+  padding: 18px 22px;
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--brass);
+  background: var(--paper-raised);
+}
+
+.confirm-readings h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.confirm-readings ul {
+  display: grid;
+  gap: 14px;
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.confirm-readings li {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.confirm-readings img {
+  width: 96px;
+  height: 128px;
+  object-fit: cover;
+  object-position: top;
+  border: 1px solid var(--rule);
+}
+
+/* ==========================================================================
+ * UX and accessibility pass (demo polish)
+ * Citation previews, the evidence viewer on phones, the monthly cash-flow chart, stacked tables
+ * that keep their labels, the officer's current page, a calm "still working" line, and two
+ * contrast fixes.
+ * ========================================================================== */
+
+/* Citation chips and their previews */
+.cite-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.cite {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+}
+
+@media (pointer: coarse) {
+  .cite {
+    min-height: 36px;
+    padding: 4px 10px;
+    font-size: 13px;
+  }
+}
+
+.cite-preview {
+  position: absolute;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 12px;
+  width: 300px;
+  padding: 12px;
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--brand);
+  background: var(--paper-raised);
+  box-shadow: 0 14px 34px rgb(8 42 36 / 0.2);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  pointer-events: none;
+}
+
+.cite-preview.below,
+.cite-preview.below-end {
+  top: calc(100% + 6px);
+}
+
+.cite-preview.above,
+.cite-preview.above-end {
+  bottom: calc(100% + 6px);
+}
+
+.cite-preview.below,
+.cite-preview.above {
+  left: 0;
+}
+
+.cite-preview.below-end,
+.cite-preview.above-end {
+  right: 0;
+}
+
+.cite-preview.sheet {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  width: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cite-preview {
+    animation: cite-in 140ms ease-out;
+  }
+}
+
+@keyframes cite-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+.cite-thumb {
+  width: 64px;
+  height: 86px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  object-fit: cover;
+  object-position: top;
+}
+
+.cite-thumb.audio {
+  display: grid;
+  place-items: center;
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-size: 20px;
+}
+
+.cite-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cite-where {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cite-text {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.cite-note {
+  color: var(--ink-soft);
+}
+
+.cite-amount {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--brand);
+}
+
+.cite-hint {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* The evidence viewer: the title and Close stay in view while the reading scrolls. */
+.viewer-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--paper-raised);
+}
+
+/* The monthly cash-flow chart; the table under it carries the exact figures. */
+.cf-figure {
+  margin: 0;
+}
+
+.cf-figure figcaption {
+  margin: 0 0 14px;
+  max-width: 70ch;
+}
+
+.cf-chart {
+  margin-bottom: 22px;
+  padding: 18px 18px 6px;
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+}
+
+.cf-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: 0 0 30px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.cf-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cf-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.cf-swatch.qris,
+.cf-bar.qris .cf-fill {
+  background: var(--brand);
+}
+
+.cf-swatch.notebook,
+.cf-bar.notebook .cf-fill {
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(176 138 62 / 0.6) 0 3px,
+    rgb(176 138 62 / 0.22) 3px 7px
+  );
+  box-shadow: inset 0 0 0 1.5px #94742c;
+}
+
+.cf-swatch.receipts,
+.cf-bar.receipts .cf-fill {
+  background: #7d8984;
+}
+
+.cf-plot {
+  position: relative;
+  height: 230px;
+  margin-left: 38px;
+}
+
+.cf-unit {
+  position: absolute;
+  top: -24px;
+  left: -38px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.cf-grid {
+  position: absolute;
+  inset: 0 0 30px;
+}
+
+.cf-tick {
+  position: absolute;
+  right: 0;
+  left: 0;
+  border-top: 1px dashed var(--rule);
+}
+
+.cf-tick:first-child {
+  border-top: 1px solid var(--rule-strong);
+}
+
+.cf-tick-label {
+  position: absolute;
+  left: -38px;
+  width: 32px;
+  font-size: 11px;
+  line-height: 1;
+  text-align: right;
+  color: var(--muted);
+  transform: translateY(-50%);
+}
+
+.cf-groups {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 12px;
+  padding-inline: 8px;
+}
+
+.cf-group {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cf-bars {
+  display: flex;
+  flex: 1;
+  gap: 6px;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.cf-bar {
+  display: flex;
+  align-items: flex-end;
+  width: min(56px, 28%);
+  height: 100%;
+}
+
+.cf-fill {
+  position: relative;
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+}
+
+.cf-value {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  padding-bottom: 3px;
+  font-size: 11px;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--ink-soft);
+  transform: translateX(-50%);
+}
+
+.cf-month {
+  height: 30px;
+  font-size: 13px;
+  line-height: 30px;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+/* Column headings in figure tables read as words, not figures. */
+.figures-table thead .num {
+  font-family: var(--sans);
+}
+
+/* The owner's summary heading keeps its English gloss on its own line. */
+#owner-heading .fine {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* On the officer's file the business name is a level-two heading with the same look. */
+.file-title .file-name {
+  margin: 0 0 4px;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.1;
+}
+
+/* The officer's current page in the masthead. */
+.masthead[aria-label='Officer workspace'] .nav-links a[aria-current='page'] {
+  color: var(--brand-ink);
+  box-shadow: inset 0 -2px 0 var(--brass);
+}
+
+/* A calm note when a run has been quiet for a while. */
+.trace-quiet {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--brass);
+  background: var(--paper);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.trace-quiet-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brass);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .trace-quiet-dot {
+    animation: trace-breathe 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes trace-breathe {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* The officer's "Add" buttons wrap a file input that stays reachable by keyboard. */
+.file-button {
+  position: relative;
+}
+
+.file-button:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Contrast: small text on the pale brass backgrounds. */
+.next-tag {
+  color: #7a540c;
+}
+
+.hero .hv-chip-b small {
+  color: var(--ink-soft);
+}
+
+@media (max-width: 560px) {
+  .viewer {
+    width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+  }
+
+  .viewer-head {
+    padding: 10px 14px;
+  }
+
+  .viewer-head h3 {
+    font-size: 19px;
+  }
+
+  .viewer-body {
+    gap: 14px;
+    padding: 14px;
+  }
+
+  /* The photo leaves room for the highlighted reading below it. */
+  .viewer-body img {
+    height: 38vh;
+    object-fit: contain;
+    background: var(--paper);
+  }
+
+  .cf-chart {
+    padding: 14px 10px 4px;
+  }
+
+  .cf-groups {
+    gap: 6px;
+    padding-inline: 2px;
+  }
+
+  .cf-bars {
+    gap: 4px;
+  }
+
+  /* Stacked cash-flow rows read as "label … amount". */
+  .cashflow-table td {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 4px;
+  }
+
+  .cashflow-table td::before {
+    display: inline;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+
+  .facts-table .num {
+    text-align: left;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .facts-table td::before {
+    font-family: var(--sans);
+  }
 }

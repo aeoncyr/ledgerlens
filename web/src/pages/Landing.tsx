@@ -35,6 +35,27 @@ const JOURNEY: { title: string; actor: Actor[]; text: string }[] = [
   },
 ]
 
+const GOOGLE_CLOUD: { name: string; where?: string; text: string }[] = [
+  {
+    name: 'Gemini',
+    text: 'Reads handwriting, receipts, QRIS screenshots and interviews in Bahasa Indonesia, cross-checks the sources, and writes the memo.',
+  },
+  {
+    name: 'Cloud Run',
+    where: 'Jakarta',
+    text: 'Runs the API and the agent pipeline that turns evidence into a credit file.',
+  },
+  {
+    name: 'Firestore',
+    where: 'Jakarta',
+    text: 'Holds the applications, the live progress of every analysis, and the audit log.',
+  },
+  {
+    name: 'Firebase',
+    text: 'Hosting for this site, anonymous sign-in, Storage for photos and recordings, and the security rules that keep each file private.',
+  },
+]
+
 const SAMPLE_NOTE: Record<string, string> = {
   'bu-sari': 'Notebook, receipts and QRIS agree, and so does the owner’s interview.',
   'pak-joko': 'Honest books but no QRIS history, so only part of the cash flow is proven.',
@@ -44,18 +65,25 @@ const SAMPLE_NOTE: Record<string, string> = {
 function HeroVisual() {
   return (
     <div className="hero-visual" aria-hidden="true">
-      <img
-        className="hv-page"
-        src="/specimen/bu-sari-page-1.webp"
-        width={720}
-        height={1018}
-        alt=""
-      />
+      <div className="hv-page">
+        <img src="/specimen/bu-sari-page-1.webp" width={720} height={1018} alt="" />
+        {/* A pen mark, as an officer checking the page would make: drawn in the photo's own
+            coordinates so it stays on line 16 whatever the size. */}
+        <svg className="hv-mark" viewBox="0 0 720 1018" preserveAspectRatio="none">
+          <path
+            className="hv-loop"
+            pathLength={100}
+            d="M 140 726 C 300 712, 640 714, 700 740 C 730 756, 690 782, 520 784 C 330 788, 110 786, 88 762 C 72 744, 110 728, 200 722"
+          />
+          <path className="hv-pen" d="M 74 742 C 40 700, 34 580, 56 500" />
+          <path className="hv-pen" d="M 56 500 L 40 522 M 56 500 L 68 524" />
+        </svg>
+      </div>
       <div className="hv-chip hv-chip-a">
-        <span className="hv-written">“2,1jt”</span>
+        <span className="hv-written">“2,3 jt”</span>
         <span className="hv-arrow">→</span>
-        <strong>Rp 2.100.000</strong>
-        <small>Notebook page 1 · line 7</small>
+        <strong>Rp 2.300.000</strong>
+        <small>Notebook page 1 · line 16</small>
       </div>
       <div className="hv-chip hv-chip-b">
         <span className="hv-wave" />
@@ -154,6 +182,23 @@ export default function Landing() {
               For rural banks (BPR), cooperatives and microfinance lenders without their own tools.
             </p>
           </article>
+        </section>
+
+        <section className="container cloud-strip" aria-labelledby="cloud-heading">
+          <h2 id="cloud-heading" className="cloud-title">
+            Powered by Google Cloud
+          </h2>
+          <dl className="cloud-cells">
+            {GOOGLE_CLOUD.map((cell) => (
+              <div key={cell.name}>
+                <dt>
+                  {cell.name}
+                  {cell.where && <span className="cloud-where">{cell.where}</span>}
+                </dt>
+                <dd>{cell.text}</dd>
+              </div>
+            ))}
+          </dl>
         </section>
 
         <section id="how" className="how-band" aria-labelledby="how-heading">

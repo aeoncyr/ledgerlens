@@ -12,6 +12,7 @@ export default function SiteNav({ home = false }: { home?: boolean }) {
         </Link>
         <div className="nav-links">
           <a href={`${prefix}#how`}>How it works</a>
+          <Link to="/ai">How the AI works</Link>
           <a href={`${prefix}#samples`}>Sample files</a>
           <a href={`${prefix}#accuracy`}>Accuracy</a>
           <Link to="/owner">For business owners</Link>

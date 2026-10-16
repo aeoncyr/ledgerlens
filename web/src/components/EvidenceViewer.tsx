@@ -1,24 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
+import { isLocatedTotal, locatedNumber, money, rowsOf } from '../evidence.ts'
 import type { EvidenceItem } from '../types.ts'
-
-const rupiah = new Intl.NumberFormat('id-ID')
-
-type Row = Record<string, unknown>
-
-function money(value: unknown): string {
-  return typeof value === 'number' ? rupiah.format(value) : '—'
-}
-
-function rowsOf(reading: Row | null, key: string): Row[] {
-  const value = reading?.[key]
-  return Array.isArray(value) ? (value as Row[]) : []
-}
-
-// The number in a locator such as "line 4" or "row 2", to highlight that row.
-function locatedNumber(locator: string | null, word: string): number | null {
-  const match = locator?.match(new RegExp(`${word} (\\d+)`))
-  return match ? Number(match[1]) : null
-}
 
 function Reading({ item, locator }: { item: EvidenceItem; locator: string | null }) {
   const reading = item.reading
@@ -30,7 +12,9 @@ function Reading({ item, locator }: { item: EvidenceItem; locator: string | null
       <table className="ledger compact">
         <thead>
           <tr>
-            <th scope="col">Line</th>
+            <th scope="col" className="col-line">
+              Line
+            </th>
             <th scope="col">As written</th>
             <th scope="col" className="num">
               Amount
@@ -59,7 +43,7 @@ function Reading({ item, locator }: { item: EvidenceItem; locator: string | null
       <table className="ledger compact">
         <tbody>
           {rowsOf(reading, 'items').map((line, index) => (
-            <tr key={index} className={locator === 'items' ? 'marked' : undefined}>
+            <tr key={index} className={locator?.startsWith('item') ? 'marked' : undefined}>
               <td>
                 {line.quantityText ? `${String(line.quantityText)} ` : ''}
                 {String(line.name)}
@@ -69,7 +53,7 @@ function Reading({ item, locator }: { item: EvidenceItem; locator: string | null
           ))}
         </tbody>
         <tfoot>
-          <tr className={locator === 'total' ? 'marked' : undefined}>
+          <tr className={locator?.startsWith('total') ? 'marked' : undefined}>
             <th scope="row">Total</th>
             <td className="num">{money(reading.totalRp)}</td>
           </tr>
@@ -84,7 +68,10 @@ function Reading({ item, locator }: { item: EvidenceItem; locator: string | null
       <table className="ledger compact">
         <tbody>
           {rowsOf(reading, 'totals').map((total, index) => (
-            <tr key={`t${index}`} className={locator?.startsWith('total') ? 'marked' : undefined}>
+            <tr
+              key={`t${index}`}
+              className={isLocatedTotal(locator, total.periodText) ? 'marked' : undefined}
+            >
               <th scope="row">Total for {String(total.periodText)}</th>
               <td className="num">{money(total.amountRp)}</td>
             </tr>
@@ -109,7 +96,9 @@ function Reading({ item, locator }: { item: EvidenceItem; locator: string | null
         <table className="ledger compact">
           <thead>
             <tr>
-              <th scope="col">At</th>
+              <th scope="col" className="col-line">
+                At
+              </th>
               <th scope="col">The owner said</th>
               <th scope="col" className="num">
                 Rupiah
@@ -163,11 +152,28 @@ export default function EvidenceViewer({
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const player = useRef<HTMLAudioElement>(null)
+  // The control that opened the viewer gets the focus back when it closes.
+  const opener = useRef<HTMLElement | null>(null)
+  const titleId = useId()
 
   useEffect(() => {
-    if (item) dialog.current?.showModal()
-    else dialog.current?.close()
-  }, [item])
+    const box = dialog.current
+    if (!box) return
+    if (item) {
+      if (!box.open) {
+        opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+        box.showModal()
+      }
+      // Bring the cited row into view, so the highlighted reading is seen without scrolling.
+      const marked = box.querySelector<HTMLElement>('tr.marked')
+      if (marked) requestAnimationFrame(() => marked.scrollIntoView({ block: 'nearest' }))
+    } else {
+      if (box.open) box.close()
+      const back = opener.current
+      opener.current = null
+      if (back?.isConnected) back.focus()
+    }
+  }, [item, locator])
 
   // A citation such as "0:04" plays the recording from just before that moment.
   useEffect(() => {
@@ -185,13 +191,13 @@ export default function EvidenceViewer({
   }, [item, locator])
 
   return (
-    <dialog ref={dialog} className="viewer" onClose={onClose} aria-label="Evidence">
+    <dialog ref={dialog} className="viewer" onClose={onClose} aria-labelledby={titleId}>
       {item && (
         <>
           <div className="viewer-head">
-            <h3>
+            <h3 id={titleId}>
               {item.reading?.label ?? item.id}
-              {locator && <span className="viewer-locator">{locator}</span>}
+              {locator && <span className="viewer-locator"> {locator}</span>}
             </h3>
             <button type="button" className="button quiet" onClick={onClose}>
               Close

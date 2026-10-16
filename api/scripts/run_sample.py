@@ -62,7 +62,7 @@ async def run(sample: Path, out_dir: Path) -> None:
     application, items, manifest = load(sample)
     started = time.monotonic()
 
-    async def progress(agent: str, message: str, state: str) -> None:
+    async def progress(agent: str, message: str, state: str, detail: dict | None = None) -> None:
         print(f"{time.monotonic() - started:6.1f}s  {agent:<18} {state:<8} {message}")
 
     settings = get_settings()

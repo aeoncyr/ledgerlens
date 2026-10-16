@@ -1,0 +1,214 @@
+/* "How LedgerLens uses AI": agents laid out like an annex to the credit file. */
+.ai-hero {
+  padding-block: 56px 48px;
+  background:
+    radial-gradient(60% 80% at 90% 10%, rgb(176 138 62 / 0.2), transparent 60%),
+    var(--brand);
+  color: var(--brand-ink);
+  border-bottom: 4px solid var(--brass);
+}
+
+.ai-hero h1 {
+  margin: 0 0 14px;
+  font-size: clamp(36px, 4.6vw, 56px);
+  line-height: 1.05;
+}
+
+.ai-hero p {
+  max-width: 68ch;
+  margin: 0;
+  font-size: 18px;
+  color: var(--brand-muted);
+}
+
+.ai-section {
+  padding-block: 48px;
+}
+
+.ai-section h2 {
+  margin: 0 0 12px;
+  font-size: clamp(26px, 3vw, 36px);
+}
+
+.ai-lead {
+  max-width: 80ch;
+  color: var(--ink-soft);
+}
+
+.ai-stages {
+  display: grid;
+  gap: 28px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ai-stages h3 {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.ai-stage-number {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-size: 16px;
+}
+
+.ai-agents {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.ai-agent {
+  padding: 16px 18px;
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--partial);
+  border-radius: 6px;
+  background: var(--paper-raised);
+  box-shadow: var(--shadow-1);
+}
+
+.ai-agent.python {
+  border-top-color: var(--accent);
+}
+
+.ai-agent header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.ai-agent header strong {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.ai-kind {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: #e6edf8;
+  color: var(--partial);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ai-agent.python .ai-kind {
+  background: #e2efe9;
+  color: var(--accent);
+}
+
+.ai-agent dl {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  font-size: 14px;
+}
+
+.ai-agent dt {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.ai-agent dd {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.ai-band {
+  background: linear-gradient(180deg, var(--paper) 0%, #e9efeb 100%);
+  border-block: 1px solid var(--rule);
+}
+
+.ai-two {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.ai-two p {
+  max-width: 62ch;
+  color: var(--ink-soft);
+}
+
+.ai-code {
+  padding: 16px 18px;
+  border-radius: 8px;
+  background: var(--brand-deep);
+  color: var(--brand-ink);
+  box-shadow: var(--shadow-2);
+}
+
+.ai-code pre {
+  margin: 0 0 12px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.ai-code-label {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brass-light);
+}
+
+.ai-page code {
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: #e9efeb;
+  font-family: var(--mono);
+  font-size: 0.92em;
+}
+
+.ai-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.ai-grid h3 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.ai-grid p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.ai-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.ai-list.muted {
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .ai-two,
+  .ai-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -5,6 +5,7 @@ import {
   addEvidence,
   answerQuestion,
   errorText,
+  isQuotaError,
   recheck,
   recordConsent,
   rememberedSample,
@@ -22,6 +23,7 @@ import {
   type Run,
 } from '../../owner.ts'
 import { SAMPLES } from '../../samples.ts'
+import { evidenceStrength } from '../../strength.ts'
 import type { CreditFileData, EvidenceType } from '../../types.ts'
 import {
   ChatIcon,
@@ -34,6 +36,8 @@ import {
   UndoIcon,
 } from './icons.tsx'
 import OwnerShell from './OwnerShell.tsx'
+import VoiceRecorder from '../../components/VoiceRecorder.tsx'
+import { answerByVoice, declineQuestion } from '../../officer.ts'
 
 const MAX_BYTES = 15 * 1024 * 1024
 
@@ -178,7 +182,7 @@ export default function OwnerFile() {
         <>
           {run?.state === 'failed' && (
             <p className="ow-error" role="alert">
-              {t.checkFailed} {run.error}
+              {isQuotaError(run.error) ? t.checkQuota : t.checkFailed}
             </p>
           )}
           {summary && (
@@ -186,6 +190,7 @@ export default function OwnerFile() {
               <SummaryCard summary={summary} lang={lang} t={t} />
               <Questions
                 key={summary.updatedAt?.seconds ?? 0}
+                id={id}
                 summary={summary}
                 lang={lang}
                 t={t}
@@ -334,6 +339,7 @@ function Records({
   for (const item of evidence) counts.set(item.type, (counts.get(item.type) ?? 0) + 1)
   const disabled = busy !== null
   const newSinceCheck = summary ? evidence.length > summary.evidenceCount : true
+  const next = evidenceStrength(evidence.map((item) => item.type)).next
 
   const samplePicker = (
     <section className="ow-sample-box" aria-labelledby="ow-sample-records">
@@ -370,6 +376,11 @@ function Records({
         {summary ? t.moreTitle : t.sendTitle}
       </h2>
       <p className="ow-lead">{summary ? t.moreLead : t.sendLead}</p>
+      {next && evidence.length > 0 && (
+        <p className="ow-next">
+          <span className="ow-next-label">{t.nextBestLabel}</span> {t.nextBest[next.key]}
+        </p>
+      )}
 
       {remembered && evidence.length === 0 && samplePicker}
 
@@ -554,7 +565,7 @@ function Checking({ run, t }: { run: Run | null; t: OwnerStrings }) {
       </ol>
       {run?.state === 'failed' && (
         <p className="ow-error" role="alert">
-          {t.checkFailed} {run.error}
+          {isQuotaError(run.error) ? t.checkQuota : t.checkFailed}
         </p>
       )}
     </section>
@@ -608,12 +619,14 @@ function SummaryCard({
 }
 
 function Questions({
+  id,
   summary,
   lang,
   t,
   busy,
   onRecheck,
 }: {
+  id: string
   summary: OwnerSummary
   lang: 'en' | 'id'
   t: OwnerStrings
@@ -625,7 +638,26 @@ function Questions({
     Object.fromEntries(questions.map((q) => [q.index, q.answer ?? ''])),
   )
   const [hint, setHint] = useState(false)
+  const [voice, setVoice] = useState<Record<number, 'sending' | 'sent' | string>>({})
   if (questions.length === 0) return null
+
+  async function sendVoice(index: number, audio: Blob) {
+    setVoice((v) => ({ ...v, [index]: 'sending' }))
+    try {
+      await answerByVoice(id, index, audio)
+      setVoice((v) => ({ ...v, [index]: 'sent' }))
+    } catch (e) {
+      setVoice((v) => ({ ...v, [index]: e instanceof Error ? e.message : String(e) }))
+    }
+  }
+
+  async function decline(index: number) {
+    try {
+      await declineQuestion(id, index)
+    } catch (e) {
+      setVoice((v) => ({ ...v, [index]: e instanceof Error ? e.message : String(e) }))
+    }
+  }
 
   const changed = questions
     .map((q): [number, string] => [q.index, (drafts[q.index] ?? '').trim()])
@@ -676,7 +708,35 @@ function Questions({
                   setDrafts((d) => ({ ...d, [q.index]: e.target.value }))
                 }}
               />
-              {q.answer && <p className="ow-answered">{t.answered} <TickIcon size={14} /></p>}
+              <div className="ow-answer-more">
+                <VoiceRecorder
+                  label={t.recordAnswer}
+                  busy={busy || voice[q.index] === 'sending'}
+                  onRecorded={(audio) => void sendVoice(q.index, audio)}
+                />
+                <button
+                  type="button"
+                  className="link-button"
+                  disabled={busy}
+                  onClick={() => void decline(q.index)}
+                >
+                  {t.declineAnswer}
+                </button>
+              </div>
+              {voice[q.index] === 'sending' && <p className="ow-fine">{t.sendingVoice}</p>}
+              {voice[q.index] === 'sent' && <p className="ow-fine">{t.voiceSent}</p>}
+              {voice[q.index] && !['sending', 'sent'].includes(voice[q.index]) && (
+                <p className="ow-error">{voice[q.index]}</p>
+              )}
+              {q.declined ? (
+                <p className="ow-fine">{t.declinedNote}</p>
+              ) : (
+                q.answer && (
+                  <p className="ow-answered">
+                    {t.answered}: <span lang="id">{q.answer}</span> <TickIcon size={14} />
+                  </p>
+                )
+              )}
             </li>
           )
         })}
@@ -747,6 +807,25 @@ function ShareCard({ app, t }: { app: OwnerApplication; t: OwnerStrings }) {
         {t.shareTitle}
       </h2>
       <p>{t.shareLead}</p>
+      <div className="ow-share-scope">
+        <div>
+          <h3>{t.shareSeesTitle}</h3>
+          <ul className="ow-scope-yes">
+            {t.shareSees.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3>{t.shareNotTitle}</h3>
+          <ul className="ow-scope-no">
+            {t.shareNot.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <p>{t.shareOneLender}</p>
+      </div>
       {!code ? (
         <button className="ow-button ow-button-wide ow-button-light" onClick={create} disabled={!!busy}>
           {busy === 'share' ? t.sharing : t.shareButton}

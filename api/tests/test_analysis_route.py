@@ -272,3 +272,107 @@ def test_a_spent_gemini_quota_gets_a_clear_message(client, ready_application, mo
 
     assert response.status_code == 503
     assert "free daily quota" in response.json()["detail"]
+
+
+@pytest.fixture
+def disputed_file(client, fake_db, ready_application):
+    app_id, _, _ = ready_application
+    client.post(f"/api/applications/{app_id}/analyze")
+    context = fake_db.docs[("applications", app_id, "memo", "context")]
+    evidence_id = next(iter(fake_db.docs_in("applications", app_id, "evidence")))
+    context["extractions"] = {
+        evidence_id: {
+            "label": "Notebook page 1",
+            "lines": [{"line": 2, "amountRp": 850_000, "confidence": 0.5}],
+            "disagreements": [{"line": 2, "first": 850_000, "second": 650_000}],
+        }
+    }
+    return app_id, evidence_id
+
+
+def test_the_officer_confirms_a_disputed_reading(client, fake_db, disputed_file):
+    app_id, evidence_id = disputed_file
+    url = f"/api/applications/{app_id}/evidence/{evidence_id}/confirm"
+
+    assert client.post(url, json={"line": 3, "amountRp": 1}).status_code == 404
+    confirmed = client.post(url, json={"line": 2, "amountRp": 650_000})
+
+    assert confirmed.json() == {"pending": 0}
+    context = fake_db.docs[("applications", app_id, "memo", "context")]
+    assert context["confirmed"] == {evidence_id: {"2": 650_000}}
+    assert context["pending_confirmations"] is True
+    line = fake_db.docs[("applications", app_id, "evidence", evidence_id)]["extraction"]["lines"][0]
+    assert (line["amountRp"], line["confirmedByOfficer"]) == (650_000, True)
+
+
+def test_rechecking_after_a_confirmation_does_not_use_a_question_round(
+    client, fake_db, disputed_file, monkeypatch
+):
+    app_id, evidence_id = disputed_file
+    rounds = []
+
+    async def fake_judge(*, gemini, context, progress, answers=None, policy=None):
+        rounds.append(context.round)
+        result = canned_result([], round_=context.round)
+        result.extractions = {}
+        result.context = context
+        return result
+
+    monkeypatch.setattr(analysis, "judge", fake_judge)
+    client.post(
+        f"/api/applications/{app_id}/evidence/{evidence_id}/confirm",
+        json={"line": 2, "amountRp": 650_000},
+    )
+
+    assert client.post(f"/api/applications/{app_id}/reverify").status_code == 200
+    assert rounds == [0]
+    assert client.post(f"/api/applications/{app_id}/reverify").status_code == 409
+
+
+def test_only_the_officer_confirms_readings(client_as, fake_db, disputed_file):
+    app_id, evidence_id = disputed_file
+    fake_db.docs[("applications", app_id)]["ownerUid"] = "owner-9"
+
+    response = client_as("owner-9").post(
+        f"/api/applications/{app_id}/evidence/{evidence_id}/confirm",
+        json={"line": 2, "amountRp": 650_000},
+    )
+
+    assert response.status_code == 404
+
+
+def test_an_owner_may_decline_and_it_is_recorded_neutrally(client, fake_db, answered_file):
+    app_id, _ = answered_file
+
+    response = client.post(f"/api/applications/{app_id}/findings/0/answer", json={"declined": True})
+
+    assert response.status_code == 204
+    finding = fake_db.docs[("applications", app_id, "memo", "current")]["findings"][0]
+    assert (finding["declined"], finding["answer"]) == (True, "(prefers not to answer)")
+
+
+def test_a_spoken_answer_is_transcribed(client, fake_db, fake_gemini, answered_file):
+    from app.agents.interview_listener import SpokenAnswer
+
+    app_id, _ = answered_file
+
+    class Store:
+        async def read(self, path):
+            return b"audio", "audio/webm"
+
+    client.app.dependency_overrides[analysis.get_evidence_store] = lambda: Store()
+    fake_gemini.reading = SpokenAnswer(
+        audible=True, transcript="Ada kue titipan tetangga.", transcript_en="Consignment cakes."
+    )
+
+    response = client.post(
+        f"/api/applications/{app_id}/findings/0/answer",
+        json={"audioPath": f"evidence/{app_id}/judge-1/answer.webm"},
+    )
+
+    assert response.status_code == 204
+    finding = fake_db.docs[("applications", app_id, "memo", "current")]["findings"][0]
+    assert (finding["answer"], finding["answerEn"]) == (
+        "Ada kue titipan tetangga.",
+        "Consignment cakes.",
+    )

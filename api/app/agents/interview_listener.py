@@ -125,3 +125,28 @@ async def listen(gemini: Gemini, audio: bytes, mime_type: str) -> tuple[Intervie
         contents=contents, schema=InterviewReading, system=SYSTEM_PROMPT
     )
     return to_output(reading), model
+
+
+class SpokenAnswer(BaseModel):
+    audible: bool
+    transcript: str = Field(description="Exactly what was said, in the original language")
+    transcript_en: str = Field(description="A faithful English translation")
+
+
+ANSWER_PROMPT = """\
+You transcribe a short spoken answer from the owner of an Indonesian micro business to a loan
+officer's question. Write exactly what was said, in the language it was said, without summarising,
+correcting or adding anything; amounts stay as spoken ("tiga ratus ribu"). Then give a faithful
+English translation. If nothing intelligible was said, set audible to false.
+"""
+
+
+async def transcribe_answer(
+    gemini: Gemini, audio: bytes, mime_type: str, question: str
+) -> tuple[SpokenAnswer, str]:
+    """Transcribe an owner's spoken answer to one follow-up question."""
+    contents = [
+        types.Part.from_bytes(data=audio, mime_type=mime_type),
+        f"The question was: {question}",
+    ]
+    return await gemini.generate(contents=contents, schema=SpokenAnswer, system=ANSWER_PROMPT)

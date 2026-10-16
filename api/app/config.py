@@ -14,11 +14,14 @@ def _split(value: str) -> list[str]:
 # Gemini Developer API free tier, checked in AI Studio on 2026-10-15: Flash-Lite models allow 15
 # requests a minute and 500 a day each; Flash models 5 a minute and 20 a day each.
 FREE_READERS = ("gemini-3.5-flash-lite", "gemini-3.1-flash-lite")
+# Flash-Lite closes the writers' chain: when every Flash model is busy at once (seen on 2026-10-16),
+# a lighter writer finishes the file instead of the whole check failing.
 FREE_WRITERS = (
     "gemini-3.8-flash",
     "gemini-3.7-flash",
     "gemini-3.6-flash",
     "gemini-3-flash-preview",
+    *FREE_READERS,
 )
 FREE_TIER_RPM = {"lite": 15, "flash": 5}
 
