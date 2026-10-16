@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import asyncio
 import time
+from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime
 from functools import lru_cache
 from typing import Annotated, Any
@@ -18,18 +19,27 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from google.cloud import firestore
 
 from app.analysis.evidence_store import CloudStorageStore, EvidenceStore
-from app.analysis.pipeline import Application, EvidenceItem, run_pipeline
+from app.analysis.pipeline import (
+    AnalysisResult,
+    Application,
+    Context,
+    EvidenceItem,
+    Progress,
+    judge,
+    run_pipeline,
+)
 from app.auth import User, current_user
 from app.config import get_settings
 from app.gemini import Gemini, get_gemini
 from app.routers.applications import _audit, _owned_application
-from app.schemas import AnalyzeResponse, ApplicationStatus, EvidenceType
+from app.schemas import AnalyzeResponse, ApplicationStatus, EvidenceType, FollowUpAnswerRequest
 from app.store import get_firestore
 from app.tools.camel import camelize
 
 router = APIRouter(prefix="/api/applications", tags=["analysis"])
 
 STALE_RUN_SECONDS = 15 * 60  # a run older than this is treated as dead, so it can be restarted
+MAX_FOLLOW_UP_ROUNDS = 2  # the owner is asked at most twice; after that, more evidence is needed
 
 
 @lru_cache
@@ -89,6 +99,95 @@ async def analyze(
     if not items:
         raise HTTPException(status.HTTP_409_CONFLICT, "Add some evidence first")
 
+    settings = get_settings()
+    return await _run(
+        ref,
+        user,
+        lambda progress: run_pipeline(
+            gemini=gemini,
+            store=store,
+            application=_application(data),
+            items=items,
+            progress=progress,
+            max_parallel=settings.max_parallel_calls,
+            double_read=settings.ledger_double_read,
+        ),
+        failed_status=ApplicationStatus.COLLECTING,
+        action="analysis_completed",
+    )
+
+
+@router.post("/{application_id}/findings/{index}/answer", status_code=status.HTTP_204_NO_CONTENT)
+async def answer_follow_up(
+    application_id: str,
+    index: int,
+    body: FollowUpAnswerRequest,
+    user: Annotated[User, Depends(current_user)],
+    db: Annotated[firestore.AsyncClient, Depends(get_firestore)],
+) -> None:
+    """Record the owner's answer to one follow-up question, as the officer heard it."""
+    ref, _ = await _owned_application(db, application_id, user)
+    if not body.text:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT, "Type the owner's answer; voice notes come later"
+        )
+    memo_ref = ref.collection("memo").document("current")
+    snapshot = await memo_ref.get()
+    findings = (snapshot.to_dict() or {}).get("findings", []) if snapshot.exists else []
+    if not 0 <= index < len(findings) or not findings[index].get("followUpQuestion"):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "There is no such question")
+    findings[index] = {**findings[index], "answer": body.text.strip()}
+    await memo_ref.update({"findings": findings})
+    await _audit(ref, user, "follow_up_answered", question=findings[index]["followUpQuestion"])
+
+
+@router.post("/{application_id}/reverify", response_model=AnalyzeResponse)
+async def reverify(
+    application_id: str,
+    user: Annotated[User, Depends(current_user)],
+    db: Annotated[firestore.AsyncClient, Depends(get_firestore)],
+    gemini: Annotated[Gemini, Depends(get_gemini)],
+) -> AnalyzeResponse:
+    """Check the file again with the owner's answers, without reading the evidence again."""
+    ref, data = await _owned_application(db, application_id, user)
+    if _is_running(data):
+        raise HTTPException(status.HTTP_409_CONFLICT, "An analysis is already running")
+    memo = await ref.collection("memo").document("current").get()
+    saved = await ref.collection("memo").document("context").get()
+    if not (memo.exists and saved.exists):
+        raise HTTPException(status.HTTP_409_CONFLICT, "Run the analysis first")
+    context = Context.model_validate(saved.to_dict())
+    if context.round >= MAX_FOLLOW_UP_ROUNDS:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "The owner has been asked twice; collect more evidence instead",
+        )
+    answers = [
+        {"finding": f["text"], "question": f["followUpQuestion"], "answer": f["answer"]}
+        for f in (memo.to_dict() or {}).get("findings", [])
+        if f.get("answer") and f.get("followUpQuestion")
+    ]
+    if not answers:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Record at least one of the owner's answers")
+    context = context.model_copy(update={"round": context.round + 1})
+    return await _run(
+        ref,
+        user,
+        lambda progress: judge(gemini=gemini, context=context, progress=progress, answers=answers),
+        failed_status=ApplicationStatus(data.get("status", "needs_follow_up")),
+        action="reverified_with_answers",
+    )
+
+
+async def _run(
+    ref: Any,
+    user: User,
+    work: Callable[[Progress], Awaitable[AnalysisResult]],
+    *,
+    failed_status: ApplicationStatus,
+    action: str,
+) -> AnalyzeResponse:
+    """Run analysis work inside this request, streaming its steps to Firestore, then store it."""
     started = time.monotonic()
     now = datetime.now(UTC)
     run_ref = ref.collection("runs").document()
@@ -111,20 +210,12 @@ async def analyze(
             await run_ref.update({"steps": list(steps)})
 
     try:
-        result = await run_pipeline(
-            gemini=gemini,
-            store=store,
-            application=_application(data),
-            items=items,
-            progress=progress,
-            max_parallel=get_settings().max_parallel_calls,
-            double_read=get_settings().ledger_double_read,
-        )
+        result = await work(progress)
     except Exception as exc:
         await run_ref.update(
             {"state": "failed", "error": str(exc), "finishedAt": datetime.now(UTC)}
         )
-        await ref.update({"status": ApplicationStatus.COLLECTING.value})
+        await ref.update({"status": failed_status.value})
         raise HTTPException(status.HTTP_502_BAD_GATEWAY, "The analysis failed; try again") from exc
 
     for evidence_id, extraction in result.extractions.items():
@@ -137,18 +228,18 @@ async def analyze(
         f.follow_up_question and not f.resolved and f.severity in ("medium", "high")
         for f in result.findings
     )
-    new_status = ApplicationStatus.NEEDS_FOLLOW_UP if needs_answers else ApplicationStatus.READY
+    can_ask = result.round < MAX_FOLLOW_UP_ROUNDS
+    new_status = (
+        ApplicationStatus.NEEDS_FOLLOW_UP if needs_answers and can_ask else ApplicationStatus.READY
+    )
+    stored = result.model_dump(mode="json", by_alias=True, exclude={"extractions", "context"})
     await (
         ref.collection("memo")
         .document("current")
-        .set(
-            {
-                "runId": run_ref.id,
-                **camelize(result.model_dump(mode="json", by_alias=True, exclude={"extractions"})),
-                "generatedAt": firestore.SERVER_TIMESTAMP,
-            }
-        )
+        .set({"runId": run_ref.id, **camelize(stored), "generatedAt": firestore.SERVER_TIMESTAMP})
     )
+    # Kept as the pipeline wrote it, for re-checking with the owner's answers.
+    await ref.collection("memo").document("context").set(result.context.model_dump(mode="json"))
     await ref.update(
         {
             "status": new_status.value,
@@ -166,9 +257,7 @@ async def analyze(
             "models": result.models,
         }
     )
-    await _audit(
-        ref, user, "analysis_completed", assessment=result.assessment.value, runId=run_ref.id
-    )
+    await _audit(ref, user, action, assessment=result.assessment.value, runId=run_ref.id)
     return AnalyzeResponse(
         run_id=run_ref.id, assessment=result.assessment, status=new_status, latency_ms=latency_ms
     )
