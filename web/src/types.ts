@@ -57,6 +57,9 @@ export type Finding = {
   figures: string[]
   source: 'code' | 'verifier'
   answer: string | null
+  answerEn?: string | null
+  answerAudio?: string | null
+  declined?: boolean
   resolved: boolean
 }
 

@@ -3158,3 +3158,84 @@ textarea:focus {
     border-top: 1px solid var(--rule);
   }
 }
+
+/* Voice answers and confirming disputed readings */
+.answer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.answer-actions input {
+  width: 180px;
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.voice-button {
+  gap: 8px;
+}
+
+.voice-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--inconsistent);
+}
+
+.voice-button.recording .voice-dot {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.answer-en {
+  display: block;
+}
+
+.confirm-readings {
+  max-width: 900px;
+  margin-bottom: 28px;
+  padding: 18px 22px;
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--brass);
+  background: var(--paper-raised);
+}
+
+.confirm-readings h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.confirm-readings ul {
+  display: grid;
+  gap: 14px;
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.confirm-readings li {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.confirm-readings img {
+  width: 96px;
+  height: 128px;
+  object-fit: cover;
+  object-position: top;
+  border: 1px solid var(--rule);
+}

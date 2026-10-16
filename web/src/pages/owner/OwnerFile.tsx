@@ -35,6 +35,8 @@ import {
   UndoIcon,
 } from './icons.tsx'
 import OwnerShell from './OwnerShell.tsx'
+import VoiceRecorder from '../../components/VoiceRecorder.tsx'
+import { answerByVoice, declineQuestion } from '../../officer.ts'
 
 const MAX_BYTES = 15 * 1024 * 1024
 
@@ -187,6 +189,7 @@ export default function OwnerFile() {
               <SummaryCard summary={summary} lang={lang} t={t} />
               <Questions
                 key={summary.updatedAt?.seconds ?? 0}
+                id={id}
                 summary={summary}
                 lang={lang}
                 t={t}
@@ -615,12 +618,14 @@ function SummaryCard({
 }
 
 function Questions({
+  id,
   summary,
   lang,
   t,
   busy,
   onRecheck,
 }: {
+  id: string
   summary: OwnerSummary
   lang: 'en' | 'id'
   t: OwnerStrings
@@ -632,7 +637,26 @@ function Questions({
     Object.fromEntries(questions.map((q) => [q.index, q.answer ?? ''])),
   )
   const [hint, setHint] = useState(false)
+  const [voice, setVoice] = useState<Record<number, 'sending' | 'sent' | string>>({})
   if (questions.length === 0) return null
+
+  async function sendVoice(index: number, audio: Blob) {
+    setVoice((v) => ({ ...v, [index]: 'sending' }))
+    try {
+      await answerByVoice(id, index, audio)
+      setVoice((v) => ({ ...v, [index]: 'sent' }))
+    } catch (e) {
+      setVoice((v) => ({ ...v, [index]: e instanceof Error ? e.message : String(e) }))
+    }
+  }
+
+  async function decline(index: number) {
+    try {
+      await declineQuestion(id, index)
+    } catch (e) {
+      setVoice((v) => ({ ...v, [index]: e instanceof Error ? e.message : String(e) }))
+    }
+  }
 
   const changed = questions
     .map((q): [number, string] => [q.index, (drafts[q.index] ?? '').trim()])
@@ -683,7 +707,35 @@ function Questions({
                   setDrafts((d) => ({ ...d, [q.index]: e.target.value }))
                 }}
               />
-              {q.answer && <p className="ow-answered">{t.answered} <TickIcon size={14} /></p>}
+              <div className="ow-answer-more">
+                <VoiceRecorder
+                  label={t.recordAnswer}
+                  busy={busy || voice[q.index] === 'sending'}
+                  onRecorded={(audio) => void sendVoice(q.index, audio)}
+                />
+                <button
+                  type="button"
+                  className="link-button"
+                  disabled={busy}
+                  onClick={() => void decline(q.index)}
+                >
+                  {t.declineAnswer}
+                </button>
+              </div>
+              {voice[q.index] === 'sending' && <p className="ow-fine">{t.sendingVoice}</p>}
+              {voice[q.index] === 'sent' && <p className="ow-fine">{t.voiceSent}</p>}
+              {voice[q.index] && !['sending', 'sent'].includes(voice[q.index]) && (
+                <p className="ow-error">{voice[q.index]}</p>
+              )}
+              {q.declined ? (
+                <p className="ow-fine">{t.declinedNote}</p>
+              ) : (
+                q.answer && (
+                  <p className="ow-answered">
+                    {t.answered}: <span lang="id">{q.answer}</span> <TickIcon size={14} />
+                  </p>
+                )
+              )}
             </li>
           )
         })}

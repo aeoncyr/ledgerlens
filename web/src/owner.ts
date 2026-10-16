@@ -51,6 +51,7 @@ export type OwnerQuestion = {
   question: string
   questionEn: string | null
   answer: string | null
+  declined?: boolean
 }
 
 export type OwnerSummary = {

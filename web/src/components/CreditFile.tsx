@@ -234,7 +234,15 @@ export default function CreditFile({
                   )}
                   {finding.answer && (
                     <p className="answer">
-                      <strong>Owner’s answer:</strong> <span lang="id">{finding.answer}</span>
+                      <strong>Owner’s answer{finding.answerAudio ? ' (spoken, transcribed by Gemini)' : ''}:</strong>{' '}
+                      {finding.declined ? (
+                        <em>prefers not to answer (recorded neutrally)</em>
+                      ) : (
+                        <span lang="id">{finding.answer}</span>
+                      )}
+                      {finding.answerEn && !finding.declined && (
+                        <span className="fine answer-en"> {finding.answerEn}</span>
+                      )}
                     </p>
                   )}
                   <Cite citations={finding.citations} />

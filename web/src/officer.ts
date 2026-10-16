@@ -150,6 +150,42 @@ export async function answerQuestion(id: string, index: number, text: string): P
   })
 }
 
+/** Send a recorded answer: it is stored in the caller's folder and Gemini transcribes it. */
+export async function answerByVoice(id: string, index: number, audio: Blob): Promise<void> {
+  const user = await ensureSignedIn()
+  const extension = audio.type.includes('mp4') ? 'm4a' : 'webm'
+  const path = `evidence/${id}/${user.uid}/answer-${index}-${Date.now()}.${extension}`
+  await uploadBytes(ref(storage, path), audio, { contentType: audio.type || 'audio/webm' })
+  await apiFetch(`/api/applications/${id}/findings/${index}/answer`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ audioPath: path }),
+  })
+}
+
+/** Record, neutrally, that the owner prefers not to answer a question. */
+export async function declineQuestion(id: string, index: number): Promise<void> {
+  await apiFetch(`/api/applications/${id}/findings/${index}/answer`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ declined: true }),
+  })
+}
+
+/** The officer settles a notebook line where the two readings disagree. */
+export async function confirmReading(
+  id: string,
+  evidenceId: string,
+  line: number,
+  amountRp: number,
+): Promise<{ pending: number }> {
+  return apiFetch(`/api/applications/${id}/evidence/${evidenceId}/confirm`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ line, amountRp }),
+  })
+}
+
 /** Check the file again with the owner's answers; only the verifier and memo writer run. */
 export async function recheck(id: string): Promise<void> {
   const base = import.meta.env.VITE_ANALYZE_BASE || ''
