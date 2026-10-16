@@ -15,7 +15,7 @@ type Agent = {
 }
 
 const READERS = 'gemini-3.5-flash-lite, then gemini-3.1-flash-lite'
-const WRITERS = 'gemini-3.8-flash, then 3.7, 3.6 and 3 Flash · low thinking'
+const WRITERS = 'gemini-3.8-flash, then 3.7, 3.6 and 3 Flash, then Flash-Lite · low thinking'
 
 const AGENTS: { stage: string; agents: Agent[] }[] = [
   {
@@ -252,7 +252,8 @@ export default function HowItWorks() {
                 <p>
                   Each Gemini model has its own daily quota, so the work is split by role: readers on
                   Flash-Lite, the verifier and memo writer on a chain of Flash models. A busy model
-                  hands over to the next at once.
+                  hands over to the next at once, and if every Flash model is busy, Flash-Lite
+                  finishes the file rather than the check failing.
                 </p>
               </div>
               <div>
