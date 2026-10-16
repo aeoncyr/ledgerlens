@@ -22,7 +22,8 @@ wall: the app signs you in anonymously in the background.
 1. **Read a finished credit file.** Open the [Warung Makan Hendra sample](https://ledger-lens-511708.web.app/samples/pak-hendra),
    a food stall whose notebook claims far more than its purchases can support. Click any citation, such as
    *Notebook page 1, line 2*, to see the photographed page beside what Gemini read from it, with that line
-   highlighted. The other two samples are [Warung Bu Sari](https://ledger-lens-511708.web.app/samples/bu-sari)
+   highlighted, or *Interview, 0:04* to hear the owner put his daily sales at a third of what his notebook
+   claims. The other two samples are [Warung Bu Sari](https://ledger-lens-511708.web.app/samples/bu-sari)
    (verified) and [Penjahit Pak Joko](https://ledger-lens-511708.web.app/samples/pak-joko) (partially
    verified). These files were analysed in advance, so they open instantly.
 2. **Run one yourself as a loan officer** (about five minutes, most of it waiting on the free tier):
