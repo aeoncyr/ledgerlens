@@ -190,14 +190,15 @@ export default function Evidence() {
               </div>
               <div className="kind-actions">
                 <span className="count">{counts.get(kind.type) ?? 0} on file</span>
-                <label className="button quiet">
+                <label className="button quiet file-button">
                   Add
                   <input
                     type="file"
+                    className="visually-hidden"
+                    aria-label={`Add ${kind.title}`}
                     accept={kind.accept}
                     capture={kind.accept === 'image/*' ? 'environment' : undefined}
                     multiple
-                    hidden
                     disabled={!!progress}
                     onChange={(e) => upload(kind.type, e)}
                   />
@@ -215,7 +216,12 @@ export default function Evidence() {
           interview with the owner of a fictional business, uploaded as if you had just taken them.
         </p>
         <div className="page-actions">
-          <select value={sample} onChange={(e) => setSample(e.target.value)} disabled={!!progress}>
+          <select
+            aria-label="Sample business"
+            value={sample}
+            onChange={(e) => setSample(e.target.value)}
+            disabled={!!progress}
+          >
             {SAMPLES.map((s) => (
               <option key={s.slug} value={s.slug}>
                 {s.alias}

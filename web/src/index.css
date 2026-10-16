@@ -3239,3 +3239,459 @@ textarea:focus {
   object-position: top;
   border: 1px solid var(--rule);
 }
+
+/* ==========================================================================
+ * UX and accessibility pass (demo polish)
+ * Citation previews, the evidence viewer on phones, the monthly cash-flow chart, stacked tables
+ * that keep their labels, the officer's current page, a calm "still working" line, and two
+ * contrast fixes.
+ * ========================================================================== */
+
+/* Citation chips and their previews */
+.cite-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.cite {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+}
+
+@media (pointer: coarse) {
+  .cite {
+    min-height: 36px;
+    padding: 4px 10px;
+    font-size: 13px;
+  }
+}
+
+.cite-preview {
+  position: absolute;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 12px;
+  width: 300px;
+  padding: 12px;
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--brand);
+  background: var(--paper-raised);
+  box-shadow: 0 14px 34px rgb(8 42 36 / 0.2);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  pointer-events: none;
+}
+
+.cite-preview.below,
+.cite-preview.below-end {
+  top: calc(100% + 6px);
+}
+
+.cite-preview.above,
+.cite-preview.above-end {
+  bottom: calc(100% + 6px);
+}
+
+.cite-preview.below,
+.cite-preview.above {
+  left: 0;
+}
+
+.cite-preview.below-end,
+.cite-preview.above-end {
+  right: 0;
+}
+
+.cite-preview.sheet {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  width: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cite-preview {
+    animation: cite-in 140ms ease-out;
+  }
+}
+
+@keyframes cite-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+.cite-thumb {
+  width: 64px;
+  height: 86px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  object-fit: cover;
+  object-position: top;
+}
+
+.cite-thumb.audio {
+  display: grid;
+  place-items: center;
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-size: 20px;
+}
+
+.cite-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cite-where {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cite-text {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.cite-note {
+  color: var(--ink-soft);
+}
+
+.cite-amount {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--brand);
+}
+
+.cite-hint {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* The evidence viewer: the title and Close stay in view while the reading scrolls. */
+.viewer-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--paper-raised);
+}
+
+/* The monthly cash-flow chart; the table under it carries the exact figures. */
+.cf-figure {
+  margin: 0;
+}
+
+.cf-figure figcaption {
+  margin: 0 0 14px;
+  max-width: 70ch;
+}
+
+.cf-chart {
+  margin-bottom: 22px;
+  padding: 18px 18px 6px;
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+}
+
+.cf-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin: 0 0 30px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.cf-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cf-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.cf-swatch.qris,
+.cf-bar.qris .cf-fill {
+  background: var(--brand);
+}
+
+.cf-swatch.notebook,
+.cf-bar.notebook .cf-fill {
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(176 138 62 / 0.6) 0 3px,
+    rgb(176 138 62 / 0.22) 3px 7px
+  );
+  box-shadow: inset 0 0 0 1.5px #94742c;
+}
+
+.cf-swatch.receipts,
+.cf-bar.receipts .cf-fill {
+  background: #7d8984;
+}
+
+.cf-plot {
+  position: relative;
+  height: 230px;
+  margin-left: 38px;
+}
+
+.cf-unit {
+  position: absolute;
+  top: -24px;
+  left: -38px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.cf-grid {
+  position: absolute;
+  inset: 0 0 30px;
+}
+
+.cf-tick {
+  position: absolute;
+  right: 0;
+  left: 0;
+  border-top: 1px dashed var(--rule);
+}
+
+.cf-tick:first-child {
+  border-top: 1px solid var(--rule-strong);
+}
+
+.cf-tick-label {
+  position: absolute;
+  left: -38px;
+  width: 32px;
+  font-size: 11px;
+  line-height: 1;
+  text-align: right;
+  color: var(--muted);
+  transform: translateY(-50%);
+}
+
+.cf-groups {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: 12px;
+  padding-inline: 8px;
+}
+
+.cf-group {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cf-bars {
+  display: flex;
+  flex: 1;
+  gap: 6px;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.cf-bar {
+  display: flex;
+  align-items: flex-end;
+  width: min(56px, 28%);
+  height: 100%;
+}
+
+.cf-fill {
+  position: relative;
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+}
+
+.cf-value {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  padding-bottom: 3px;
+  font-size: 11px;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--ink-soft);
+  transform: translateX(-50%);
+}
+
+.cf-month {
+  height: 30px;
+  font-size: 13px;
+  line-height: 30px;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+/* Column headings in figure tables read as words, not figures. */
+.figures-table thead .num {
+  font-family: var(--sans);
+}
+
+/* The owner's summary heading keeps its English gloss on its own line. */
+#owner-heading .fine {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* On the officer's file the business name is a level-two heading with the same look. */
+.file-title .file-name {
+  margin: 0 0 4px;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.1;
+}
+
+/* The officer's current page in the masthead. */
+.masthead[aria-label='Officer workspace'] .nav-links a[aria-current='page'] {
+  color: var(--brand-ink);
+  box-shadow: inset 0 -2px 0 var(--brass);
+}
+
+/* A calm note when a run has been quiet for a while. */
+.trace-quiet {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--brass);
+  background: var(--paper);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.trace-quiet-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brass);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .trace-quiet-dot {
+    animation: trace-breathe 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes trace-breathe {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* The officer's "Add" buttons wrap a file input that stays reachable by keyboard. */
+.file-button {
+  position: relative;
+}
+
+.file-button:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Contrast: small text on the pale brass backgrounds. */
+.next-tag {
+  color: #7a540c;
+}
+
+.hero .hv-chip-b small {
+  color: var(--ink-soft);
+}
+
+@media (max-width: 560px) {
+  .viewer {
+    width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+  }
+
+  .viewer-head {
+    padding: 10px 14px;
+  }
+
+  .viewer-head h3 {
+    font-size: 19px;
+  }
+
+  .viewer-body {
+    gap: 14px;
+    padding: 14px;
+  }
+
+  /* The photo leaves room for the highlighted reading below it. */
+  .viewer-body img {
+    height: 38vh;
+    object-fit: contain;
+    background: var(--paper);
+  }
+
+  .cf-chart {
+    padding: 14px 10px 4px;
+  }
+
+  .cf-groups {
+    gap: 6px;
+    padding-inline: 2px;
+  }
+
+  .cf-bars {
+    gap: 4px;
+  }
+
+  /* Stacked cash-flow rows read as "label … amount". */
+  .cashflow-table td {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 4px;
+  }
+
+  .cashflow-table td::before {
+    display: inline;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+
+  .facts-table .num {
+    text-align: left;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .facts-table td::before {
+    font-family: var(--sans);
+  }
+}

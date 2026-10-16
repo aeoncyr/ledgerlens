@@ -572,6 +572,7 @@ export default function ApplicationFile() {
       crumbs={crumbs}
       step={stepOf(app)}
       done={app.status === 'decided'}
+      titleHidden
     >
       <div className="page-actions">
         <span className="status-label">{STATUS_LABEL[app.status]}</span>
@@ -590,6 +591,7 @@ export default function ApplicationFile() {
       )}
       <CreditFile
         file={file}
+        titleLevel={2}
         findingExtra={
           app.status === 'decided' || app.status === 'analyzing' || (file.round ?? 0) >= 2
             ? undefined

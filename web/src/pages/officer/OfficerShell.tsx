@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import Logo from '../../components/Logo.tsx'
 
 export type OfficerStep = 1 | 2 | 3 | 4
@@ -44,6 +44,7 @@ export default function OfficerShell({
   crumbs,
   step,
   done,
+  titleHidden,
   children,
 }: {
   title: string
@@ -52,6 +53,9 @@ export default function OfficerShell({
   step?: OfficerStep
   // The last step is finished: the decision is recorded.
   done?: boolean
+  // The page shows its own visible title (the credit file's business name); the h1 stays for
+  // screen readers.
+  titleHidden?: boolean
   children: ReactNode
 }) {
   return (
@@ -63,24 +67,28 @@ export default function OfficerShell({
             LedgerLens
           </Link>
           <div className="nav-links">
-            <Link to="/app">Applications</Link>
-            <Link to="/app/new">New application</Link>
+            <NavLink to="/app" end>
+              Applications
+            </NavLink>
+            <NavLink to="/app/new" end>
+              New application
+            </NavLink>
             <Link to="/">About</Link>
           </div>
         </div>
       </nav>
-      <div className="prototype-note">
+      <aside className="prototype-note" aria-label="Prototype notice">
         <div className="container">
           Prototype: use fictional businesses only. Photos are read by Gemini’s free tier.
         </div>
-      </div>
+      </aside>
       <main className="container officer-page">
         <p className="crumbs">
           <Link to="/app">Applications</Link>
           {crumbs}
         </p>
         {step && <Progress step={step} done={done} />}
-        <h1 className="page-title">{title}</h1>
+        <h1 className={titleHidden ? 'visually-hidden' : 'page-title'}>{title}</h1>
         {children}
       </main>
     </>

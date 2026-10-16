@@ -19,6 +19,9 @@ const PYTHON_AGENTS = new Set(['intake', 'calculator', 'policy'])
 
 const SAMPLE_LINES = 12
 
+// Seconds without a new step before the trace says, calmly, that the run is still going.
+const QUIET_SECONDS = 30
+
 // A step that started is hidden once a later step reports on the same item or stage, so the trace
 // reads as a list of what has been done, plus what is happening now.
 function visibleSteps(steps: RunStep[]): RunStep[] {
@@ -74,6 +77,8 @@ export default function LiveTrace({ run }: { run: Run | null }) {
       : run.latencyMs
         ? run.latencyMs / 1000
         : last - start
+  // No new step for a while: say so, so a slow free-tier call doesn't look like a stall.
+  const quiet = running && start > 0 && now - Math.max(last, start) >= QUIET_SECONDS
 
   return (
     <div className="trace">
@@ -126,6 +131,13 @@ export default function LiveTrace({ run }: { run: Run | null }) {
           )
         })}
       </ol>
+      {quiet && (
+        <p className="trace-quiet" role="status">
+          <span className="trace-quiet-dot" aria-hidden="true" />
+          Still working. Gemini’s free tier is busy at times; LedgerLens waits and moves to another
+          model when one is slow.
+        </p>
+      )}
       {run.state === 'running' && (
         <p className="fine">
           Gemini reads every item in parallel; arithmetic is done by code. On the free tier this

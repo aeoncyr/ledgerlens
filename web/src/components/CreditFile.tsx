@@ -7,6 +7,8 @@ import {
   type EvidenceItem,
   type Finding,
 } from '../types.ts'
+import CashflowChart from './CashflowChart.tsx'
+import CiteChip from './CiteChip.tsx'
 import EvidenceViewer from './EvidenceViewer.tsx'
 
 const rupiah = new Intl.NumberFormat('id-ID')
@@ -113,10 +115,13 @@ function RevenueRange({ low, high }: { low: number; high: number }) {
 export default function CreditFile({
   file,
   findingExtra,
+  titleLevel = 1,
 }: {
   file: CreditFileData
   // The officer's file adds an answer box under each open question.
   findingExtra?: (finding: Finding, index: number) => ReactNode
+  // The business name is the page's heading, unless the page already has one.
+  titleLevel?: 1 | 2
 }) {
   const [open, setOpen] = useState<{ item: EvidenceItem; locator: string | null } | null>(null)
   const byId = new Map(file.evidence.map((item) => [item.id, item]))
@@ -128,24 +133,24 @@ export default function CreditFile({
     return byId.get(id)?.reading?.label ?? id
   }
 
-  function Cite({ citations }: { citations: Citation[] }) {
+  function openEvidence(item: EvidenceItem, locator: string) {
+    setOpen({ item, locator })
+  }
+
+  // A plain function, not a component, so the chips keep their identity (and focus) across renders.
+  function cites(citations: Citation[]) {
     if (citations.length === 0) return null
     return (
       <span className="cites">
-        {citations.map((c, index) => {
-          const item = byId.get(c.evidenceId)
-          return (
-            <button
-              key={`${c.evidenceId}-${c.locator}-${index}`}
-              type="button"
-              className="cite"
-              disabled={!item}
-              onClick={() => item && setOpen({ item, locator: c.locator })}
-            >
-              {label(c.evidenceId)}, {c.locator}
-            </button>
-          )
-        })}
+        {citations.map((c, index) => (
+          <CiteChip
+            key={`${c.evidenceId}-${c.locator}-${index}`}
+            item={byId.get(c.evidenceId)}
+            locator={c.locator}
+            label={label(c.evidenceId)}
+            onOpen={openEvidence}
+          />
+        ))}
       </span>
     )
   }
@@ -163,7 +168,7 @@ export default function CreditFile({
         </div>
         <div className="file-title">
           <div>
-            <h1>{app.alias}</h1>
+            {titleLevel === 1 ? <h1>{app.alias}</h1> : <h2 className="file-name">{app.alias}</h2>}
             <p className="file-sub">
               {app.businessType}, {app.city} · {app.yearsOperating} years trading · requests{' '}
               {rp(app.amount)} over {app.tenorMonths} months
@@ -245,7 +250,7 @@ export default function CreditFile({
                       )}
                     </p>
                   )}
-                  <Cite citations={finding.citations} />
+                  {cites(finding.citations)}
                   {findingExtra?.(finding, index)}
                 </li>
               ))}
@@ -256,7 +261,7 @@ export default function CreditFile({
                 <ul className="agrees">
                   {file.confirmations.map((c, index) => (
                     <li key={index}>
-                      {c.text} <Cite citations={c.citations} />
+                      {c.text} {cites(c.citations)}
                     </li>
                   ))}
                 </ul>
@@ -266,38 +271,53 @@ export default function CreditFile({
 
           <section aria-labelledby="cashflow-heading">
             <h2 id="cashflow-heading">Cash flow by month</h2>
-            <div className="table-scroll">
-              <table className="register figures-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Month</th>
-                    <th scope="col" className="num">
-                      Proven by QRIS
-                    </th>
-                    <th scope="col" className="num">
-                      Claimed in notebook
-                    </th>
-                    <th scope="col" className="num">
-                      Purchases on receipts
-                    </th>
-                    <th scope="col" className="num">
-                      Expenses in notebook
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {file.cashflow.months.map((m) => (
-                    <tr key={m.month}>
-                      <th scope="row">{month(m.month)}</th>
-                      <td className="num">{rupiah.format(m.provenInflows)}</td>
-                      <td className="num">{rupiah.format(m.claimedSales)}</td>
-                      <td className="num">{rupiah.format(m.receiptPurchases)}</td>
-                      <td className="num">{rupiah.format(m.claimedExpenses)}</td>
+            <figure className="cf-figure" aria-labelledby="cashflow-caption">
+              <figcaption id="cashflow-caption" className="fine">
+                What QRIS proves, what the notebook claims and what the receipts show was bought,
+                in juta (millions of rupiah). The table gives the exact figures.
+              </figcaption>
+              <CashflowChart months={file.cashflow.months} />
+              <div className="table-scroll">
+                <table className="register figures-table cashflow-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Month</th>
+                      <th scope="col" className="num">
+                        Proven by QRIS
+                      </th>
+                      <th scope="col" className="num">
+                        Claimed in notebook
+                      </th>
+                      <th scope="col" className="num">
+                        Purchases on receipts
+                      </th>
+                      <th scope="col" className="num">
+                        Expenses in notebook
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {file.cashflow.months.map((m) => (
+                      <tr key={m.month}>
+                        <th scope="row">{month(m.month)}</th>
+                        <td className="num" data-label="Proven by QRIS">
+                          {rupiah.format(m.provenInflows)}
+                        </td>
+                        <td className="num" data-label="Claimed in notebook">
+                          {rupiah.format(m.claimedSales)}
+                        </td>
+                        <td className="num" data-label="Purchases on receipts">
+                          {rupiah.format(m.receiptPurchases)}
+                        </td>
+                        <td className="num" data-label="Expenses in notebook">
+                          {rupiah.format(m.claimedExpenses)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </figure>
             <p className="fine">
               Amounts in rupiah, added up by code from the dated lines of each piece of evidence.
             </p>
@@ -312,7 +332,7 @@ export default function CreditFile({
               <div className="memo-section" key={key}>
                 <h3>{title}</h3>
                 <p>{file.memo[key].text}</p>
-                <Cite citations={file.memo[key].citations} />
+                {cites(file.memo[key].citations)}
               </div>
             ))}
             <div className="memo-section">
@@ -329,7 +349,7 @@ export default function CreditFile({
             <section aria-labelledby="figures-heading">
               <h2 id="figures-heading">Every figure in this file</h2>
               <div className="table-scroll">
-                <table className="register figures-table">
+                <table className="register figures-table facts-table">
                   <thead>
                     <tr>
                       <th scope="col">Figure</th>
@@ -342,9 +362,9 @@ export default function CreditFile({
                   <tbody>
                     {memoFigures.map((fact) => (
                       <tr key={fact.key}>
-                        <td>{fact.label}</td>
+                        <td className="fact-label">{fact.label}</td>
                         <td className="num">{fact.display}</td>
-                        <td>
+                        <td data-label="Computed from">
                           {fact.sources.length
                             ? fact.sources.map(label).join(', ')
                             : origin(fact.key)}

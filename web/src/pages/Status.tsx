@@ -25,7 +25,7 @@ export default function Status() {
 
   return (
     <main className="container section">
-      <h2>System status</h2>
+      <h1>System status</h1>
       <ul className="status-list">
         <li>
           <span>API</span>
