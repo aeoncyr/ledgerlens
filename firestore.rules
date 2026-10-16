@@ -14,18 +14,18 @@ service cloud.firestore {
 
     // The lender's officer on this file.
     function isOfficer(appId) {
-      return signedIn() && application(appId).officerUid == request.auth.uid;
+      return signedIn() && application(appId).get('officerUid', null) == request.auth.uid;
     }
 
     // The business owner who started this file.
     function isOwner(appId) {
-      return signedIn() && application(appId).ownerUid == request.auth.uid;
+      return signedIn() && application(appId).get('ownerUid', null) == request.auth.uid;
     }
 
     match /applications/{appId} {
       allow read: if signedIn()
-        && (resource.data.officerUid == request.auth.uid
-          || resource.data.ownerUid == request.auth.uid);
+        && (resource.data.get('officerUid', null) == request.auth.uid
+          || resource.data.get('ownerUid', null) == request.auth.uid);
 
       // The owner sees their evidence, the progress of a check, and the summary written for them.
       match /evidence/{doc} {
