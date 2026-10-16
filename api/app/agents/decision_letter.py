@@ -152,6 +152,9 @@ async def write_letter(
                 system=SYSTEM_PROMPT,
                 facts=facts,
                 quoted=quoted,
+                # A short letter around figures code fills in: Flash-Lite writes it in seconds,
+                # while Flash under load took over a minute (Oct 17), longer than anyone waits.
+                role="read",
             ),
             timeout=LETTER_TIMEOUT_SECONDS,
         )

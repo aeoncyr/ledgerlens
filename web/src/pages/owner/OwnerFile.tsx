@@ -104,6 +104,10 @@ export default function OwnerFile() {
   const consented = !!app.consent?.given
   const checking =
     busy === 'check' || busy === 'recheck' || (app.status === 'analyzing' && run?.state !== 'failed')
+  // While the lender decides, or with a loan on offer, the file stays as decided on: no new
+  // records, no re-check, no more answers to the old questions.
+  const locked =
+    app.status === 'awaiting_signoff' || (app.status === 'decided' && decision?.action === 'approve')
   const stage = !consented ? 0 : checking ? 2 : summary ? (app.officerUid ? 4 : 3) : 1
 
   async function act(kind: Busy, work: () => Promise<void>) {
@@ -209,22 +213,24 @@ export default function OwnerFile() {
           {summary && (
             <>
               <SummaryCard summary={summary} lang={lang} t={t} />
-              <Questions
-                key={summary.updatedAt?.seconds ?? 0}
-                id={id}
-                summary={summary}
-                lang={lang}
-                t={t}
-                busy={busy !== null}
-                onRecheck={(answers) =>
-                  act('recheck', async () => {
-                    setProgress(t.savingAnswers)
-                    for (const [index, text] of answers) await answerQuestion(id, index, text)
-                    setProgress(null)
-                    await recheck(id)
-                  })
-                }
-              />
+              {!locked && (
+                <Questions
+                    key={summary.updatedAt?.seconds ?? 0}
+                  id={id}
+                  summary={summary}
+                  lang={lang}
+                  t={t}
+                  busy={busy !== null}
+                  onRecheck={(answers) =>
+                    act('recheck', async () => {
+                      setProgress(t.savingAnswers)
+                      for (const [index, text] of answers) await answerQuestion(id, index, text)
+                      setProgress(null)
+                      await recheck(id)
+                    })
+                  }
+                />
+              )}
               <ShareCard app={app} t={t} />
             </>
           )}
@@ -235,11 +241,7 @@ export default function OwnerFile() {
             summary={summary}
             busy={busy}
             progress={progress}
-            // While the lender decides, or with a loan on offer, the file stays as decided on.
-            locked={
-              app.status === 'awaiting_signoff' ||
-              (app.status === 'decided' && decision?.action === 'approve')
-            }
+            locked={locked}
             onPick={onPick}
             onSample={(slug) => act('upload', () => sendSample(slug))}
             onCheck={() => act('check', () => runCheck(id))}
