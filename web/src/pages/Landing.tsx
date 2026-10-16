@@ -92,9 +92,9 @@ export default function Landing() {
                 <Link className="button on-dark" to={`/samples/${SAMPLES[0].slug}`}>
                   Open a sample credit file
                 </Link>
-                <a className="link-on-dark" href="#how">
-                  How a file is made
-                </a>
+                <Link className="link-on-dark" to="/app/new">
+                  Try it as a loan officer
+                </Link>
               </div>
             </div>
             <CreditFileCard sample={SAMPLES[0]} />

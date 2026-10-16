@@ -15,6 +15,7 @@ export default function SiteNav({ home = false }: { home?: boolean }) {
           <a href={`${prefix}#how`}>How it works</a>
           <a href={`${prefix}#accuracy`}>Accuracy</a>
           <a href={`${prefix}#safeguards`}>Safeguards</a>
+          <Link to="/app">Officer app</Link>
         </div>
       </div>
     </nav>
