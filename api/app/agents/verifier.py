@@ -70,7 +70,9 @@ Return findings, each with:
 - severity: high only when sources clearly contradict each other on a material figure or a
   document looks altered; medium when an answer or more evidence is needed before relying on a
   figure; low for minor points.
-- citations: the evidence_id and a locator copied from the case file, for every source involved.
+- citations: the evidence_id and a locator for every source involved. A locator is "line N" or
+  "row N" as the reading lists it, "total" or "items" for a receipt, the m:ss time for the
+  interview, or "whole item". Never use a field name as a locator.
 - follow_up_question: when the owner could explain it, a short, polite question in Bahasa
   Indonesia, using "Bapak/Ibu", that does not accuse; plus its English translation.
 

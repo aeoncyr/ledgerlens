@@ -8,6 +8,11 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_APP_ID: string
   /** Optional absolute API origin. Empty means same origin, through the Firebase Hosting rewrite. */
   readonly VITE_API_BASE?: string
+  /**
+   * The Cloud Run URL, called directly for /analyze: an analysis runs inside its request for a
+   * minute or more, longer than Firebase Hosting lets a request last.
+   */
+  readonly VITE_ANALYZE_BASE?: string
 }
 
 interface ImportMeta {

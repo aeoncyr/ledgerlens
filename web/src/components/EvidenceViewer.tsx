@@ -33,6 +33,9 @@ function Reading({ item, locator }: { item: EvidenceItem; locator: string | null
             <th scope="col">Line</th>
             <th scope="col">As written</th>
             <th scope="col" className="num">
+              Amount
+            </th>
+            <th scope="col" className="num">
               Rupiah
             </th>
           </tr>
@@ -41,11 +44,8 @@ function Reading({ item, locator }: { item: EvidenceItem; locator: string | null
           {rowsOf(reading, 'lines').map((line) => (
             <tr key={String(line.line)} className={line.line === marked ? 'marked' : undefined}>
               <td className="col-line">{String(line.line)}</td>
-              <td>
-                {line.dateText ? <span className="date">{String(line.dateText)} </span> : null}
-                {String(line.description)}{' '}
-                {line.amountText ? <span className="written">{String(line.amountText)}</span> : null}
-              </td>
+              <td>{String(line.description)}</td>
+              <td className="num">{line.amountText ? String(line.amountText) : ''}</td>
               <td className="num">{line.amountRp == null ? '' : money(line.amountRp)}</td>
             </tr>
           ))}

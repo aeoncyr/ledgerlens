@@ -25,6 +25,16 @@ function rp(value: number | null): string {
   return value === null ? '—' : `Rp ${rupiah.format(value)}`
 }
 
+// Where a figure without a piece of evidence behind it comes from.
+function origin(key: string): string {
+  if (key.startsWith('requested') || key === 'tenor_months') return 'the application'
+  if (key.startsWith('kur_')) return 'KUR programme rules'
+  if (['capacity_basis', 'max_installment', 'evidence_strength'].includes(key)) {
+    return 'the lender’s policy, applied by code'
+  }
+  return 'the monthly cash flow above'
+}
+
 function month(key: string): string {
   return monthName.format(new Date(`${key}-01T00:00:00`))
 }
@@ -233,7 +243,7 @@ export default function CreditFile({ file }: { file: CreditFileData }) {
                         <td>
                           {fact.sources.length
                             ? fact.sources.map(label).join(', ')
-                            : 'the monthly cash flow above'}
+                            : origin(fact.key)}
                         </td>
                       </tr>
                     ))}

@@ -25,6 +25,7 @@ from app.gemini import Gemini, get_gemini
 from app.routers.applications import _audit, _owned_application
 from app.schemas import AnalyzeResponse, ApplicationStatus, EvidenceType
 from app.store import get_firestore
+from app.tools.camel import camelize
 
 router = APIRouter(prefix="/api/applications", tags=["analysis"])
 
@@ -130,7 +131,7 @@ async def analyze(
         await (
             ref.collection("evidence")
             .document(evidence_id)
-            .update({"label": extraction.get("label"), "extraction": extraction})
+            .update({"label": extraction.get("label"), "extraction": camelize(extraction)})
         )
     needs_answers = any(
         f.follow_up_question and not f.resolved and f.severity in ("medium", "high")
@@ -143,7 +144,7 @@ async def analyze(
         .set(
             {
                 "runId": run_ref.id,
-                **result.model_dump(mode="json", by_alias=True, exclude={"extractions"}),
+                **camelize(result.model_dump(mode="json", by_alias=True, exclude={"extractions"})),
                 "generatedAt": firestore.SERVER_TIMESTAMP,
             }
         )
