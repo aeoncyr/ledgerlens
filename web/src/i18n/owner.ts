@@ -138,6 +138,15 @@ const EN = {
   // Evidence
   sendTitle: 'Send photos of your records',
   moreTitle: 'Your records',
+  nextBestLabel: 'Most helpful next',
+  nextBest: {
+    qris: 'Add your QRIS history: it is the only record that proves your sales for certain.',
+    notebook: 'Add your notebook pages: they show the sales and purchases the other records check.',
+    receipts: 'Add supplier receipts: they confirm the purchases in your notebook.',
+    more_pages: 'Add more notebook pages: two months or more is best.',
+    interview: 'Record a short voice note: what you say is checked against your records.',
+    photo: 'Add a photo of your shop and its stock.',
+  },
   moreLead: 'Add more at any time, then check again. The tips above show what helps most.',
   sendLead:
     'Tap a box to open your camera. The more kinds you send, the stronger your file. Two months of records is best.',
@@ -358,6 +367,15 @@ const ID: OwnerStrings = {
 
   sendTitle: 'Kirim foto catatan Anda',
   moreTitle: 'Catatan Anda',
+  nextBestLabel: 'Paling membantu berikutnya',
+  nextBest: {
+    qris: 'Tambahkan riwayat QRIS: hanya catatan ini yang membuktikan penjualan Anda dengan pasti.',
+    notebook: 'Tambahkan foto buku catatan: isinya penjualan dan pembelian yang dicocokkan dengan bukti lain.',
+    receipts: 'Tambahkan nota pemasok: nota memastikan pembelian di buku catatan Anda.',
+    more_pages: 'Tambahkan halaman buku catatan lagi: dua bulan atau lebih paling baik.',
+    interview: 'Rekam pesan suara singkat: cerita Anda dicocokkan dengan catatan.',
+    photo: 'Tambahkan foto toko dan stok barang Anda.',
+  },
   moreLead: 'Tambahkan kapan saja, lalu periksa ulang. Saran di atas menunjukkan yang paling membantu.',
   sendLead:
     'Ketuk kotak untuk membuka kamera. Semakin banyak jenis yang Anda kirim, semakin kuat berkas Anda. Catatan dua bulan paling baik.',

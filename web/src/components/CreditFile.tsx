@@ -23,7 +23,7 @@ const FIVE_C = [
 const SEVERITY_LABEL = { high: 'Material', medium: 'Needs an answer', low: 'Minor' }
 
 function rp(value: number | null): string {
-  return value === null ? '—' : `Rp ${rupiah.format(value)}`
+  return value === null ? '—' : `Rp\u00a0${rupiah.format(value)}`
 }
 
 // Where a figure without a piece of evidence behind it comes from.
@@ -38,6 +38,74 @@ function origin(key: string): string {
 
 function month(key: string): string {
   return monthName.format(new Date(`${key}-01T00:00:00`))
+}
+
+// The policy's haircut on net cash flow, by outcome: only verified and partly verified files get an
+// instalment.
+const HAIRCUT: Partial<Record<CreditFileData['assessment'], string>> = {
+  verified: '20% haircut for a verified file',
+  partially_verified: '40% haircut for a partly verified file',
+}
+
+// A round top for the revenue scale: 1, 2, 2.5 or 5 times a power of ten, just above the high end.
+function scaleTop(value: number): number {
+  if (value <= 0) return 1
+  const target = value * 1.08
+  const power = 10 ** Math.floor(Math.log10(target))
+  const step = [1, 2, 2.5, 5, 10].find((m) => m * power >= target) ?? 10
+  return step * power
+}
+
+// Monthly revenue as a range: the floor that hard evidence proves, and the upper estimate once the
+// notebook is counted. The months table below is the same data as a table.
+function RevenueRange({ low, high }: { low: number; high: number }) {
+  const upper = Math.max(low, high)
+  const top = scaleTop(upper)
+  const lowPct = (low / top) * 100
+  const highPct = (upper / top) * 100
+  return (
+    <div className="range">
+      <h2 className="range-title">Monthly revenue</h2>
+      <div
+        className="range-track"
+        role="img"
+        aria-label={`Monthly revenue from ${rp(low)} proven by QRIS to ${rp(upper)} with the notebook`}
+      >
+        {low > 0 && <span className="range-floor" style={{ width: `${lowPct}%` }} />}
+        <span
+          className="range-upper"
+          style={{
+            left: low > 0 ? `calc(${lowPct}% + 2px)` : 0,
+            width: `max(0px, calc(${highPct - lowPct}% - ${low > 0 ? 2 : 0}px))`,
+          }}
+        />
+      </div>
+      <div className="range-axis mono" aria-hidden="true">
+        <span>0</span>
+        <span>{rp(top)}</span>
+      </div>
+      <dl className="range-legend">
+        <div>
+          <dt>
+            <span className="swatch floor" aria-hidden="true" />
+            Floor
+          </dt>
+          <dd className="mono">{low > 0 ? rp(low) : 'None'}</dd>
+          <dd className="fine">
+            {low > 0 ? 'Proven by QRIS, hard evidence' : 'No QRIS history, so nothing is proven'}
+          </dd>
+        </div>
+        <div>
+          <dt>
+            <span className="swatch upper" aria-hidden="true" />
+            Upper estimate
+          </dt>
+          <dd className="mono">{rp(upper)}</dd>
+          <dd className="fine">With the notebook</dd>
+        </div>
+      </dl>
+    </div>
+  )
 }
 
 // A credit file as LedgerLens produces it: outcome, figures, findings, the 5C memo and the evidence,
@@ -101,32 +169,42 @@ export default function CreditFile({
               {rp(app.amount)} over {app.tenorMonths} months
             </p>
           </div>
-          <span className={`stamp static ${tone}`}>{ASSESSMENT_LABEL[file.assessment]}</span>
+          <div className="outcome-box">
+            <span className={`stamp static ${tone}`}>{ASSESSMENT_LABEL[file.assessment]}</span>
+            <span className="prov-badge">Outcome set by policy rules in code</span>
+          </div>
         </div>
         <p className="file-headline">{file.memo.headline}</p>
-        <dl className="key-figures">
-          <div>
-            <dt>Monthly revenue, proven (QRIS)</dt>
-            <dd>{rp(file.cashflow.revenueLow)}</dd>
-          </div>
-          <div>
-            <dt>Monthly revenue, claimed (notebook)</dt>
-            <dd>{rp(file.cashflow.revenueHigh)}</dd>
-          </div>
-          <div>
-            <dt>Largest instalment the policy allows</dt>
-            <dd>{rp(file.policy.maxInstallment)}</dd>
-          </div>
-          <div>
-            <dt>Instalment requested</dt>
-            <dd>
-              {rp(file.policy.requestedInstallment)}
+        <div className="file-figures-row">
+          <RevenueRange low={file.cashflow.revenueLow} high={file.cashflow.revenueHigh} />
+          <div className="instalment">
+            <h2 className="range-title">Largest instalment the policy allows</h2>
+            {file.policy.maxInstallment === null ? (
+              <p className="instalment-none">
+                No instalment suggested; the lender’s normal process applies.
+              </p>
+            ) : (
+              <>
+                <p className="instalment-value mono">
+                  {rp(file.policy.maxInstallment)} <span>/month</span>
+                </p>
+                <p className="fine">
+                  30% of net cash flow after a {HAIRCUT[file.assessment] ?? 'policy haircut'}
+                  {file.policy.capacityBasis !== null && (
+                    <> ({rp(file.policy.capacityBasis)} a month after the haircut)</>
+                  )}
+                  .
+                </p>
+              </>
+            )}
+            <p className="instalment-request">
+              Requested <span className="mono">{rp(file.policy.requestedInstallment)}</span>
               <span className={file.policy.withinPolicy ? 'within' : 'outside'}>
                 {file.policy.withinPolicy ? 'within policy' : 'not supported'}
               </span>
-            </dd>
+            </p>
           </div>
-        </dl>
+        </div>
         <ul className="reasons">
           {file.policy.reasons.map((reason) => (
             <li key={reason}>{reason}</li>
@@ -218,7 +296,10 @@ export default function CreditFile({
           </section>
 
           <section aria-labelledby="memo-heading">
-            <h2 id="memo-heading">Credit memo</h2>
+            <div className="memo-head">
+              <h2 id="memo-heading">Credit memo</h2>
+              <span className="prov-badge">Narrative by Gemini · Figures by Python</span>
+            </div>
             {FIVE_C.map(([key, title]) => (
               <div className="memo-section" key={key}>
                 <h3>{title}</h3>

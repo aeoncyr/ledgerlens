@@ -3,21 +3,30 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import CreditFile from '../../components/CreditFile.tsx'
 import LiveTrace from '../../components/LiveTrace.tsx'
-import { storage } from '../../firebase.ts'
+import { auth, storage } from '../../firebase.ts'
 import {
   STATUS_LABEL,
   answerQuestion,
   recheck,
   recordDecision,
   useApplication,
+  useAudit,
   useCreditFileDoc,
   useEvidence,
   useRun,
   type Application,
+  type AuditEntry,
   type StoredEvidence,
 } from '../../officer.ts'
-import type { CreditFileData, Finding } from '../../types.ts'
-import OfficerShell from './OfficerShell.tsx'
+import {
+  ASSESSMENT_LABEL,
+  EVIDENCE_LABEL,
+  type Assessment,
+  type CreditFileData,
+  type EvidenceType,
+  type Finding,
+} from '../../types.ts'
+import OfficerShell, { type OfficerStep } from './OfficerShell.tsx'
 
 function useImageUrls(evidence: StoredEvidence[]): Map<string, string> {
   const [urls, setUrls] = useState(new Map<string, string>())
@@ -191,6 +200,127 @@ function Decision({ app }: { app: Application }) {
   )
 }
 
+const AUDIT_LABEL: Record<string, string> = {
+  created: 'Application opened',
+  created_by_owner: 'File started by the business owner',
+  consent_given: 'Consent recorded',
+  consent_withdrawn: 'Consent withdrawn',
+  evidence_added: 'Evidence added',
+  analysis_completed: 'Analysis completed',
+  reverified_with_answers: 'Re-checked with the owner’s answers',
+  follow_up_answered: 'Answer to a question recorded',
+  reading_confirmed: 'A reading confirmed on the photo',
+  decision_approve: 'Decision: approve',
+  decision_decline: 'Decision: decline',
+  decision_request_more: 'Decision: ask for more evidence',
+  share_link_created: 'Share link created',
+  opened_by_lender: 'Opened from the owner’s share link',
+  share_withdrawn: 'Share withdrawn',
+}
+
+const auditTime = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  hour: '2-digit',
+  minute: '2-digit',
+})
+
+type AuditRow = { entry: AuditEntry; label: string; detail: string | null }
+
+// Consecutive uploads by the same person read as one line: "14 pieces of evidence added".
+function auditRows(entries: AuditEntry[]): AuditRow[] {
+  const rows: AuditRow[] = []
+  let i = 0
+  while (i < entries.length) {
+    const entry = entries[i]
+    if (entry.action === 'evidence_added') {
+      let j = i
+      const kinds = new Map<string, number>()
+      while (
+        j < entries.length &&
+        entries[j].action === 'evidence_added' &&
+        entries[j].actor === entry.actor
+      ) {
+        const type = entries[j].details?.type as EvidenceType | undefined
+        const name = (type && EVIDENCE_LABEL[type]) ?? 'Other'
+        kinds.set(name, (kinds.get(name) ?? 0) + 1)
+        j++
+      }
+      const count = j - i
+      rows.push({
+        entry: entries[j - 1],
+        label: count === 1 ? 'Evidence added' : `${count} pieces of evidence added`,
+        detail: [...kinds].map(([name, n]) => (n > 1 ? `${name} ×${n}` : name)).join(' · '),
+      })
+      i = j
+      continue
+    }
+    const details = entry.details ?? {}
+    const assessment = details.assessment as Assessment | undefined
+    const question = typeof details.question === 'string' ? details.question : null
+    const detail = entry.reason
+      ? `“${entry.reason}”`
+      : assessment && ASSESSMENT_LABEL[assessment]
+        ? `Outcome: ${ASSESSMENT_LABEL[assessment]}`
+        : question
+    rows.push({ entry, label: AUDIT_LABEL[entry.action] ?? entry.action, detail })
+    i++
+  }
+  return rows
+}
+
+function AuditLog({ app }: { app: Application }) {
+  const { data: entries, error } = useAudit(app.id)
+  const me = auth.currentUser?.uid
+  if (entries.length === 0 && !error) return null
+
+  function who(actor: string): string {
+    if (actor === me) return 'you'
+    if (app.ownerUid && actor === app.ownerUid) return 'owner'
+    return 'another officer'
+  }
+
+  return (
+    <section className="audit" aria-labelledby="audit-heading">
+      <h2 id="audit-heading">Audit log</h2>
+      <p className="fine">Written by the API on every action; nobody can edit it from the app.</p>
+      {error && <p className="error">The audit log could not be loaded.</p>}
+      <ol className="audit-log">
+        {auditRows(entries).map(({ entry, label, detail }) => {
+          const actor = who(entry.actor)
+          return (
+            <li key={entry.id} className={`audit-row by-${actor.replace(' ', '-')}`}>
+              <time className="audit-time mono" dateTime={entry.at?.toDate().toISOString()}>
+                {entry.at ? auditTime.format(entry.at.toDate()) : 'just now'}
+              </time>
+              <span className="audit-body">
+                <span className="audit-label">{label}</span>
+                <span className="audit-actor">by {actor}</span>
+                {detail && (
+                  <span
+                    className="audit-detail"
+                    lang={entry.action === 'follow_up_answered' ? 'id' : undefined}
+                  >
+                    {detail}
+                  </span>
+                )}
+              </span>
+            </li>
+          )
+        })}
+      </ol>
+    </section>
+  )
+}
+
+// Where the application stands in the officer's four steps.
+function stepOf(app: Application): OfficerStep {
+  if (app.status === 'draft' || app.status === 'collecting') return 1
+  if (app.status === 'analyzing') return 2
+  if (app.status === 'needs_follow_up') return 3
+  return 4
+}
+
 export default function ApplicationFile() {
   const { id = '' } = useParams()
   const { data: app, loading } = useApplication(id)
@@ -216,7 +346,7 @@ export default function ApplicationFile() {
         ? { to: `/app/${id}/consent`, label: 'Record the owner’s consent' }
         : { to: `/app/${id}/evidence`, label: 'Collect the evidence' }
     return (
-      <OfficerShell title={title} crumbs={crumbs}>
+      <OfficerShell title={title} crumbs={crumbs} step={stepOf(app)}>
         <p className="lead-text">{STATUS_LABEL[app.status]}.</p>
         {app.status === 'analyzing' ? (
           <LiveTrace run={run} />
@@ -262,7 +392,12 @@ export default function ApplicationFile() {
   }
 
   return (
-    <OfficerShell title={title} crumbs={crumbs}>
+    <OfficerShell
+      title={title}
+      crumbs={crumbs}
+      step={stepOf(app)}
+      done={app.status === 'decided'}
+    >
       <div className="page-actions">
         <span className="status-label">{STATUS_LABEL[app.status]}</span>
         {app.status !== 'decided' && (
@@ -284,6 +419,7 @@ export default function ApplicationFile() {
         }
       />
       <Decision app={app} />
+      <AuditLog app={app} />
     </OfficerShell>
   )
 }

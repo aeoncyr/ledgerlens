@@ -2450,3 +2450,711 @@ textarea:focus {
   background: #f4ead2;
   color: var(--owner);
 }
+
+/* ---------------------------------------------------------------------------------------------
+ * Quick wins (Oct 16): the officer's progress steps, the revenue range on the credit file,
+ * provenance badges, the evidence strength panel, the richer agent trace, the audit log, and the
+ * Google Cloud strip on the landing page.
+ * ------------------------------------------------------------------------------------------- */
+
+/* Officer progress: four numbered steps joined by a rule. */
+.officer-steps {
+  max-width: 720px;
+  margin: 0 0 22px;
+}
+
+.officer-steps ol {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.officer-steps li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.officer-steps li + li::before {
+  content: '';
+  position: absolute;
+  top: 13px;
+  right: calc(100% + 4px);
+  width: calc(100% - 36px);
+  height: 2px;
+  background: var(--rule);
+}
+
+.officer-steps li.done + li::before,
+.officer-steps li.done + li.current::before {
+  background: var(--brand);
+}
+
+.os-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--rule);
+  border-radius: 50%;
+  background: var(--paper-raised);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.officer-steps li.done .os-node {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+
+.officer-steps li.current .os-node {
+  border-color: var(--brass);
+  color: var(--ink);
+  box-shadow: 0 0 0 3px rgb(176 138 62 / 0.2);
+}
+
+.officer-steps li.current,
+.officer-steps li.done {
+  color: var(--ink);
+}
+
+.officer-steps li.current .os-label {
+  font-weight: 600;
+}
+
+.os-caption {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* Credit file header: revenue range beside the policy's instalment. */
+.file-figures-row {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule);
+}
+
+.range,
+.instalment {
+  padding: 16px 0 16px;
+}
+
+.range {
+  padding-right: 28px;
+}
+
+.instalment {
+  padding-left: 28px;
+  border-left: 1px solid var(--rule);
+}
+
+.range-title {
+  margin: 0 0 12px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.range-track {
+  position: relative;
+  height: 18px;
+  border-radius: 2px;
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.range-floor,
+.range-upper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.range-floor {
+  left: 0;
+  border-radius: 2px 0 0 2px;
+  background: var(--brand);
+}
+
+.range-upper {
+  border-radius: 0 4px 4px 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(176 138 62 / 0.55) 0 3px,
+    rgb(176 138 62 / 0.18) 3px 7px
+  );
+  box-shadow: inset 0 0 0 1px var(--brass);
+}
+
+.range-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.range-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin: 10px 0 0;
+}
+
+.range-legend dt {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.range-legend dd {
+  margin: 0;
+}
+
+.range-legend dd.mono {
+  font-size: 18px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.range-legend .fine {
+  margin: 0;
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+  border-radius: 1px;
+}
+
+.swatch.floor {
+  background: var(--brand);
+}
+
+.swatch.upper {
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(176 138 62 / 0.6) 0 2px,
+    rgb(176 138 62 / 0.2) 2px 4px
+  );
+  box-shadow: inset 0 0 0 1px var(--brass);
+}
+
+.instalment-value {
+  margin: 0 0 4px;
+  font-size: 26px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.instalment-value span {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.instalment .fine {
+  margin: 0;
+}
+
+.instalment-none {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.instalment-request {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px dashed var(--rule);
+  font-size: 14px;
+}
+
+.instalment-request .within,
+.instalment-request .outside {
+  display: inline;
+}
+
+/* Provenance badges: who made what, said quietly. */
+.outcome-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.prov-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.memo-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.file-main .memo-head h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Evidence strength on the officer's evidence step. */
+.strength-panel {
+  max-width: 900px;
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--brass);
+  background: var(--paper-raised);
+}
+
+.sp-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  align-items: baseline;
+}
+
+.sp-head h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.sp-label {
+  padding: 1px 9px;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sp-label.weak {
+  color: var(--inconsistent);
+}
+
+.sp-label.moderate {
+  color: var(--partial);
+}
+
+.sp-label.strong {
+  color: var(--verified);
+}
+
+.sp-score {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-weight: 500;
+}
+
+.strength-bar.sp-bar {
+  display: block;
+  width: 100%;
+  height: 8px;
+  margin: 10px 0;
+}
+
+.sp-tiers {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.sp-tiers .has {
+  color: var(--ink);
+}
+
+.sp-next {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.sp-next-label {
+  margin-right: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--owner);
+}
+
+.evidence-kinds li.suggested {
+  box-shadow: inset 3px 0 0 var(--brass);
+  padding-left: 14px;
+}
+
+.next-tag {
+  background: #f4ead2;
+  color: var(--owner);
+}
+
+/* The same hint on the owner's records step. */
+.ow-next {
+  margin: -6px 0 16px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--brass);
+  background: #f3ead6;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.ow-next-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--owner);
+}
+
+/* Agent trace: a clock, the run id, the engine of each agent, and samples of the output. */
+.trace-head {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.trace-title {
+  font-family: var(--serif);
+  font-size: 18px;
+}
+
+.trace-run {
+  margin-left: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.trace-clock {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.trace-step {
+  grid-template-columns: 3.5rem 13rem minmax(0, 1fr) 5.5rem;
+}
+
+.engine {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 6px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
+.engine.gemini {
+  background: #e3eaf6;
+  color: var(--partial);
+}
+
+.engine.python {
+  background: #e1ece7;
+  color: var(--accent);
+}
+
+.trace-model {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.trace-sample {
+  grid-column: 2 / -1;
+  margin: 4px 0 2px;
+}
+
+.trace-sample summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.trace-sample pre {
+  margin: 8px 0 4px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  border-left: 3px solid var(--partial);
+  background: #f2f4f6;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.trace-sample .fine {
+  margin: 0;
+}
+
+/* Audit log: a compact vertical timeline. */
+.audit {
+  max-width: 900px;
+  margin-top: 40px;
+}
+
+.audit h2 {
+  margin: 0 0 4px;
+}
+
+.audit-log {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.audit-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 2px 22px;
+  padding: 0 0 14px;
+}
+
+/* The rail and a node on it, between the time and the entry. */
+.audit-row::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  bottom: -8px;
+  left: calc(8.5rem + 12px);
+  width: 1px;
+  background: var(--brand-muted);
+}
+
+.audit-row:last-child::before {
+  display: none;
+}
+
+.audit-row::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: calc(8.5rem + 6px);
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--brand);
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.audit-row.by-owner::after {
+  border-color: var(--brass);
+}
+
+.audit-time {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+  padding-right: 4px;
+}
+
+.audit-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  align-items: baseline;
+  padding-left: 6px;
+  font-size: 14px;
+}
+
+.audit-label {
+  font-weight: 600;
+}
+
+.audit-actor {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.audit-detail {
+  flex-basis: 100%;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* Landing: what the product runs on. */
+.cloud-strip {
+  margin-top: 48px;
+}
+
+.cloud-title {
+  margin: 0 0 14px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cloud-cells {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule);
+}
+
+.cloud-cells div {
+  padding: 16px 20px 16px 0;
+}
+
+.cloud-cells div + div {
+  padding-left: 20px;
+  border-left: 1px solid var(--rule);
+}
+
+.cloud-cells dt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  margin-bottom: 6px;
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.cloud-where {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.cloud-cells dd {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.cloud-strip + .how-band {
+  margin-top: 48px;
+}
+
+@media (max-width: 900px) {
+  .file-figures-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .range {
+    padding-right: 0;
+  }
+
+  .instalment {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .cloud-cells {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cloud-cells div:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .cloud-cells div:nth-child(n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+}
+
+@media (max-width: 560px) {
+  .officer-steps .os-label {
+    font-size: 12px;
+  }
+
+  .outcome-box {
+    align-items: flex-start;
+  }
+
+  .trace-step {
+    grid-template-columns: 3rem minmax(0, 1fr);
+  }
+
+  .trace-sample {
+    grid-column: 1 / -1;
+  }
+
+  .audit-row {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 22px;
+  }
+
+  .audit-row::before {
+    left: 6px;
+  }
+
+  .audit-row::after {
+    left: 0;
+  }
+
+  .audit-time {
+    text-align: left;
+  }
+
+  .audit-body {
+    padding-left: 0;
+  }
+
+  .cloud-cells {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cloud-cells div,
+  .cloud-cells div + div {
+    padding: 14px 0;
+    border-left: 0;
+  }
+
+  .cloud-cells div + div {
+    border-top: 1px solid var(--rule);
+  }
+}

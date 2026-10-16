@@ -22,6 +22,7 @@ import {
   type Run,
 } from '../../owner.ts'
 import { SAMPLES } from '../../samples.ts'
+import { evidenceStrength } from '../../strength.ts'
 import type { CreditFileData, EvidenceType } from '../../types.ts'
 import {
   ChatIcon,
@@ -334,6 +335,7 @@ function Records({
   for (const item of evidence) counts.set(item.type, (counts.get(item.type) ?? 0) + 1)
   const disabled = busy !== null
   const newSinceCheck = summary ? evidence.length > summary.evidenceCount : true
+  const next = evidenceStrength(evidence.map((item) => item.type)).next
 
   const samplePicker = (
     <section className="ow-sample-box" aria-labelledby="ow-sample-records">
@@ -370,6 +372,11 @@ function Records({
         {summary ? t.moreTitle : t.sendTitle}
       </h2>
       <p className="ow-lead">{summary ? t.moreLead : t.sendLead}</p>
+      {next && evidence.length > 0 && (
+        <p className="ow-next">
+          <span className="ow-next-label">{t.nextBestLabel}</span> {t.nextBest[next.key]}
+        </p>
+      )}
 
       {remembered && evidence.length === 0 && samplePicker}
 

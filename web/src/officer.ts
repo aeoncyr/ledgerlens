@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   onSnapshot,
+  orderBy,
   query,
   where,
   type DocumentData,
@@ -61,8 +62,32 @@ export type StoredEvidence = {
   submittedBy?: 'owner' | 'officer'
 }
 
-export type RunStep = { agent: string; message: string; state: string; at: Timestamp }
-export type Run = { state: 'running' | 'done' | 'failed'; steps: RunStep[]; error?: string }
+export type RunStep = {
+  agent: string
+  message: string
+  state: string
+  at: Timestamp
+  // Which Gemini model did the step, and a short excerpt of its structured output.
+  detail?: { model?: string | null; sample?: unknown; sampleLabel?: string }
+}
+export type Run = {
+  id?: string
+  state: 'running' | 'done' | 'failed'
+  steps: RunStep[]
+  startedAt?: Timestamp
+  latencyMs?: number
+  models?: string[]
+  error?: string
+}
+
+export type AuditEntry = {
+  id: string
+  actor: string
+  action: string
+  reason: string | null
+  details?: Record<string, unknown>
+  at?: Timestamp | null
+}
 
 export type NewApplication = {
   alias: string
@@ -246,7 +271,7 @@ export function useRun(id: string, runId: string | undefined): Live<Run | null> 
       if (!runId) return () => {}
       return onSnapshot(
         doc(db, 'applications', id, 'runs', runId),
-        (snapshot) => set(snapshot.exists() ? (snapshot.data() as Run) : null),
+        (snapshot) => set(snapshot.exists() ? withId<Run>(snapshot.id, snapshot.data()) : null),
         fail,
       )
     },
@@ -264,5 +289,19 @@ export function useCreditFileDoc(id: string, version: string | undefined): Live<
         fail,
       ),
     [id, version],
+  )
+}
+
+/** The application's audit log, oldest first. Only the lender can read it. */
+export function useAudit(id: string): Live<AuditEntry[]> {
+  return useLive<AuditEntry[]>(
+    [],
+    (set, fail) =>
+      onSnapshot(
+        query(collection(db, 'applications', id, 'audit'), orderBy('at')),
+        (snapshot) => set(snapshot.docs.map((d) => withId<AuditEntry>(d.id, d.data()))),
+        fail,
+      ),
+    [id],
   )
 }

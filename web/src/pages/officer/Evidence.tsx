@@ -11,13 +11,13 @@ import {
 } from '../../officer.ts'
 import { SAMPLES } from '../../samples.ts'
 import type { CreditFileData, EvidenceType } from '../../types.ts'
+import { TIER_LABEL, evidenceStrength, type Tier } from '../../strength.ts'
 import OfficerShell from './OfficerShell.tsx'
 
 const KINDS: {
   type: EvidenceType
   title: string
   tier: string
-  points: number
   hint: string
   accept: string
 }[] = [
@@ -25,7 +25,6 @@ const KINDS: {
     type: 'qris_history',
     title: 'QRIS or e-wallet history',
     tier: 'Hard evidence',
-    points: 35,
     hint: 'Screenshots of the merchant app’s history, one per month if possible.',
     accept: 'image/*',
   },
@@ -33,7 +32,6 @@ const KINDS: {
     type: 'receipt',
     title: 'Supplier receipts',
     tier: 'Medium',
-    points: 20,
     hint: 'Notas from suppliers, for the purchases the notebook records.',
     accept: 'image/*',
   },
@@ -41,7 +39,6 @@ const KINDS: {
     type: 'ledger_page',
     title: 'Notebook pages',
     tier: 'Soft',
-    points: 15,
     hint: 'One photo per page, flat and in good light. Two months or more is best.',
     accept: 'image/*',
   },
@@ -49,7 +46,6 @@ const KINDS: {
     type: 'interview_audio',
     title: 'Owner interview',
     tier: 'Soft',
-    points: 10,
     hint: 'One or two minutes in Bahasa Indonesia: sales, purchases, what the loan is for.',
     accept: 'audio/*',
   },
@@ -57,7 +53,6 @@ const KINDS: {
     type: 'shop_photo',
     title: 'Shop and stock',
     tier: 'Physical',
-    points: 10,
     hint: 'The shop front and shelves, taken on the visit.',
     accept: 'image/*',
   },
@@ -76,11 +71,7 @@ export default function Evidence() {
 
   const counts = new Map<EvidenceType, number>()
   for (const item of evidence) counts.set(item.type, (counts.get(item.type) ?? 0) + 1)
-  const strength = Math.min(
-    100,
-    KINDS.filter((k) => counts.has(k.type)).reduce((sum, k) => sum + k.points, 0) +
-      ((counts.get('ledger_page') ?? 0) >= 4 ? 10 : 0),
-  )
+  const strength = evidenceStrength(evidence.map((item) => item.type))
 
   async function upload(type: EvidenceType, event: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? [])
@@ -136,7 +127,7 @@ export default function Evidence() {
 
   if (analysing || app?.status === 'analyzing') {
     return (
-      <OfficerShell title="Analysing the evidence" crumbs={crumbs}>
+      <OfficerShell title="Analysing the evidence" crumbs={crumbs} step={2}>
         <LiveTrace run={run} />
         {error && <p className="error">{error}</p>}
       </OfficerShell>
@@ -144,50 +135,77 @@ export default function Evidence() {
   }
 
   return (
-    <OfficerShell title="Collect the evidence" crumbs={crumbs}>
+    <OfficerShell title="Collect the evidence" crumbs={crumbs} step={1}>
       {app && !app.consent?.given && (
         <p className="error">
           Record the owner’s consent first. <Link to={`/app/${id}/consent`}>Go to consent</Link>
         </p>
       )}
-      <div className="strength-meter">
-        <span>Evidence strength</span>
-        <span className="strength-bar" aria-hidden="true">
-          <span style={{ width: `${strength}%` }} />
+      <section className="strength-panel" aria-labelledby="strength-heading">
+        <div className="sp-head">
+          <h2 id="strength-heading">Evidence strength</h2>
+          <span className={`sp-label ${strength.label.toLowerCase()}`}>{strength.label}</span>
+          <strong className="sp-score">{strength.score} / 100</strong>
+        </div>
+        <span
+          className="strength-bar sp-bar"
+          role="meter"
+          aria-label="Evidence strength"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={strength.score}
+          aria-valuetext={`${strength.score} out of 100, ${strength.label.toLowerCase()}`}
+        >
+          <span style={{ width: `${strength.score}%` }} />
         </span>
-        <strong>{strength} / 100</strong>
-        <span className="fine">
-          {counts.has('qris_history')
-            ? 'Hard evidence on file.'
-            : 'Without QRIS history the file can be at most partly verified.'}
-        </span>
-      </div>
+        <p className="sp-tiers">
+          {(Object.keys(TIER_LABEL) as Tier[]).map((tier, index) => (
+            <span key={tier} className={strength.tiers[tier] ? 'has' : undefined}>
+              {index > 0 && <span aria-hidden="true"> · </span>}
+              {TIER_LABEL[tier]}: {strength.tiers[tier]}
+            </span>
+          ))}
+        </p>
+        <p className="sp-next">
+          {strength.next ? (
+            <>
+              <span className="sp-next-label">Next best evidence</span> {strength.next.text}
+            </>
+          ) : (
+            'Every kind of evidence is on file.'
+          )}
+        </p>
+      </section>
 
       <ul className="evidence-kinds">
-        {KINDS.map((kind) => (
-          <li key={kind.type}>
-            <div>
-              <h2>{kind.title}</h2>
-              <span className="tier">{kind.tier}</span>
-              <p className="fine">{kind.hint}</p>
-            </div>
-            <div className="kind-actions">
-              <span className="count">{counts.get(kind.type) ?? 0} on file</span>
-              <label className="button quiet">
-                Add
-                <input
-                  type="file"
-                  accept={kind.accept}
-                  capture={kind.accept === 'image/*' ? 'environment' : undefined}
-                  multiple
-                  hidden
-                  disabled={!!progress}
-                  onChange={(e) => upload(kind.type, e)}
-                />
-              </label>
-            </div>
-          </li>
-        ))}
+        {KINDS.map((kind) => {
+          const suggested = strength.next?.type === kind.type
+          return (
+            <li key={kind.type} className={suggested ? 'suggested' : undefined}>
+              <div>
+                <h2>{kind.title}</h2>
+                <span className="tier">{kind.tier}</span>
+                {suggested && <span className="tag next-tag">Suggested next</span>}
+                <p className="fine">{kind.hint}</p>
+              </div>
+              <div className="kind-actions">
+                <span className="count">{counts.get(kind.type) ?? 0} on file</span>
+                <label className="button quiet">
+                  Add
+                  <input
+                    type="file"
+                    accept={kind.accept}
+                    capture={kind.accept === 'image/*' ? 'environment' : undefined}
+                    multiple
+                    hidden
+                    disabled={!!progress}
+                    onChange={(e) => upload(kind.type, e)}
+                  />
+                </label>
+              </div>
+            </li>
+          )
+        })}
       </ul>
 
       <section className="sample-picker" aria-labelledby="sample-evidence">

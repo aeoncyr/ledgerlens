@@ -35,6 +35,27 @@ const JOURNEY: { title: string; actor: Actor[]; text: string }[] = [
   },
 ]
 
+const GOOGLE_CLOUD: { name: string; where?: string; text: string }[] = [
+  {
+    name: 'Gemini',
+    text: 'Reads handwriting, receipts, QRIS screenshots and interviews in Bahasa Indonesia, cross-checks the sources, and writes the memo.',
+  },
+  {
+    name: 'Cloud Run',
+    where: 'Jakarta',
+    text: 'Runs the API and the agent pipeline that turns evidence into a credit file.',
+  },
+  {
+    name: 'Firestore',
+    where: 'Jakarta',
+    text: 'Holds the applications, the live progress of every analysis, and the audit log.',
+  },
+  {
+    name: 'Firebase',
+    text: 'Hosting for this site, anonymous sign-in, Storage for photos and recordings, and the security rules that keep each file private.',
+  },
+]
+
 const SAMPLE_NOTE: Record<string, string> = {
   'bu-sari': 'Notebook, receipts and QRIS agree, and so does the owner’s interview.',
   'pak-joko': 'Honest books but no QRIS history, so only part of the cash flow is proven.',
@@ -154,6 +175,23 @@ export default function Landing() {
               For rural banks (BPR), cooperatives and microfinance lenders without their own tools.
             </p>
           </article>
+        </section>
+
+        <section className="container cloud-strip" aria-labelledby="cloud-heading">
+          <h2 id="cloud-heading" className="cloud-title">
+            Powered by Google Cloud
+          </h2>
+          <dl className="cloud-cells">
+            {GOOGLE_CLOUD.map((cell) => (
+              <div key={cell.name}>
+                <dt>
+                  {cell.name}
+                  {cell.where && <span className="cloud-where">{cell.where}</span>}
+                </dt>
+                <dd>{cell.text}</dd>
+              </div>
+            ))}
+          </dl>
         </section>
 
         <section id="how" className="how-band" aria-labelledby="how-heading">
