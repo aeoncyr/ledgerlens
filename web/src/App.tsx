@@ -12,6 +12,10 @@ const Consent = lazy(() => import('./pages/officer/Consent.tsx'))
 const Evidence = lazy(() => import('./pages/officer/Evidence.tsx'))
 const ApplicationFile = lazy(() => import('./pages/officer/ApplicationFile.tsx'))
 const OpenShared = lazy(() => import('./pages/officer/OpenShared.tsx'))
+// The business owner's pages, also loaded on demand.
+const OwnerHome = lazy(() => import('./pages/owner/OwnerHome.tsx'))
+const OwnerNew = lazy(() => import('./pages/owner/OwnerNew.tsx'))
+const OwnerFile = lazy(() => import('./pages/owner/OwnerFile.tsx'))
 
 export default function App() {
   return (
@@ -26,6 +30,9 @@ export default function App() {
         <Route path="/app/:id/consent" element={<Consent />} />
         <Route path="/app/:id/evidence" element={<Evidence />} />
         <Route path="/app/shared/:code" element={<OpenShared />} />
+        <Route path="/owner" element={<OwnerHome />} />
+        <Route path="/owner/new" element={<OwnerNew />} />
+        <Route path="/owner/:id" element={<OwnerFile />} />
         <Route path="*" element={<Landing />} />
       </Routes>
     </Suspense>
