@@ -1,5 +1,6 @@
-# Internal planning docs (private, never pushed)
+# Internal planning docs (private, never pushed): submission files, interview transcripts
 .docs/
+data/samples/*/interview-script.txt
 
 # Environment files and credentials
 .env
