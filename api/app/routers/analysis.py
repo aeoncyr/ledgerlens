@@ -30,11 +30,12 @@ from app.analysis.pipeline import (
 )
 from app.auth import User, current_user
 from app.config import get_settings
-from app.gemini import Gemini, get_gemini
+from app.gemini import Gemini, GeminiQuotaExhausted, get_gemini
 from app.routers.applications import _audit, _owned_application
 from app.schemas import AnalyzeResponse, ApplicationStatus, EvidenceType, FollowUpAnswerRequest
 from app.store import get_firestore
 from app.tools.camel import camelize
+from app.usage import claim_run
 
 router = APIRouter(prefix="/api/applications", tags=["analysis"])
 
@@ -100,6 +101,7 @@ async def analyze(
         raise HTTPException(status.HTTP_409_CONFLICT, "Add some evidence first")
 
     settings = get_settings()
+    await claim_run(db, user.uid, settings)
     return await _run(
         ref,
         user,
@@ -169,6 +171,7 @@ async def reverify(
     ]
     if not answers:
         raise HTTPException(status.HTTP_409_CONFLICT, "Record at least one of the owner's answers")
+    await claim_run(db, user.uid, get_settings())
     context = context.model_copy(update={"round": context.round + 1})
     return await _run(
         ref,
@@ -216,6 +219,12 @@ async def _run(
             {"state": "failed", "error": str(exc), "finishedAt": datetime.now(UTC)}
         )
         await ref.update({"status": failed_status.value})
+        if isinstance(exc, GeminiQuotaExhausted):
+            raise HTTPException(
+                status.HTTP_503_SERVICE_UNAVAILABLE,
+                "Gemini's free daily quota is used up for today. It resets at 07:00 UTC; the "
+                "sample files on the home page show finished analyses meanwhile.",
+            ) from exc
         raise HTTPException(status.HTTP_502_BAD_GATEWAY, "The analysis failed; try again") from exc
 
     for evidence_id, extraction in result.extractions.items():
