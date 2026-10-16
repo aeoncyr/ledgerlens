@@ -20,7 +20,7 @@
     "lines": [
      {
       "line": 1,
-      "dateText": null,
+      "dateText": "1-10",
       "description": "Aug 1-10",
       "amountText": null,
       "amountRp": null,
@@ -207,7 +207,7 @@
       "amountRp": null,
       "crossedOutText": null,
       "kind": "other",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 2,
@@ -217,7 +217,7 @@
       "amountRp": 260000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 3,
@@ -227,7 +227,7 @@
       "amountRp": 25000,
       "crossedOutText": null,
       "kind": "receivable",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 4,
@@ -237,7 +237,7 @@
       "amountRp": 305000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 5,
@@ -247,7 +247,7 @@
       "amountRp": 285000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 6,
@@ -257,7 +257,7 @@
       "amountRp": 295000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 7,
@@ -267,7 +267,7 @@
       "amountRp": 695000,
       "crossedOutText": null,
       "kind": "purchase",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 8,
@@ -277,7 +277,7 @@
       "amountRp": 10000,
       "crossedOutText": "110rb",
       "kind": "receivable",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 9,
@@ -287,7 +287,7 @@
       "amountRp": 160000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 10,
@@ -297,7 +297,7 @@
       "amountRp": 15000,
       "crossedOutText": null,
       "kind": "receivable",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 11,
@@ -307,7 +307,7 @@
       "amountRp": 300000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 12,
@@ -317,7 +317,7 @@
       "amountRp": 310000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 13,
@@ -327,7 +327,7 @@
       "amountRp": 215000,
       "crossedOutText": "218rb",
       "kind": "sale",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 14,
@@ -337,7 +337,7 @@
       "amountRp": 295000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 1.0
+      "confidence": 0.95
      },
      {
       "line": 15,
@@ -347,7 +347,7 @@
       "amountRp": 185000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 1.0
+      "confidence": 0.95
      }
     ]
    }
@@ -362,7 +362,7 @@
     "lines": [
      {
       "line": 1,
-      "dateText": "21-31",
+      "dateText": "Aug 21-31",
       "description": "Aug 21-31",
       "amountText": null,
       "amountRp": null,
@@ -373,8 +373,8 @@
      {
       "line": 2,
       "dateText": "21/8",
-      "description": "jahit kebaya",
-      "amountText": "190 rb",
+      "description": "21/8 jahit kebaya",
+      "amountText": "190rb",
       "amountRp": 190000,
       "crossedOutText": "1190rb",
       "kind": "sale",
@@ -403,7 +403,7 @@
      {
       "line": 5,
       "dateText": "22/8",
-      "description": "permak celana",
+      "description": "22/8 permak celana",
       "amountText": "270rb",
       "amountRp": 270000,
       "crossedOutText": null,
@@ -413,7 +413,7 @@
      {
       "line": 6,
       "dateText": "23/8",
-      "description": "jahit seragam",
+      "description": "23/8 jahit seragam",
       "amountText": "305 rb",
       "amountRp": 305000,
       "crossedOutText": null,
@@ -423,7 +423,7 @@
      {
       "line": 7,
       "dateText": "24/8",
-      "description": "jahit seragam",
+      "description": "24/8 jahit seragam",
       "amountText": "250rb",
       "amountRp": 250000,
       "crossedOutText": null,
@@ -433,7 +433,7 @@
      {
       "line": 8,
       "dateText": "25/8",
-      "description": "permak celana",
+      "description": "25/8 permak celana",
       "amountText": "Rp 190.000",
       "amountRp": 190000,
       "crossedOutText": null,
@@ -443,7 +443,7 @@
      {
       "line": 9,
       "dateText": "26/8",
-      "description": "jahit kebaya",
+      "description": "26/8 jahit kebaya",
       "amountText": "220 rb",
       "amountRp": 220000,
       "crossedOutText": null,
@@ -463,7 +463,7 @@
      {
       "line": 11,
       "dateText": "27/8",
-      "description": "ongkos jahit",
+      "description": "27/8 ongkos jahit",
       "amountText": "250rb",
       "amountRp": 250000,
       "crossedOutText": null,
@@ -473,7 +473,7 @@
      {
       "line": 12,
       "dateText": "28/8",
-      "description": "jahit seragam",
+      "description": "28/8 jahit seragam",
       "amountText": "Rp 190.000",
       "amountRp": 190000,
       "crossedOutText": null,
@@ -493,7 +493,7 @@
      {
       "line": 14,
       "dateText": "29/8",
-      "description": "ongkos jahit",
+      "description": "29/8 ongkos jahit",
       "amountText": "280rb",
       "amountRp": 280000,
       "crossedOutText": null,
@@ -503,7 +503,7 @@
      {
       "line": 15,
       "dateText": "30/8",
-      "description": "jahit seragam",
+      "description": "30/8 jahit seragam",
       "amountText": "305.000",
       "amountRp": 305000,
       "crossedOutText": null,
@@ -513,7 +513,7 @@
      {
       "line": 16,
       "dateText": "31/8",
-      "description": "jahit seragam",
+      "description": "31/8 jahit seragam",
       "amountText": "235rb",
       "amountRp": 235000,
       "crossedOutText": null,
@@ -533,28 +533,28 @@
     "legible": true,
     "merchant": "TOKO KAIN SINAR JAYA",
     "dateText": "7/8/26",
-    "handwritten": true,
+    "handwritten": false,
     "items": [
      {
-      "name": "3 lusin benang",
-      "quantityText": "3",
+      "name": "benang",
+      "quantityText": "3 lusin",
       "amountText": "144.000",
       "amountRp": 144000,
-      "confidence": 0.99
+      "confidence": 0.95
      },
      {
-      "name": "2 lusin resleting",
-      "quantityText": "2",
+      "name": "resleting",
+      "quantityText": "2 lusin",
       "amountText": "120.000",
       "amountRp": 120000,
-      "confidence": 0.99
+      "confidence": 0.95
      },
      {
-      "name": "11 m kain katun",
-      "quantityText": "11",
+      "name": "kain katun",
+      "quantityText": "11 m",
       "amountText": "396.000",
       "amountRp": 396000,
-      "confidence": 0.99
+      "confidence": 0.95
      }
     ],
     "itemsSumRp": 660000,
@@ -624,21 +624,21 @@
       "quantityText": "6 m",
       "amountText": "210.000",
       "amountRp": 210000,
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
-      "name": "kancing",
-      "quantityText": "5 pak",
+      "name": "pak kancing",
+      "quantityText": "5",
       "amountText": "125.000",
       "amountRp": 125000,
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
-      "name": "resleting",
-      "quantityText": "6 lusin",
+      "name": "lusin resleting",
+      "quantityText": "6",
       "amountText": "375.000",
       "amountRp": 375000,
-      "confidence": 0.95
+      "confidence": 1.0
      }
     ],
     "itemsSumRp": 710000,
@@ -707,7 +707,7 @@
       "amountRp": null,
       "crossedOutText": null,
       "kind": "other",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 2,
@@ -717,7 +717,7 @@
       "amountRp": 190000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 3,
@@ -727,7 +727,7 @@
       "amountRp": 50000,
       "crossedOutText": null,
       "kind": "receivable",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 4,
@@ -737,7 +737,7 @@
       "amountRp": 255000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 5,
@@ -747,7 +747,7 @@
       "amountRp": 170000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 6,
@@ -757,7 +757,7 @@
       "amountRp": 250000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 7,
@@ -767,7 +767,7 @@
       "amountRp": 280000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 8,
@@ -777,7 +777,7 @@
       "amountRp": 730000,
       "crossedOutText": null,
       "kind": "purchase",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 9,
@@ -787,7 +787,7 @@
       "amountRp": 500000,
       "crossedOutText": null,
       "kind": "expense",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 10,
@@ -797,7 +797,7 @@
       "amountRp": 240000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 11,
@@ -807,7 +807,7 @@
       "amountRp": 150000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 12,
@@ -817,7 +817,7 @@
       "amountRp": 15000,
       "crossedOutText": null,
       "kind": "receivable",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 13,
@@ -827,7 +827,7 @@
       "amountRp": 235000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 14,
@@ -837,7 +837,7 @@
       "amountRp": 25000,
       "crossedOutText": null,
       "kind": "receivable",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 15,
@@ -847,7 +847,7 @@
       "amountRp": 310000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 16,
@@ -857,7 +857,7 @@
       "amountRp": 320000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      }
     ]
    }
@@ -878,7 +878,7 @@
       "amountRp": null,
       "crossedOutText": null,
       "kind": "other",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 2,
@@ -888,7 +888,7 @@
       "amountRp": 290000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 3,
@@ -898,7 +898,7 @@
       "amountRp": 320000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 4,
@@ -908,7 +908,7 @@
       "amountRp": 845000,
       "crossedOutText": null,
       "kind": "purchase",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 5,
@@ -918,7 +918,7 @@
       "amountRp": 185000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 6,
@@ -928,7 +928,7 @@
       "amountRp": 185000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 7,
@@ -938,7 +938,7 @@
       "amountRp": 185000,
       "crossedOutText": "188rb",
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 0.98
      },
      {
       "line": 8,
@@ -948,7 +948,7 @@
       "amountRp": 230000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 9,
@@ -958,7 +958,7 @@
       "amountRp": 50000,
       "crossedOutText": null,
       "kind": "receivable",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 10,
@@ -968,7 +968,7 @@
       "amountRp": 300000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 11,
@@ -978,7 +978,7 @@
       "amountRp": 245000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 12,
@@ -988,7 +988,7 @@
       "amountRp": 310000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 13,
@@ -998,7 +998,7 @@
       "amountRp": 790000,
       "crossedOutText": null,
       "kind": "purchase",
-      "confidence": 0.98
+      "confidence": 0.99
      },
      {
       "line": 14,
@@ -1008,7 +1008,7 @@
       "amountRp": 305000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.98
+      "confidence": 0.99
      }
     ]
    }
@@ -1029,7 +1029,7 @@
       "amountRp": null,
       "crossedOutText": null,
       "kind": "other",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 2,
@@ -1039,7 +1039,7 @@
       "amountRp": 315000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 3,
@@ -1049,7 +1049,7 @@
       "amountRp": 300000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 4,
@@ -1059,7 +1059,7 @@
       "amountRp": 15000,
       "crossedOutText": null,
       "kind": "receivable",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 5,
@@ -1069,7 +1069,7 @@
       "amountRp": 195000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 6,
@@ -1079,7 +1079,7 @@
       "amountRp": 165000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 7,
@@ -1089,7 +1089,7 @@
       "amountRp": 160000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 8,
@@ -1099,7 +1099,7 @@
       "amountRp": 295000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 9,
@@ -1109,7 +1109,7 @@
       "amountRp": 815000,
       "crossedOutText": null,
       "kind": "purchase",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 10,
@@ -1119,7 +1119,7 @@
       "amountRp": 20000,
       "crossedOutText": null,
       "kind": "receivable",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 11,
@@ -1129,7 +1129,7 @@
       "amountRp": 175000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 12,
@@ -1139,7 +1139,7 @@
       "amountRp": 205000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 13,
@@ -1149,7 +1149,7 @@
       "amountRp": 245000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      },
      {
       "line": 14,
@@ -1159,7 +1159,7 @@
       "amountRp": 220000,
       "crossedOutText": null,
       "kind": "sale",
-      "confidence": 0.95
+      "confidence": 1.0
      }
     ]
    }
@@ -1331,12 +1331,76 @@
     "totalText": "815.000",
     "totalRp": 815000
    }
+  },
+  {
+   "id": "interview",
+   "type": "interview_audio",
+   "image": "/samples/pak-joko/interview.wav",
+   "capturedAt": "2026-10-06T09:58:00+00:00",
+   "reading": {
+    "label": "Interview",
+    "audible": true,
+    "language": "Indonesian",
+    "summaryEn": "The owner of a sewing business has been operating for 12 years. He earns between 200,000 and 300,000 IDR per day and spends 700,000 IDR per week on materials. He is seeking a loan to purchase a second sewing machine.",
+    "claims": [
+     {
+      "topic": "years_operating",
+      "statementEn": "The owner has been running the sewing business for 12 years.",
+      "quote": "Sudah 12 tahun, Pak.",
+      "amountText": null,
+      "amountRp": null,
+      "period": null,
+      "monthlyRp": null,
+      "timeText": "0:03"
+     },
+     {
+      "topic": "sales",
+      "statementEn": "The owner earns between 200,000 and 300,000 IDR per day, depending on orders.",
+      "quote": "200 sampai 300 ribu, tergantung pesanan.",
+      "amountText": "200 sampai 300 ribu",
+      "amountRp": null,
+      "period": "day",
+      "monthlyRp": null,
+      "timeText": "0:07"
+     },
+     {
+      "topic": "purchases",
+      "statementEn": "The owner spends 700,000 IDR per week on fabric and thread.",
+      "quote": "Seminggu sekali 700 ribu-an.",
+      "amountText": "700 ribu",
+      "amountRp": 700000,
+      "period": "week",
+      "monthlyRp": 3031000,
+      "timeText": "0:13"
+     },
+     {
+      "topic": "customers",
+      "statementEn": "The owner does not have customers who pay using QRIS.",
+      "quote": "Belum, Pak, semua masih tunai.",
+      "amountText": null,
+      "amountRp": null,
+      "period": null,
+      "monthlyRp": null,
+      "timeText": "0:17"
+     },
+     {
+      "topic": "loan_purpose",
+      "statementEn": "The owner wants to use the loan to buy a second sewing machine to speed up production.",
+      "quote": "Untuk beli mesin jahit kedua, supaya pesanan seragam bisa lebih cepat.",
+      "amountText": null,
+      "amountRp": null,
+      "period": "once",
+      "monthlyRp": null,
+      "timeText": "0:20"
+     }
+    ]
+   }
   }
  ],
  "assessment": "partially_verified",
  "policy": {
   "assessment": "partially_verified",
-  "evidenceStrength": 45,
+  "evidenceStrength": 55,
   "capacityBasis": 2296500,
   "maxInstallment": 688950,
   "requestedInstallment": 688531,
@@ -1382,12 +1446,12 @@
    "text": "There is no QRIS or e-wallet history, so no sales are confirmed by a payment provider and the low end of cash flow rests on receipts alone.",
    "citations": [
     {
-     "evidenceId": "notebook-2026-08-1",
-     "locator": "line 1"
+     "evidenceId": "interview",
+     "locator": "0:17"
     }
    ],
-   "followUpQuestion": "Apakah usaha Bapak/Ibu melayani pembayaran nontunai seperti QRIS atau transfer bank, atau seluruh pembayaran dilakukan secara tunai?",
-   "followUpQuestionEn": "Does your business accept non-cash payments such as QRIS or bank transfer, or are all payments made in cash?",
+   "followUpQuestion": "Apakah Bapak/Ibu berencana untuk mulai menggunakan QRIS di masa mendatang?",
+   "followUpQuestionEn": "Do you plan to start using QRIS in the future?",
    "figures": [],
    "source": "code",
    "answer": null,
@@ -1396,7 +1460,7 @@
  ],
  "confirmations": [
   {
-   "text": "The purchase recorded on notebook page 1 matches the total on Receipt 1.",
+   "text": "The purchase entries recorded in the notebook match the supplier receipt totals.",
    "figures": [],
    "citations": [
     {
@@ -1405,70 +1469,111 @@
     },
     {
      "evidenceId": "receipt-2026-08-1",
-     "locator": "total_written"
-    }
-   ]
-  },
-  {
-   "text": "The purchase recorded on notebook page 2 matches the total on Receipt 2.",
-   "figures": [],
-   "citations": [
+     "locator": "total"
+    },
     {
      "evidenceId": "notebook-2026-08-2",
      "locator": "line 7"
     },
     {
      "evidenceId": "receipt-2026-08-2",
-     "locator": "total_written"
-    }
-   ]
-  },
-  {
-   "text": "The purchase recorded on notebook page 4 matches the total on Receipt 5.",
-   "figures": [],
-   "citations": [
+     "locator": "total"
+    },
     {
      "evidenceId": "notebook-2026-09-1",
      "locator": "line 8"
     },
     {
      "evidenceId": "receipt-2026-09-1",
-     "locator": "total_written"
-    }
-   ]
-  },
-  {
-   "text": "The purchase recorded on notebook page 6 matches the total on Receipt 8.",
-   "figures": [],
-   "citations": [
+     "locator": "total"
+    },
+    {
+     "evidenceId": "notebook-2026-09-2",
+     "locator": "line 13"
+    },
+    {
+     "evidenceId": "receipt-2026-09-3",
+     "locator": "total"
+    },
     {
      "evidenceId": "notebook-2026-09-3",
      "locator": "line 9"
     },
     {
      "evidenceId": "receipt-2026-09-4",
-     "locator": "total_written"
+     "locator": "total"
+    }
+   ]
+  },
+  {
+   "text": "The owner's interview statement about weekly material spending aligns with the supplier receipts.",
+   "figures": [],
+   "citations": [
+    {
+     "evidenceId": "interview",
+     "locator": "0:13"
+    },
+    {
+     "evidenceId": "receipt-2026-08-1",
+     "locator": "total"
+    },
+    {
+     "evidenceId": "receipt-2026-08-2",
+     "locator": "total"
+    },
+    {
+     "evidenceId": "receipt-2026-08-3",
+     "locator": "total"
+    },
+    {
+     "evidenceId": "receipt-2026-08-4",
+     "locator": "total"
     }
    ]
   }
  ],
  "memo": {
-  "headline": "The application is partially verified and meets policy criteria because the requested instalment is fully covered by haircutted cash flow, though revenue lacks independent electronic confirmation.",
+  "headline": "The application is partially verified and meets policy criteria, with the requested monthly repayment fitting within capacity limits despite an absence of digital banking evidence.",
   "character": {
-   "text": "The business has been operating as a tailor for 12 years in Yogyakarta. The owner's recorded daily tailoring and alteration orders align consistently with purchase dates and expense notes in the ledger. However, customer payments are completely unverified by external sources as no QRIS or bank statements were submitted.",
+   "text": "The business has operated for 12 years in Yogyakarta, showing established stability. The owner's statements regarding sales of 200 to 300 thousand IDR per day and material costs around 700 thousand IDR per week correspond closely with the notebook records and supplier receipts. However, all revenue transactions remain entirely cash-based without digital confirmation.",
    "citations": [
     {
-     "evidenceId": "notebook-2026-08-1",
-     "locator": "line 2"
+     "evidenceId": "interview",
+     "locator": "0:03"
     },
     {
-     "evidenceId": "notebook-2026-08-1",
-     "locator": "line 12"
+     "evidenceId": "interview",
+     "locator": "0:07"
+    },
+    {
+     "evidenceId": "interview",
+     "locator": "0:13"
+    },
+    {
+     "evidenceId": "interview",
+     "locator": "0:17"
     }
    ]
   },
   "capacity": {
-   "text": "Monthly revenue based strictly on hard evidence is Rp 0 due to zero digital payment records, while notebook records suggest a high of Rp 7.355.000. Against monthly costs of Rp 3.527.500, the policy's haircutted cash flow yields Rp 2.296.500, supporting a maximum instalment of Rp 688.950. This comfortably covers the requested instalment of Rp 688.531.",
+   "text": "Based purely on hard verification, monthly revenue is Rp 0, as digital payment history is not used. Taking into account ledger entries, revenue reaches Rp 7.355.000, leaving a net monthly cash flow of Rp 3.827.500 after monthly costs of Rp 3.527.500. Under policy haircut rules, the capacity basis of Rp 2.296.500 supports a maximum instalment of Rp 688.950, which covers the requested instalment of Rp 688.531.",
+   "citations": [
+    {
+     "evidenceId": "interview",
+     "locator": "0:17"
+    },
+    {
+     "evidenceId": "notebook-2026-08-1",
+     "locator": "line 9"
+    },
+    {
+     "evidenceId": "notebook-2026-09-1",
+     "locator": "line 9"
+    }
+   ]
+  },
+  "capital": {
+   "text": "The file lacks shop photographs to directly evaluate inventory levels and equipment value on site. However, purchase receipts from Toko Kain Sinar Jaya confirm regular weekly material acquisition totaling Rp 3.027.500 per month, matching ledger entries for cloth, zippers, and buttons. Operating commitments also show steady shop rental payments of 500 thousand IDR recorded each month.",
    "citations": [
     {
      "evidenceId": "receipt-2026-08-1",
@@ -1477,56 +1582,51 @@
     {
      "evidenceId": "notebook-2026-08-1",
      "locator": "line 9"
-    }
-   ]
-  },
-  "capital": {
-   "text": "No shop or inventory photos were provided to confirm sewing machines, tools, or fabric on hand. Nevertheless, written supplier receipts from Toko Kain Sinar Jaya confirm regular weekly material investments averaging Rp 3.027.500 per month. Physical working capital and fixed asset condition remain open questions requiring on-site verification.",
-   "citations": [
-    {
-     "evidenceId": "receipt-2026-08-1",
-     "locator": "items"
     },
     {
-     "evidenceId": "receipt-2026-09-4",
-     "locator": "items"
+     "evidenceId": "notebook-2026-09-1",
+     "locator": "line 9"
     }
    ]
   },
   "collateral": {
-   "text": "No physical collateral documentation or asset photos were submitted with the file. For KUR financing up to Rp 100.000.000, supplemental collateral may not be mandatory. The loan decision therefore hinges on verified cash flow and field appraisal.",
+   "text": "Physical collateral documentation and asset photos are not present in the current submission. Since the requested loan of Rp 8.000.000 is well within the KUR collateral-free threshold of Rp 100.000.000, secondary physical collateral may not be mandated. Credit evaluation will instead rely directly on demonstrated operational cash flow.",
    "citations": [
     {
-     "evidenceId": "notebook-2026-08-1",
-     "locator": "line 1"
+     "evidenceId": "interview",
+     "locator": "0:20"
     }
    ]
   },
   "conditions": {
-   "text": "The applicant requests a loan of Rp 8.000.000 with a tenor of 12 months for tailoring working capital. Tailoring and repair services cater to recurring local demand for uniforms, kebayas, and alterations. However, wider neighborhood competition and seasonal customer flow cannot be confirmed without field interview records.",
+   "text": "The borrower seeks a Rp 8.000.000 facility over 12 months to purchase a second sewing machine to accelerate uniform completion. The enterprise serves a recurring local client base in Yogyakarta, including uniform and kebaya orders as well as tailoring repairs. No broader sector data or formal contracts were provided.",
    "citations": [
     {
+     "evidenceId": "interview",
+     "locator": "0:20"
+    },
+    {
      "evidenceId": "notebook-2026-08-1",
-     "locator": "line 5"
+     "locator": "line 2"
     },
     {
      "evidenceId": "notebook-2026-09-1",
-     "locator": "line 4"
+     "locator": "line 2"
     }
    ]
   },
   "officerNextSteps": [
-   "Conduct an on-site visit to the tailor shop to photograph machinery, active work-in-progress, and fabric stock.",
-   "Inspect payment transaction history or savings passbooks to corroborate cash sales against notebook entries.",
-   "Confirm kiosk rental status directly with the property owner using the rent notes cited in the ledger."
+   "Conduct an on-site inspection to capture shop photos, verify existing sewing machines, and document fabric inventory.",
+   "Inspect recent supplier invoices or request bank statements to confirm daily cash deposits.",
+   "Confirm the machine supplier's price quote for the planned equipment purchase."
   ],
   "ownerSummary": {
-   "verified": "Catatan pembukuan harian serta nota pembelian bahan kain dan perlengkapan jahit dari toko langganan sudah tercatat dengan rapi.",
-   "missing": "Bukti transaksi digital (seperti QRIS/rekening koran), foto tempat usaha, dan foto mesin jahit belum tersedia.",
+   "verified": "Catatan pembukuan harian dan nota pembelian kain dari Toko Kain Sinar Jaya telah sesuai dengan penjelasan usaha jahit Anda selama 12 tahun.",
+   "missing": "Bukti foto kios atau mesin jahit saat ini belum tersedia, dan seluruh penerimaan transaksi usaha masih berjalan secara tunai tanpa riwayat QRIS atau mutasi bank.",
    "tips": [
-    "Mulai sediakan pembayaran QRIS agar transaksi dari pelanggan tercatat secara otomatis di sistem perbankan.",
-    "Selalu simpan nota asli pembelian kain, benang, dan kancing secara teratur bersama buku catatan kas harian.",
-    "Dokumentasikan foto tempat usaha dan mesin jahit yang sedang beroperasi untuk melengkapi berkas pengajuan."
+    "Minta nota tertulis lengkap dan bertanggal dari toko perlengkapan jahit setiap kali berbelanja bahan.",
+    "Sediakan QRIS atau transfer bank untuk pelanggan agar transaksi pemasukan tercatat otomatis oleh perbankan.",
+    "Simpan foto tempat kerja dan mesin jahit yang sedang beroperasi untuk melengkapi berkas usaha."
    ]
   },
   "figures": [
@@ -1535,6 +1635,7 @@
    "capacity_basis",
    "kur_collateral_free_limit",
    "max_installment",
+   "net_high",
    "requested_amount",
    "requested_installment",
    "revenue_high",
@@ -1608,6 +1709,16 @@
    "display": "Rp 1.520.000"
   },
   {
+   "key": "receipt_1_total",
+   "label": "Total of Receipt 1",
+   "kind": "rupiah",
+   "value": 660000.0,
+   "sources": [
+    "receipt-2026-08-1"
+   ],
+   "display": "Rp 660.000"
+  },
+  {
    "key": "receipt_2_total",
    "label": "Total of Receipt 2",
    "kind": "rupiah",
@@ -1650,16 +1761,6 @@
    "display": "Rp 815.000"
   },
   {
-   "key": "receipt_1_total",
-   "label": "Total of Receipt 1",
-   "kind": "rupiah",
-   "value": 660000.0,
-   "sources": [
-    "receipt-2026-08-1"
-   ],
-   "display": "Rp 660.000"
-  },
-  {
    "key": "receipt_4_total",
    "label": "Total of Receipt 4",
    "kind": "rupiah",
@@ -1690,14 +1791,14 @@
    "display": "Rp 845.000"
   },
   {
-   "key": "receipt_3_total",
-   "label": "Total of Receipt 3",
+   "key": "receipt_7_total",
+   "label": "Total of Receipt 7",
    "kind": "rupiah",
-   "value": 710000.0,
+   "value": 790000.0,
    "sources": [
-    "receipt-2026-08-3"
+    "receipt-2026-09-3"
    ],
-   "display": "Rp 710.000"
+   "display": "Rp 790.000"
   },
   {
    "key": "receipt_8_total",
@@ -1710,14 +1811,34 @@
    "display": "Rp 815.000"
   },
   {
-   "key": "receipt_7_total",
-   "label": "Total of Receipt 7",
+   "key": "interview_1_claim_3",
+   "label": "Owner said: The owner spends 700,000 IDR per week on fabric and thread.",
    "kind": "rupiah",
-   "value": 790000.0,
+   "value": 700000.0,
    "sources": [
-    "receipt-2026-09-3"
+    "interview"
    ],
-   "display": "Rp 790.000"
+   "display": "Rp 700.000"
+  },
+  {
+   "key": "interview_1_claim_3_monthly",
+   "label": "Owner's figure as a monthly amount (code's estimate, 26 trading days a month): The owner spends 700,000 IDR per week on fabric and thread.",
+   "kind": "rupiah",
+   "value": 3031000.0,
+   "sources": [
+    "interview"
+   ],
+   "display": "Rp 3.031.000"
+  },
+  {
+   "key": "receipt_3_total",
+   "label": "Total of Receipt 3",
+   "kind": "rupiah",
+   "value": 710000.0,
+   "sources": [
+    "receipt-2026-08-3"
+   ],
+   "display": "Rp 710.000"
   },
   {
    "key": "months_covered",
@@ -1851,16 +1972,3205 @@
    "key": "evidence_strength",
    "label": "Evidence strength, out of 100",
    "kind": "count",
-   "value": 45.0,
+   "value": 55.0,
    "sources": [],
-   "display": "45"
+   "display": "55"
   }
  ],
  "unreadable": [],
  "models": [
   "gemini-3.1-flash-lite",
   "gemini-3.5-flash-lite",
-  "gemini-3.8-flash"
+  "gemini-3.6-flash",
+  "gemini-3.7-flash"
  ],
- "figureProblems": []
+ "figureProblems": [],
+ "round": 0,
+ "context": {
+  "application": {
+   "alias": "Penjahit Pak Joko",
+   "businessType": "Tailor (penjahit)",
+   "city": "Yogyakarta",
+   "yearsOperating": 12,
+   "amount": 8000000,
+   "tenorMonths": 12
+  },
+  "caseFile": {
+   "business": {
+    "alias": "Penjahit Pak Joko",
+    "type": "Tailor (penjahit)",
+    "city": "Yogyakarta",
+    "yearsOperating": 12
+   },
+   "request": {
+    "amount": "[[requested_amount]]",
+    "termMonths": 12
+   },
+   "facts": [
+    {
+     "key": "page_4_sales",
+     "label": "Sales written on Notebook page 4",
+     "value": "Rp 2.400.000"
+    },
+    {
+     "key": "page_4_purchases",
+     "label": "Purchases written on Notebook page 4",
+     "value": "Rp 730.000"
+    },
+    {
+     "key": "page_1_sales",
+     "label": "Sales written on Notebook page 1",
+     "value": "Rp 2.185.000"
+    },
+    {
+     "key": "page_1_purchases",
+     "label": "Purchases written on Notebook page 1",
+     "value": "Rp 660.000"
+    },
+    {
+     "key": "page_2_sales",
+     "label": "Sales written on Notebook page 2",
+     "value": "Rp 2.610.000"
+    },
+    {
+     "key": "page_2_purchases",
+     "label": "Purchases written on Notebook page 2",
+     "value": "Rp 695.000"
+    },
+    {
+     "key": "page_3_sales",
+     "label": "Sales written on Notebook page 3",
+     "value": "Rp 2.685.000"
+    },
+    {
+     "key": "page_3_purchases",
+     "label": "Purchases written on Notebook page 3",
+     "value": "Rp 1.520.000"
+    },
+    {
+     "key": "receipt_1_total",
+     "label": "Total of Receipt 1",
+     "value": "Rp 660.000"
+    },
+    {
+     "key": "receipt_2_total",
+     "label": "Total of Receipt 2",
+     "value": "Rp 695.000"
+    },
+    {
+     "key": "page_5_sales",
+     "label": "Sales written on Notebook page 5",
+     "value": "Rp 2.555.000"
+    },
+    {
+     "key": "page_5_purchases",
+     "label": "Purchases written on Notebook page 5",
+     "value": "Rp 1.635.000"
+    },
+    {
+     "key": "page_6_sales",
+     "label": "Sales written on Notebook page 6",
+     "value": "Rp 2.275.000"
+    },
+    {
+     "key": "page_6_purchases",
+     "label": "Purchases written on Notebook page 6",
+     "value": "Rp 815.000"
+    },
+    {
+     "key": "receipt_4_total",
+     "label": "Total of Receipt 4",
+     "value": "Rp 810.000"
+    },
+    {
+     "key": "receipt_5_total",
+     "label": "Total of Receipt 5",
+     "value": "Rp 730.000"
+    },
+    {
+     "key": "receipt_6_total",
+     "label": "Total of Receipt 6",
+     "value": "Rp 845.000"
+    },
+    {
+     "key": "receipt_7_total",
+     "label": "Total of Receipt 7",
+     "value": "Rp 790.000"
+    },
+    {
+     "key": "receipt_8_total",
+     "label": "Total of Receipt 8",
+     "value": "Rp 815.000"
+    },
+    {
+     "key": "interview_1_claim_3",
+     "label": "Owner said: The owner spends 700,000 IDR per week on fabric and thread.",
+     "value": "Rp 700.000"
+    },
+    {
+     "key": "interview_1_claim_3_monthly",
+     "label": "Owner's figure as a monthly amount (code's estimate, 26 trading days a month): The owner spends 700,000 IDR per week on fabric and thread.",
+     "value": "Rp 3.031.000"
+    },
+    {
+     "key": "receipt_3_total",
+     "label": "Total of Receipt 3",
+     "value": "Rp 710.000"
+    },
+    {
+     "key": "months_covered",
+     "label": "Months of evidence analysed",
+     "value": "2"
+    },
+    {
+     "key": "avg_claimed_sales",
+     "label": "Monthly sales the notebook claims",
+     "value": "Rp 7.355.000"
+    },
+    {
+     "key": "avg_proven_inflows",
+     "label": "Monthly money received via QRIS (hard evidence)",
+     "value": "Rp 0"
+    },
+    {
+     "key": "avg_receipt_purchases",
+     "label": "Monthly supplier purchases on receipts",
+     "value": "Rp 3.027.500"
+    },
+    {
+     "key": "avg_costs",
+     "label": "Monthly costs (purchases and expenses)",
+     "value": "Rp 3.527.500"
+    },
+    {
+     "key": "revenue_low",
+     "label": "Monthly revenue, low end (hard evidence only)",
+     "value": "Rp 0"
+    },
+    {
+     "key": "revenue_high",
+     "label": "Monthly revenue, high end (all evidence)",
+     "value": "Rp 7.355.000"
+    },
+    {
+     "key": "net_high",
+     "label": "Monthly net cash flow, high end",
+     "value": "Rp 3.827.500"
+    },
+    {
+     "key": "hard_coverage",
+     "label": "Share of claimed sales seen in QRIS",
+     "value": "0%"
+    },
+    {
+     "key": "sales_to_purchases",
+     "label": "Claimed sales as a multiple of receipt purchases",
+     "value": "2.4×"
+    },
+    {
+     "key": "requested_amount",
+     "label": "Loan amount requested",
+     "value": "Rp 8.000.000"
+    },
+    {
+     "key": "tenor_months",
+     "label": "Loan term in months",
+     "value": "12"
+    },
+    {
+     "key": "kur_collateral_free_limit",
+     "label": "KUR loans up to this amount need no extra collateral",
+     "value": "Rp 100.000.000"
+    },
+    {
+     "key": "requested_installment",
+     "label": "Monthly instalment for the request",
+     "value": "Rp 688.531"
+    }
+   ],
+   "evidence": [
+    {
+     "evidenceId": "notebook-2026-08-1",
+     "label": "Notebook page 1",
+     "type": "ledger_page",
+     "tier": "soft",
+     "captured": "2026-10-06",
+     "reading": {
+      "lines": [
+       {
+        "locator": "line 1",
+        "date": "1-10",
+        "text": "Aug 1-10",
+        "amountWritten": null,
+        "crossedOut": null,
+        "kind": "other",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 2",
+        "date": "1/8",
+        "text": "1/8 jahit seragam",
+        "amountWritten": "Rp 200.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 3",
+        "date": "2/8",
+        "text": "2/8 jahit kebaya",
+        "amountWritten": "Rp 270.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 4",
+        "date": null,
+        "text": "kasbon Bu Lurah",
+        "amountWritten": "15rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 5",
+        "date": "3/8",
+        "text": "3/8 permak celana",
+        "amountWritten": "280 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 6",
+        "date": "4/8",
+        "text": "4/8 jahit kebaya",
+        "amountWritten": "225 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 7",
+        "date": null,
+        "text": "kasbon Bu Lurah",
+        "amountWritten": "10rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 8",
+        "date": "5/8",
+        "text": "5/8 ongkos jahit",
+        "amountWritten": "200 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 9",
+        "date": null,
+        "text": "bayar sewa kios",
+        "amountWritten": "500.000",
+        "crossedOut": null,
+        "kind": "expense",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 10",
+        "date": "6/8",
+        "text": "6/8 ongkos jahit",
+        "amountWritten": "250rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 11",
+        "date": "7/8",
+        "text": "7/8 jahit kebaya",
+        "amountWritten": "Rp 160.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 12",
+        "date": null,
+        "text": "beli benang + kancing",
+        "amountWritten": "660.000",
+        "crossedOut": null,
+        "kind": "purchase",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 13",
+        "date": null,
+        "text": "kasbon Mas Dimas",
+        "amountWritten": "10rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 14",
+        "date": "8/8",
+        "text": "8/8 jahit kebaya",
+        "amountWritten": "165.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 15",
+        "date": null,
+        "text": "kasbon Mas Dimas",
+        "amountWritten": "50rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 16",
+        "date": "9/8",
+        "text": "9/8 jahit seragam",
+        "amountWritten": "170 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 17",
+        "date": "10/8",
+        "text": "10/8 jahit seragam",
+        "amountWritten": "265.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       }
+      ],
+      "figures": [
+       "page_1_sales",
+       "page_1_purchases"
+      ]
+     }
+    },
+    {
+     "evidenceId": "notebook-2026-08-2",
+     "label": "Notebook page 2",
+     "type": "ledger_page",
+     "tier": "soft",
+     "captured": "2026-10-06",
+     "reading": {
+      "lines": [
+       {
+        "locator": "line 1",
+        "date": "Aug 11-20",
+        "text": "Aug 11-20",
+        "amountWritten": null,
+        "crossedOut": null,
+        "kind": "other",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 2",
+        "date": "11/8",
+        "text": "11/8 ongkos jahit",
+        "amountWritten": "260rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 3",
+        "date": null,
+        "text": "kasbon Bu Lurah",
+        "amountWritten": "25 rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 4",
+        "date": "12/8",
+        "text": "12/8 jahit seragam",
+        "amountWritten": "305 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 5",
+        "date": "13/8",
+        "text": "13/8 permak celana",
+        "amountWritten": "285 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 6",
+        "date": "14/8",
+        "text": "14/8 jahit kebaya",
+        "amountWritten": "295rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 7",
+        "date": null,
+        "text": "beli benang + kancing",
+        "amountWritten": "Rp 695.000",
+        "crossedOut": null,
+        "kind": "purchase",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 8",
+        "date": null,
+        "text": "kasbon Mas Dimas",
+        "amountWritten": "10rb",
+        "crossedOut": "110rb",
+        "kind": "receivable",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 9",
+        "date": "15/8",
+        "text": "15/8 jahit seragam",
+        "amountWritten": "160rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 10",
+        "date": null,
+        "text": "kasbon Mas Dimas",
+        "amountWritten": "15rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 11",
+        "date": "16/8",
+        "text": "16/8 permak celana",
+        "amountWritten": "300.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 12",
+        "date": "17/8",
+        "text": "17/8 ongkos jahit",
+        "amountWritten": "Rp 310.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 13",
+        "date": "18/8",
+        "text": "18/8 ongkos jahit",
+        "amountWritten": "215rb",
+        "crossedOut": "218rb",
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 14",
+        "date": "19/8",
+        "text": "19/8 jahit seragam",
+        "amountWritten": "295.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 15",
+        "date": "20/8",
+        "text": "20/8 permak celana",
+        "amountWritten": "185.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       }
+      ],
+      "figures": [
+       "page_2_sales",
+       "page_2_purchases"
+      ]
+     }
+    },
+    {
+     "evidenceId": "notebook-2026-08-3",
+     "label": "Notebook page 3",
+     "type": "ledger_page",
+     "tier": "soft",
+     "captured": "2026-10-06",
+     "reading": {
+      "lines": [
+       {
+        "locator": "line 1",
+        "date": "Aug 21-31",
+        "text": "Aug 21-31",
+        "amountWritten": null,
+        "crossedOut": null,
+        "kind": "other",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 2",
+        "date": "21/8",
+        "text": "21/8 jahit kebaya",
+        "amountWritten": "190rb",
+        "crossedOut": "1190rb",
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 3",
+        "date": null,
+        "text": "beli kain",
+        "amountWritten": "710 rb",
+        "crossedOut": "1710 rb",
+        "kind": "purchase",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 4",
+        "date": null,
+        "text": "kasbon Mas Dimas",
+        "amountWritten": "20rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 5",
+        "date": "22/8",
+        "text": "22/8 permak celana",
+        "amountWritten": "270rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 6",
+        "date": "23/8",
+        "text": "23/8 jahit seragam",
+        "amountWritten": "305 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 7",
+        "date": "24/8",
+        "text": "24/8 jahit seragam",
+        "amountWritten": "250rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 8",
+        "date": "25/8",
+        "text": "25/8 permak celana",
+        "amountWritten": "Rp 190.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 9",
+        "date": "26/8",
+        "text": "26/8 jahit kebaya",
+        "amountWritten": "220 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 10",
+        "date": null,
+        "text": "kasbon Bu Lurah",
+        "amountWritten": "20rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 11",
+        "date": "27/8",
+        "text": "27/8 ongkos jahit",
+        "amountWritten": "250rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 12",
+        "date": "28/8",
+        "text": "28/8 jahit seragam",
+        "amountWritten": "Rp 190.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 13",
+        "date": null,
+        "text": "beli benang + kancing",
+        "amountWritten": "810 rb",
+        "crossedOut": null,
+        "kind": "purchase",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 14",
+        "date": "29/8",
+        "text": "29/8 ongkos jahit",
+        "amountWritten": "280rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 15",
+        "date": "30/8",
+        "text": "30/8 jahit seragam",
+        "amountWritten": "305.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       },
+       {
+        "locator": "line 16",
+        "date": "31/8",
+        "text": "31/8 jahit seragam",
+        "amountWritten": "235rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.95
+       }
+      ],
+      "figures": [
+       "page_3_sales",
+       "page_3_purchases"
+      ]
+     }
+    },
+    {
+     "evidenceId": "notebook-2026-09-1",
+     "label": "Notebook page 4",
+     "type": "ledger_page",
+     "tier": "soft",
+     "captured": "2026-10-06",
+     "reading": {
+      "lines": [
+       {
+        "locator": "line 1",
+        "date": "Sep 1-10",
+        "text": "Sep 1-10",
+        "amountWritten": null,
+        "crossedOut": null,
+        "kind": "other",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 2",
+        "date": "1/9",
+        "text": "1/9 jahit kebaya",
+        "amountWritten": "190rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 3",
+        "date": null,
+        "text": "kasbon Bu Ratmi",
+        "amountWritten": "50 rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 4",
+        "date": "2/9",
+        "text": "2/9 jahit seragam",
+        "amountWritten": "255.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 5",
+        "date": "3/9",
+        "text": "3/9 permak celana",
+        "amountWritten": "170rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 6",
+        "date": "4/9",
+        "text": "4/9 ongkos jahit",
+        "amountWritten": "250rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 7",
+        "date": "5/9",
+        "text": "5/9 ongkos jahit",
+        "amountWritten": "280rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 8",
+        "date": null,
+        "text": "beli kain",
+        "amountWritten": "Rp 730.000",
+        "crossedOut": null,
+        "kind": "purchase",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 9",
+        "date": null,
+        "text": "bayar sewa kios",
+        "amountWritten": "500rb",
+        "crossedOut": null,
+        "kind": "expense",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 10",
+        "date": "6/9",
+        "text": "6/9 ongkos jahit",
+        "amountWritten": "240.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 11",
+        "date": "7/9",
+        "text": "7/9 jahit kebaya",
+        "amountWritten": "150rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 12",
+        "date": null,
+        "text": "kasbon Bu Lurah",
+        "amountWritten": "15rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 13",
+        "date": "8/9",
+        "text": "8/9 jahit kebaya",
+        "amountWritten": "Rp 235.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 14",
+        "date": null,
+        "text": "kasbon Bu Ratmi",
+        "amountWritten": "25rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 15",
+        "date": "9/9",
+        "text": "9/9 permak celana",
+        "amountWritten": "310rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 16",
+        "date": "10/9",
+        "text": "10/9 jahit seragam",
+        "amountWritten": "320.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       }
+      ],
+      "figures": [
+       "page_4_sales",
+       "page_4_purchases"
+      ]
+     }
+    },
+    {
+     "evidenceId": "notebook-2026-09-2",
+     "label": "Notebook page 5",
+     "type": "ledger_page",
+     "tier": "soft",
+     "captured": "2026-10-06",
+     "reading": {
+      "lines": [
+       {
+        "locator": "line 1",
+        "date": "Sep 11-20",
+        "text": "Sep 11-20",
+        "amountWritten": null,
+        "crossedOut": null,
+        "kind": "other",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 2",
+        "date": "11/9",
+        "text": "jahit kebaya",
+        "amountWritten": "290.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 3",
+        "date": "12/9",
+        "text": "jahit seragam",
+        "amountWritten": "Rp 320.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 4",
+        "date": null,
+        "text": "beli kain",
+        "amountWritten": "845 rb",
+        "crossedOut": null,
+        "kind": "purchase",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 5",
+        "date": "13/9",
+        "text": "ongkos jahit",
+        "amountWritten": "185rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 6",
+        "date": "14/9",
+        "text": "ongkos jahit",
+        "amountWritten": "185rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 7",
+        "date": "15/9",
+        "text": "permak celana",
+        "amountWritten": "185rb",
+        "crossedOut": "188rb",
+        "kind": "sale",
+        "confidence": 0.98
+       },
+       {
+        "locator": "line 8",
+        "date": "16/9",
+        "text": "permak celana",
+        "amountWritten": "230rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 9",
+        "date": null,
+        "text": "kasbon Bu Lurah",
+        "amountWritten": "50 rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 10",
+        "date": "17/9",
+        "text": "ongkos jahit",
+        "amountWritten": "300.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 11",
+        "date": "18/9",
+        "text": "jahit kebaya",
+        "amountWritten": "245rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 12",
+        "date": "19/9",
+        "text": "permak celana",
+        "amountWritten": "Rp 310.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 13",
+        "date": null,
+        "text": "beli benang + kancing",
+        "amountWritten": "790 rb",
+        "crossedOut": null,
+        "kind": "purchase",
+        "confidence": 0.99
+       },
+       {
+        "locator": "line 14",
+        "date": "20/9",
+        "text": "jahit kebaya",
+        "amountWritten": "305.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 0.99
+       }
+      ],
+      "figures": [
+       "page_5_sales",
+       "page_5_purchases"
+      ]
+     }
+    },
+    {
+     "evidenceId": "notebook-2026-09-3",
+     "label": "Notebook page 6",
+     "type": "ledger_page",
+     "tier": "soft",
+     "captured": "2026-10-06",
+     "reading": {
+      "lines": [
+       {
+        "locator": "line 1",
+        "date": "Sep 21-30",
+        "text": "Sep 21-30",
+        "amountWritten": null,
+        "crossedOut": null,
+        "kind": "other",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 2",
+        "date": "21/9",
+        "text": "permak celana",
+        "amountWritten": "315 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 3",
+        "date": "22/9",
+        "text": "permak celana",
+        "amountWritten": "Rp 300.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 4",
+        "date": null,
+        "text": "kasbon Mas Dimas",
+        "amountWritten": "15.000",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 5",
+        "date": "23/9",
+        "text": "jahit kebaya",
+        "amountWritten": "195rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 6",
+        "date": "24/9",
+        "text": "permak celana",
+        "amountWritten": "165.000",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 7",
+        "date": "25/9",
+        "text": "permak celana",
+        "amountWritten": "160 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 8",
+        "date": "26/9",
+        "text": "jahit seragam",
+        "amountWritten": "295rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 9",
+        "date": null,
+        "text": "beli kain",
+        "amountWritten": "815.000",
+        "crossedOut": null,
+        "kind": "purchase",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 10",
+        "date": null,
+        "text": "kasbon Mas Dimas",
+        "amountWritten": "20rb",
+        "crossedOut": null,
+        "kind": "receivable",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 11",
+        "date": "27/9",
+        "text": "permak celana",
+        "amountWritten": "175rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 12",
+        "date": "28/9",
+        "text": "ongkos jahit",
+        "amountWritten": "205rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 13",
+        "date": "29/9",
+        "text": "jahit kebaya",
+        "amountWritten": "245 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       },
+       {
+        "locator": "line 14",
+        "date": "30/9",
+        "text": "ongkos jahit",
+        "amountWritten": "220 rb",
+        "crossedOut": null,
+        "kind": "sale",
+        "confidence": 1.0
+       }
+      ],
+      "figures": [
+       "page_6_sales",
+       "page_6_purchases"
+      ]
+     }
+    },
+    {
+     "evidenceId": "receipt-2026-08-1",
+     "label": "Receipt 1",
+     "type": "receipt",
+     "tier": "medium",
+     "captured": "2026-10-06",
+     "reading": {
+      "merchant": "TOKO KAIN SINAR JAYA",
+      "date": "7/8/26",
+      "handwritten": false,
+      "items": [
+       {
+        "name": "benang",
+        "quantity": "3 lusin",
+        "amountWritten": "144.000"
+       },
+       {
+        "name": "resleting",
+        "quantity": "2 lusin",
+        "amountWritten": "120.000"
+       },
+       {
+        "name": "kain katun",
+        "quantity": "11 m",
+        "amountWritten": "396.000"
+       }
+      ],
+      "totalWritten": "660.000",
+      "figures": [
+       "receipt_1_total"
+      ]
+     }
+    },
+    {
+     "evidenceId": "receipt-2026-08-2",
+     "label": "Receipt 2",
+     "type": "receipt",
+     "tier": "medium",
+     "captured": "2026-10-06",
+     "reading": {
+      "merchant": "TOKO KAIN SINAR JAYA",
+      "date": "14/8/26",
+      "handwritten": true,
+      "items": [
+       {
+        "name": "benang",
+        "quantity": "4 lusin",
+        "amountWritten": "192.000"
+       },
+       {
+        "name": "kain katun",
+        "quantity": "7 m",
+        "amountWritten": "245.000"
+       },
+       {
+        "name": "resleting",
+        "quantity": "4 lusin",
+        "amountWritten": "258.000"
+       }
+      ],
+      "totalWritten": "695.000",
+      "figures": [
+       "receipt_2_total"
+      ]
+     }
+    },
+    {
+     "evidenceId": "receipt-2026-08-3",
+     "label": "Receipt 3",
+     "type": "receipt",
+     "tier": "medium",
+     "captured": "2026-10-06",
+     "reading": {
+      "merchant": "TOKO KAIN SINAR JAYA",
+      "date": "21/8/26",
+      "handwritten": true,
+      "items": [
+       {
+        "name": "kain katun",
+        "quantity": "6 m",
+        "amountWritten": "210.000"
+       },
+       {
+        "name": "pak kancing",
+        "quantity": "5",
+        "amountWritten": "125.000"
+       },
+       {
+        "name": "lusin resleting",
+        "quantity": "6",
+        "amountWritten": "375.000"
+       }
+      ],
+      "totalWritten": "710.000",
+      "figures": [
+       "receipt_3_total"
+      ]
+     }
+    },
+    {
+     "evidenceId": "receipt-2026-08-4",
+     "label": "Receipt 4",
+     "type": "receipt",
+     "tier": "medium",
+     "captured": "2026-10-06",
+     "reading": {
+      "merchant": "TOKO KAIN SINAR JAYA",
+      "date": "28/8/26",
+      "handwritten": true,
+      "items": [
+       {
+        "name": "5 lusin benang",
+        "quantity": "5",
+        "amountWritten": "240.000"
+       },
+       {
+        "name": "7 m kain katun",
+        "quantity": "7",
+        "amountWritten": "245.000"
+       },
+       {
+        "name": "7 m kain drill",
+        "quantity": "7",
+        "amountWritten": "325.000"
+       }
+      ],
+      "totalWritten": "810.000",
+      "figures": [
+       "receipt_4_total"
+      ]
+     }
+    },
+    {
+     "evidenceId": "receipt-2026-09-1",
+     "label": "Receipt 5",
+     "type": "receipt",
+     "tier": "medium",
+     "captured": "2026-10-06",
+     "reading": {
+      "merchant": "TOKO KAIN SINAR JAYA",
+      "date": "5/9/26",
+      "handwritten": true,
+      "items": [
+       {
+        "name": "kain katun",
+        "quantity": "9 m",
+        "amountWritten": "315.000"
+       },
+       {
+        "name": "lusin resleting",
+        "quantity": "3",
+        "amountWritten": "180.000"
+       },
+       {
+        "name": "pak kancing",
+        "quantity": "9",
+        "amountWritten": "235.000"
+       }
+      ],
+      "totalWritten": "730.000",
+      "figures": [
+       "receipt_5_total"
+      ]
+     }
+    },
+    {
+     "evidenceId": "receipt-2026-09-2",
+     "label": "Receipt 6",
+     "type": "receipt",
+     "tier": "medium",
+     "captured": "2026-10-06",
+     "reading": {
+      "merchant": "TOKO KAIN SINAR JAYA",
+      "date": "12/9/26",
+      "handwritten": true,
+      "items": [
+       {
+        "name": "kain katun",
+        "quantity": "8 m",
+        "amountWritten": "280.000"
+       },
+       {
+        "name": "benang",
+        "quantity": "3 lusin",
+        "amountWritten": "144.000"
+       },
+       {
+        "name": "resleting",
+        "quantity": "7 lusin",
+        "amountWritten": "421.000"
+       }
+      ],
+      "totalWritten": "845.000",
+      "figures": [
+       "receipt_6_total"
+      ]
+     }
+    },
+    {
+     "evidenceId": "receipt-2026-09-3",
+     "label": "Receipt 7",
+     "type": "receipt",
+     "tier": "medium",
+     "captured": "2026-10-06",
+     "reading": {
+      "merchant": "TOKO KAIN SINAR JAYA",
+      "date": "19/9/26",
+      "handwritten": true,
+      "items": [
+       {
+        "name": "lusin benang",
+        "quantity": "6",
+        "amountWritten": "288.000"
+       },
+       {
+        "name": "m kain drill",
+        "quantity": "5",
+        "amountWritten": "225.000"
+       },
+       {
+        "name": "lusin resleting",
+        "quantity": "4",
+        "amountWritten": "277.000"
+       }
+      ],
+      "totalWritten": "790.000",
+      "figures": [
+       "receipt_7_total"
+      ]
+     }
+    },
+    {
+     "evidenceId": "receipt-2026-09-4",
+     "label": "Receipt 8",
+     "type": "receipt",
+     "tier": "medium",
+     "captured": "2026-10-06",
+     "reading": {
+      "merchant": "TOKO KAIN SINAR JAYA",
+      "date": "26/9/26",
+      "handwritten": true,
+      "items": [
+       {
+        "name": "10 m kain katun",
+        "quantity": "10",
+        "amountWritten": "350.000"
+       },
+       {
+        "name": "8 pak kancing",
+        "quantity": "8",
+        "amountWritten": "200.000"
+       },
+       {
+        "name": "4 lusin resleting",
+        "quantity": "4",
+        "amountWritten": "265.000"
+       }
+      ],
+      "totalWritten": "815.000",
+      "figures": [
+       "receipt_8_total"
+      ]
+     }
+    },
+    {
+     "evidenceId": "interview",
+     "label": "Interview",
+     "type": "interview_audio",
+     "tier": "soft",
+     "captured": "2026-10-06",
+     "reading": {
+      "summary": "The owner of a sewing business has been operating for 12 years. He earns between 200,000 and 300,000 IDR per day and spends 700,000 IDR per week on materials. He is seeking a loan to purchase a second sewing machine.",
+      "claims": [
+       {
+        "locator": "0:03",
+        "topic": "years_operating",
+        "statement": "The owner has been running the sewing business for 12 years.",
+        "quote": "Sudah 12 tahun, Pak.",
+        "amountSaid": null,
+        "period": null,
+        "figures": []
+       },
+       {
+        "locator": "0:07",
+        "topic": "sales",
+        "statement": "The owner earns between 200,000 and 300,000 IDR per day, depending on orders.",
+        "quote": "200 sampai 300 ribu, tergantung pesanan.",
+        "amountSaid": "200 sampai 300 ribu",
+        "period": "day",
+        "figures": []
+       },
+       {
+        "locator": "0:13",
+        "topic": "purchases",
+        "statement": "The owner spends 700,000 IDR per week on fabric and thread.",
+        "quote": "Seminggu sekali 700 ribu-an.",
+        "amountSaid": "700 ribu",
+        "period": "week",
+        "figures": [
+         "interview_1_claim_3",
+         "interview_1_claim_3_monthly"
+        ]
+       },
+       {
+        "locator": "0:17",
+        "topic": "customers",
+        "statement": "The owner does not have customers who pay using QRIS.",
+        "quote": "Belum, Pak, semua masih tunai.",
+        "amountSaid": null,
+        "period": null,
+        "figures": []
+       },
+       {
+        "locator": "0:20",
+        "topic": "loan_purpose",
+        "statement": "The owner wants to use the loan to buy a second sewing machine to speed up production.",
+        "quote": "Untuk beli mesin jahit kedua, supaya pesanan seragam bisa lebih cepat.",
+        "amountSaid": null,
+        "period": "once",
+        "figures": []
+       }
+      ]
+     }
+    }
+   ],
+   "unreadable": [],
+   "evidenceTypesMissing": [
+    "qris_history",
+    "shop_photo"
+   ],
+   "checks": [
+    {
+     "checkId": "check-1",
+     "kind": "missing_evidence",
+     "severity": "medium",
+     "text": "There is no QRIS or e-wallet history, so no sales are confirmed by a payment provider and the low end of cash flow rests on receipts alone.",
+     "citations": []
+    }
+   ]
+  },
+  "facts": [
+   {
+    "key": "page_4_sales",
+    "label": "Sales written on Notebook page 4",
+    "kind": "rupiah",
+    "value": 2400000.0,
+    "sources": []
+   },
+   {
+    "key": "page_4_purchases",
+    "label": "Purchases written on Notebook page 4",
+    "kind": "rupiah",
+    "value": 730000.0,
+    "sources": []
+   },
+   {
+    "key": "page_1_sales",
+    "label": "Sales written on Notebook page 1",
+    "kind": "rupiah",
+    "value": 2185000.0,
+    "sources": []
+   },
+   {
+    "key": "page_1_purchases",
+    "label": "Purchases written on Notebook page 1",
+    "kind": "rupiah",
+    "value": 660000.0,
+    "sources": []
+   },
+   {
+    "key": "page_2_sales",
+    "label": "Sales written on Notebook page 2",
+    "kind": "rupiah",
+    "value": 2610000.0,
+    "sources": []
+   },
+   {
+    "key": "page_2_purchases",
+    "label": "Purchases written on Notebook page 2",
+    "kind": "rupiah",
+    "value": 695000.0,
+    "sources": []
+   },
+   {
+    "key": "page_3_sales",
+    "label": "Sales written on Notebook page 3",
+    "kind": "rupiah",
+    "value": 2685000.0,
+    "sources": []
+   },
+   {
+    "key": "page_3_purchases",
+    "label": "Purchases written on Notebook page 3",
+    "kind": "rupiah",
+    "value": 1520000.0,
+    "sources": []
+   },
+   {
+    "key": "receipt_1_total",
+    "label": "Total of Receipt 1",
+    "kind": "rupiah",
+    "value": 660000.0,
+    "sources": [
+     "receipt-2026-08-1"
+    ]
+   },
+   {
+    "key": "receipt_2_total",
+    "label": "Total of Receipt 2",
+    "kind": "rupiah",
+    "value": 695000.0,
+    "sources": [
+     "receipt-2026-08-2"
+    ]
+   },
+   {
+    "key": "page_5_sales",
+    "label": "Sales written on Notebook page 5",
+    "kind": "rupiah",
+    "value": 2555000.0,
+    "sources": []
+   },
+   {
+    "key": "page_5_purchases",
+    "label": "Purchases written on Notebook page 5",
+    "kind": "rupiah",
+    "value": 1635000.0,
+    "sources": []
+   },
+   {
+    "key": "page_6_sales",
+    "label": "Sales written on Notebook page 6",
+    "kind": "rupiah",
+    "value": 2275000.0,
+    "sources": []
+   },
+   {
+    "key": "page_6_purchases",
+    "label": "Purchases written on Notebook page 6",
+    "kind": "rupiah",
+    "value": 815000.0,
+    "sources": []
+   },
+   {
+    "key": "receipt_4_total",
+    "label": "Total of Receipt 4",
+    "kind": "rupiah",
+    "value": 810000.0,
+    "sources": [
+     "receipt-2026-08-4"
+    ]
+   },
+   {
+    "key": "receipt_5_total",
+    "label": "Total of Receipt 5",
+    "kind": "rupiah",
+    "value": 730000.0,
+    "sources": [
+     "receipt-2026-09-1"
+    ]
+   },
+   {
+    "key": "receipt_6_total",
+    "label": "Total of Receipt 6",
+    "kind": "rupiah",
+    "value": 845000.0,
+    "sources": [
+     "receipt-2026-09-2"
+    ]
+   },
+   {
+    "key": "receipt_7_total",
+    "label": "Total of Receipt 7",
+    "kind": "rupiah",
+    "value": 790000.0,
+    "sources": [
+     "receipt-2026-09-3"
+    ]
+   },
+   {
+    "key": "receipt_8_total",
+    "label": "Total of Receipt 8",
+    "kind": "rupiah",
+    "value": 815000.0,
+    "sources": [
+     "receipt-2026-09-4"
+    ]
+   },
+   {
+    "key": "interview_1_claim_3",
+    "label": "Owner said: The owner spends 700,000 IDR per week on fabric and thread.",
+    "kind": "rupiah",
+    "value": 700000.0,
+    "sources": [
+     "interview"
+    ]
+   },
+   {
+    "key": "interview_1_claim_3_monthly",
+    "label": "Owner's figure as a monthly amount (code's estimate, 26 trading days a month): The owner spends 700,000 IDR per week on fabric and thread.",
+    "kind": "rupiah",
+    "value": 3031000.0,
+    "sources": [
+     "interview"
+    ]
+   },
+   {
+    "key": "receipt_3_total",
+    "label": "Total of Receipt 3",
+    "kind": "rupiah",
+    "value": 710000.0,
+    "sources": [
+     "receipt-2026-08-3"
+    ]
+   },
+   {
+    "key": "months_covered",
+    "label": "Months of evidence analysed",
+    "kind": "count",
+    "value": 2.0,
+    "sources": []
+   },
+   {
+    "key": "avg_claimed_sales",
+    "label": "Monthly sales the notebook claims",
+    "kind": "rupiah",
+    "value": 7355000.0,
+    "sources": []
+   },
+   {
+    "key": "avg_proven_inflows",
+    "label": "Monthly money received via QRIS (hard evidence)",
+    "kind": "rupiah",
+    "value": 0.0,
+    "sources": []
+   },
+   {
+    "key": "avg_receipt_purchases",
+    "label": "Monthly supplier purchases on receipts",
+    "kind": "rupiah",
+    "value": 3027500.0,
+    "sources": []
+   },
+   {
+    "key": "avg_costs",
+    "label": "Monthly costs (purchases and expenses)",
+    "kind": "rupiah",
+    "value": 3527500.0,
+    "sources": []
+   },
+   {
+    "key": "revenue_low",
+    "label": "Monthly revenue, low end (hard evidence only)",
+    "kind": "rupiah",
+    "value": 0.0,
+    "sources": []
+   },
+   {
+    "key": "revenue_high",
+    "label": "Monthly revenue, high end (all evidence)",
+    "kind": "rupiah",
+    "value": 7355000.0,
+    "sources": []
+   },
+   {
+    "key": "net_high",
+    "label": "Monthly net cash flow, high end",
+    "kind": "rupiah",
+    "value": 3827500.0,
+    "sources": []
+   },
+   {
+    "key": "hard_coverage",
+    "label": "Share of claimed sales seen in QRIS",
+    "kind": "percent",
+    "value": 0.0,
+    "sources": []
+   },
+   {
+    "key": "sales_to_purchases",
+    "label": "Claimed sales as a multiple of receipt purchases",
+    "kind": "ratio",
+    "value": 2.429,
+    "sources": []
+   },
+   {
+    "key": "requested_amount",
+    "label": "Loan amount requested",
+    "kind": "rupiah",
+    "value": 8000000.0,
+    "sources": []
+   },
+   {
+    "key": "tenor_months",
+    "label": "Loan term in months",
+    "kind": "count",
+    "value": 12.0,
+    "sources": []
+   },
+   {
+    "key": "kur_collateral_free_limit",
+    "label": "KUR loans up to this amount need no extra collateral",
+    "kind": "rupiah",
+    "value": 100000000.0,
+    "sources": []
+   },
+   {
+    "key": "requested_installment",
+    "label": "Monthly instalment for the request",
+    "kind": "rupiah",
+    "value": 688531.0,
+    "sources": []
+   }
+  ],
+  "summary": {
+   "months": [
+    {
+     "month": "2026-08",
+     "provenInflows": 0,
+     "claimedSales": 7480000,
+     "receiptPurchases": 2875000,
+     "claimedPurchases": 2875000,
+     "claimedExpenses": 500000
+    },
+    {
+     "month": "2026-09",
+     "provenInflows": 0,
+     "claimedSales": 7230000,
+     "receiptPurchases": 3180000,
+     "claimedPurchases": 3180000,
+     "claimedExpenses": 500000
+    }
+   ],
+   "avgProvenInflows": 0,
+   "avgClaimedSales": 7355000,
+   "avgCosts": 3527500,
+   "avgReceiptPurchases": 3027500,
+   "revenueLow": 0,
+   "revenueHigh": 7355000,
+   "netHigh": 3827500,
+   "hardCoverage": 0.0,
+   "salesToPurchases": 2.429
+  },
+  "checks": {
+   "check-1": {
+    "kind": "missing_evidence",
+    "severity": "medium",
+    "text": "There is no QRIS or e-wallet history, so no sales are confirmed by a payment provider and the low end of cash flow rests on receipts alone.",
+    "citations": [],
+    "followUpQuestion": null,
+    "followUpQuestionEn": null,
+    "figures": [],
+    "source": "code",
+    "answer": null,
+    "resolved": false
+   }
+  },
+  "present": [
+   "interview_audio",
+   "ledger_page",
+   "receipt"
+  ],
+  "quoted": [
+   "10",
+   "120.000",
+   "125.000",
+   "144.000",
+   "15",
+   "15.000",
+   "150",
+   "160",
+   "160.000",
+   "165.000",
+   "170",
+   "175",
+   "180.000",
+   "185",
+   "185.000",
+   "190",
+   "190.000",
+   "192.000",
+   "195",
+   "20",
+   "200",
+   "200.000",
+   "205",
+   "210.000",
+   "215",
+   "220",
+   "225",
+   "225.000",
+   "230",
+   "235",
+   "235.000",
+   "240.000",
+   "245",
+   "245.000",
+   "25",
+   "250",
+   "255.000",
+   "258.000",
+   "260",
+   "265.000",
+   "270",
+   "270.000",
+   "277.000",
+   "280",
+   "280.000",
+   "285",
+   "288.000",
+   "290.000",
+   "295",
+   "295.000",
+   "300",
+   "300.000",
+   "305",
+   "305.000",
+   "310",
+   "310.000",
+   "315",
+   "315.000",
+   "320.000",
+   "325.000",
+   "350.000",
+   "375.000",
+   "396.000",
+   "421.000",
+   "50",
+   "500",
+   "500.000",
+   "660.000",
+   "695.000",
+   "700",
+   "710",
+   "710.000",
+   "730.000",
+   "790",
+   "790.000",
+   "810",
+   "810.000",
+   "815.000",
+   "845",
+   "845.000"
+  ],
+  "evidenceIds": [
+   "notebook-2026-08-1",
+   "notebook-2026-08-2",
+   "notebook-2026-08-3",
+   "notebook-2026-09-1",
+   "notebook-2026-09-2",
+   "notebook-2026-09-3",
+   "receipt-2026-08-1",
+   "receipt-2026-08-2",
+   "receipt-2026-08-3",
+   "receipt-2026-08-4",
+   "receipt-2026-09-1",
+   "receipt-2026-09-2",
+   "receipt-2026-09-3",
+   "receipt-2026-09-4",
+   "interview"
+  ],
+  "extractions": {
+   "notebook-2026-08-1": {
+    "label": "Notebook page 1",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": "1-10",
+      "description": "Aug 1-10",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 1.0
+     },
+     {
+      "line": 2,
+      "dateText": "1/8",
+      "description": "1/8 jahit seragam",
+      "amountText": "Rp 200.000",
+      "amountRp": 200000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 3,
+      "dateText": "2/8",
+      "description": "2/8 jahit kebaya",
+      "amountText": "Rp 270.000",
+      "amountRp": 270000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 4,
+      "dateText": null,
+      "description": "kasbon Bu Lurah",
+      "amountText": "15rb",
+      "amountRp": 15000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 1.0
+     },
+     {
+      "line": 5,
+      "dateText": "3/8",
+      "description": "3/8 permak celana",
+      "amountText": "280 rb",
+      "amountRp": 280000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 6,
+      "dateText": "4/8",
+      "description": "4/8 jahit kebaya",
+      "amountText": "225 rb",
+      "amountRp": 225000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 7,
+      "dateText": null,
+      "description": "kasbon Bu Lurah",
+      "amountText": "10rb",
+      "amountRp": 10000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 1.0
+     },
+     {
+      "line": 8,
+      "dateText": "5/8",
+      "description": "5/8 ongkos jahit",
+      "amountText": "200 rb",
+      "amountRp": 200000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 9,
+      "dateText": null,
+      "description": "bayar sewa kios",
+      "amountText": "500.000",
+      "amountRp": 500000,
+      "crossedOutText": null,
+      "kind": "expense",
+      "confidence": 1.0
+     },
+     {
+      "line": 10,
+      "dateText": "6/8",
+      "description": "6/8 ongkos jahit",
+      "amountText": "250rb",
+      "amountRp": 250000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 11,
+      "dateText": "7/8",
+      "description": "7/8 jahit kebaya",
+      "amountText": "Rp 160.000",
+      "amountRp": 160000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 12,
+      "dateText": null,
+      "description": "beli benang + kancing",
+      "amountText": "660.000",
+      "amountRp": 660000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 1.0
+     },
+     {
+      "line": 13,
+      "dateText": null,
+      "description": "kasbon Mas Dimas",
+      "amountText": "10rb",
+      "amountRp": 10000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 1.0
+     },
+     {
+      "line": 14,
+      "dateText": "8/8",
+      "description": "8/8 jahit kebaya",
+      "amountText": "165.000",
+      "amountRp": 165000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 15,
+      "dateText": null,
+      "description": "kasbon Mas Dimas",
+      "amountText": "50rb",
+      "amountRp": 50000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 1.0
+     },
+     {
+      "line": 16,
+      "dateText": "9/8",
+      "description": "9/8 jahit seragam",
+      "amountText": "170 rb",
+      "amountRp": 170000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 17,
+      "dateText": "10/8",
+      "description": "10/8 jahit seragam",
+      "amountText": "265.000",
+      "amountRp": 265000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     }
+    ]
+   },
+   "notebook-2026-08-2": {
+    "label": "Notebook page 2",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": "Aug 11-20",
+      "description": "Aug 11-20",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 0.95
+     },
+     {
+      "line": 2,
+      "dateText": "11/8",
+      "description": "11/8 ongkos jahit",
+      "amountText": "260rb",
+      "amountRp": 260000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 3,
+      "dateText": null,
+      "description": "kasbon Bu Lurah",
+      "amountText": "25 rb",
+      "amountRp": 25000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 4,
+      "dateText": "12/8",
+      "description": "12/8 jahit seragam",
+      "amountText": "305 rb",
+      "amountRp": 305000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 5,
+      "dateText": "13/8",
+      "description": "13/8 permak celana",
+      "amountText": "285 rb",
+      "amountRp": 285000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 6,
+      "dateText": "14/8",
+      "description": "14/8 jahit kebaya",
+      "amountText": "295rb",
+      "amountRp": 295000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 7,
+      "dateText": null,
+      "description": "beli benang + kancing",
+      "amountText": "Rp 695.000",
+      "amountRp": 695000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 0.95
+     },
+     {
+      "line": 8,
+      "dateText": null,
+      "description": "kasbon Mas Dimas",
+      "amountText": "10rb",
+      "amountRp": 10000,
+      "crossedOutText": "110rb",
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 9,
+      "dateText": "15/8",
+      "description": "15/8 jahit seragam",
+      "amountText": "160rb",
+      "amountRp": 160000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 10,
+      "dateText": null,
+      "description": "kasbon Mas Dimas",
+      "amountText": "15rb",
+      "amountRp": 15000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 11,
+      "dateText": "16/8",
+      "description": "16/8 permak celana",
+      "amountText": "300.000",
+      "amountRp": 300000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 12,
+      "dateText": "17/8",
+      "description": "17/8 ongkos jahit",
+      "amountText": "Rp 310.000",
+      "amountRp": 310000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 13,
+      "dateText": "18/8",
+      "description": "18/8 ongkos jahit",
+      "amountText": "215rb",
+      "amountRp": 215000,
+      "crossedOutText": "218rb",
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 14,
+      "dateText": "19/8",
+      "description": "19/8 jahit seragam",
+      "amountText": "295.000",
+      "amountRp": 295000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 15,
+      "dateText": "20/8",
+      "description": "20/8 permak celana",
+      "amountText": "185.000",
+      "amountRp": 185000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     }
+    ]
+   },
+   "notebook-2026-08-3": {
+    "label": "Notebook page 3",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": "Aug 21-31",
+      "description": "Aug 21-31",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 0.95
+     },
+     {
+      "line": 2,
+      "dateText": "21/8",
+      "description": "21/8 jahit kebaya",
+      "amountText": "190rb",
+      "amountRp": 190000,
+      "crossedOutText": "1190rb",
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 3,
+      "dateText": null,
+      "description": "beli kain",
+      "amountText": "710 rb",
+      "amountRp": 710000,
+      "crossedOutText": "1710 rb",
+      "kind": "purchase",
+      "confidence": 0.95
+     },
+     {
+      "line": 4,
+      "dateText": null,
+      "description": "kasbon Mas Dimas",
+      "amountText": "20rb",
+      "amountRp": 20000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 5,
+      "dateText": "22/8",
+      "description": "22/8 permak celana",
+      "amountText": "270rb",
+      "amountRp": 270000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 6,
+      "dateText": "23/8",
+      "description": "23/8 jahit seragam",
+      "amountText": "305 rb",
+      "amountRp": 305000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 7,
+      "dateText": "24/8",
+      "description": "24/8 jahit seragam",
+      "amountText": "250rb",
+      "amountRp": 250000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 8,
+      "dateText": "25/8",
+      "description": "25/8 permak celana",
+      "amountText": "Rp 190.000",
+      "amountRp": 190000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 9,
+      "dateText": "26/8",
+      "description": "26/8 jahit kebaya",
+      "amountText": "220 rb",
+      "amountRp": 220000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 10,
+      "dateText": null,
+      "description": "kasbon Bu Lurah",
+      "amountText": "20rb",
+      "amountRp": 20000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.95
+     },
+     {
+      "line": 11,
+      "dateText": "27/8",
+      "description": "27/8 ongkos jahit",
+      "amountText": "250rb",
+      "amountRp": 250000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 12,
+      "dateText": "28/8",
+      "description": "28/8 jahit seragam",
+      "amountText": "Rp 190.000",
+      "amountRp": 190000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 13,
+      "dateText": null,
+      "description": "beli benang + kancing",
+      "amountText": "810 rb",
+      "amountRp": 810000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 0.95
+     },
+     {
+      "line": 14,
+      "dateText": "29/8",
+      "description": "29/8 ongkos jahit",
+      "amountText": "280rb",
+      "amountRp": 280000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 15,
+      "dateText": "30/8",
+      "description": "30/8 jahit seragam",
+      "amountText": "305.000",
+      "amountRp": 305000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     },
+     {
+      "line": 16,
+      "dateText": "31/8",
+      "description": "31/8 jahit seragam",
+      "amountText": "235rb",
+      "amountRp": 235000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.95
+     }
+    ]
+   },
+   "notebook-2026-09-1": {
+    "label": "Notebook page 4",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": "Sep 1-10",
+      "description": "Sep 1-10",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 1.0
+     },
+     {
+      "line": 2,
+      "dateText": "1/9",
+      "description": "1/9 jahit kebaya",
+      "amountText": "190rb",
+      "amountRp": 190000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 3,
+      "dateText": null,
+      "description": "kasbon Bu Ratmi",
+      "amountText": "50 rb",
+      "amountRp": 50000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 1.0
+     },
+     {
+      "line": 4,
+      "dateText": "2/9",
+      "description": "2/9 jahit seragam",
+      "amountText": "255.000",
+      "amountRp": 255000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 5,
+      "dateText": "3/9",
+      "description": "3/9 permak celana",
+      "amountText": "170rb",
+      "amountRp": 170000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 6,
+      "dateText": "4/9",
+      "description": "4/9 ongkos jahit",
+      "amountText": "250rb",
+      "amountRp": 250000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 7,
+      "dateText": "5/9",
+      "description": "5/9 ongkos jahit",
+      "amountText": "280rb",
+      "amountRp": 280000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 8,
+      "dateText": null,
+      "description": "beli kain",
+      "amountText": "Rp 730.000",
+      "amountRp": 730000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 1.0
+     },
+     {
+      "line": 9,
+      "dateText": null,
+      "description": "bayar sewa kios",
+      "amountText": "500rb",
+      "amountRp": 500000,
+      "crossedOutText": null,
+      "kind": "expense",
+      "confidence": 1.0
+     },
+     {
+      "line": 10,
+      "dateText": "6/9",
+      "description": "6/9 ongkos jahit",
+      "amountText": "240.000",
+      "amountRp": 240000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 11,
+      "dateText": "7/9",
+      "description": "7/9 jahit kebaya",
+      "amountText": "150rb",
+      "amountRp": 150000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 12,
+      "dateText": null,
+      "description": "kasbon Bu Lurah",
+      "amountText": "15rb",
+      "amountRp": 15000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 1.0
+     },
+     {
+      "line": 13,
+      "dateText": "8/9",
+      "description": "8/9 jahit kebaya",
+      "amountText": "Rp 235.000",
+      "amountRp": 235000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 14,
+      "dateText": null,
+      "description": "kasbon Bu Ratmi",
+      "amountText": "25rb",
+      "amountRp": 25000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 1.0
+     },
+     {
+      "line": 15,
+      "dateText": "9/9",
+      "description": "9/9 permak celana",
+      "amountText": "310rb",
+      "amountRp": 310000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 16,
+      "dateText": "10/9",
+      "description": "10/9 jahit seragam",
+      "amountText": "320.000",
+      "amountRp": 320000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     }
+    ]
+   },
+   "notebook-2026-09-2": {
+    "label": "Notebook page 5",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": "Sep 11-20",
+      "description": "Sep 11-20",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 0.99
+     },
+     {
+      "line": 2,
+      "dateText": "11/9",
+      "description": "jahit kebaya",
+      "amountText": "290.000",
+      "amountRp": 290000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.99
+     },
+     {
+      "line": 3,
+      "dateText": "12/9",
+      "description": "jahit seragam",
+      "amountText": "Rp 320.000",
+      "amountRp": 320000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.99
+     },
+     {
+      "line": 4,
+      "dateText": null,
+      "description": "beli kain",
+      "amountText": "845 rb",
+      "amountRp": 845000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 0.99
+     },
+     {
+      "line": 5,
+      "dateText": "13/9",
+      "description": "ongkos jahit",
+      "amountText": "185rb",
+      "amountRp": 185000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.99
+     },
+     {
+      "line": 6,
+      "dateText": "14/9",
+      "description": "ongkos jahit",
+      "amountText": "185rb",
+      "amountRp": 185000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.99
+     },
+     {
+      "line": 7,
+      "dateText": "15/9",
+      "description": "permak celana",
+      "amountText": "185rb",
+      "amountRp": 185000,
+      "crossedOutText": "188rb",
+      "kind": "sale",
+      "confidence": 0.98
+     },
+     {
+      "line": 8,
+      "dateText": "16/9",
+      "description": "permak celana",
+      "amountText": "230rb",
+      "amountRp": 230000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.99
+     },
+     {
+      "line": 9,
+      "dateText": null,
+      "description": "kasbon Bu Lurah",
+      "amountText": "50 rb",
+      "amountRp": 50000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 0.99
+     },
+     {
+      "line": 10,
+      "dateText": "17/9",
+      "description": "ongkos jahit",
+      "amountText": "300.000",
+      "amountRp": 300000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.99
+     },
+     {
+      "line": 11,
+      "dateText": "18/9",
+      "description": "jahit kebaya",
+      "amountText": "245rb",
+      "amountRp": 245000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.99
+     },
+     {
+      "line": 12,
+      "dateText": "19/9",
+      "description": "permak celana",
+      "amountText": "Rp 310.000",
+      "amountRp": 310000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.99
+     },
+     {
+      "line": 13,
+      "dateText": null,
+      "description": "beli benang + kancing",
+      "amountText": "790 rb",
+      "amountRp": 790000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 0.99
+     },
+     {
+      "line": 14,
+      "dateText": "20/9",
+      "description": "jahit kebaya",
+      "amountText": "305.000",
+      "amountRp": 305000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 0.99
+     }
+    ]
+   },
+   "notebook-2026-09-3": {
+    "label": "Notebook page 6",
+    "lines": [
+     {
+      "line": 1,
+      "dateText": "Sep 21-30",
+      "description": "Sep 21-30",
+      "amountText": null,
+      "amountRp": null,
+      "crossedOutText": null,
+      "kind": "other",
+      "confidence": 1.0
+     },
+     {
+      "line": 2,
+      "dateText": "21/9",
+      "description": "permak celana",
+      "amountText": "315 rb",
+      "amountRp": 315000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 3,
+      "dateText": "22/9",
+      "description": "permak celana",
+      "amountText": "Rp 300.000",
+      "amountRp": 300000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 4,
+      "dateText": null,
+      "description": "kasbon Mas Dimas",
+      "amountText": "15.000",
+      "amountRp": 15000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 1.0
+     },
+     {
+      "line": 5,
+      "dateText": "23/9",
+      "description": "jahit kebaya",
+      "amountText": "195rb",
+      "amountRp": 195000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 6,
+      "dateText": "24/9",
+      "description": "permak celana",
+      "amountText": "165.000",
+      "amountRp": 165000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 7,
+      "dateText": "25/9",
+      "description": "permak celana",
+      "amountText": "160 rb",
+      "amountRp": 160000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 8,
+      "dateText": "26/9",
+      "description": "jahit seragam",
+      "amountText": "295rb",
+      "amountRp": 295000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 9,
+      "dateText": null,
+      "description": "beli kain",
+      "amountText": "815.000",
+      "amountRp": 815000,
+      "crossedOutText": null,
+      "kind": "purchase",
+      "confidence": 1.0
+     },
+     {
+      "line": 10,
+      "dateText": null,
+      "description": "kasbon Mas Dimas",
+      "amountText": "20rb",
+      "amountRp": 20000,
+      "crossedOutText": null,
+      "kind": "receivable",
+      "confidence": 1.0
+     },
+     {
+      "line": 11,
+      "dateText": "27/9",
+      "description": "permak celana",
+      "amountText": "175rb",
+      "amountRp": 175000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 12,
+      "dateText": "28/9",
+      "description": "ongkos jahit",
+      "amountText": "205rb",
+      "amountRp": 205000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 13,
+      "dateText": "29/9",
+      "description": "jahit kebaya",
+      "amountText": "245 rb",
+      "amountRp": 245000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     },
+     {
+      "line": 14,
+      "dateText": "30/9",
+      "description": "ongkos jahit",
+      "amountText": "220 rb",
+      "amountRp": 220000,
+      "crossedOutText": null,
+      "kind": "sale",
+      "confidence": 1.0
+     }
+    ]
+   },
+   "receipt-2026-08-1": {
+    "label": "Receipt 1",
+    "legible": true,
+    "merchant": "TOKO KAIN SINAR JAYA",
+    "dateText": "7/8/26",
+    "handwritten": false,
+    "items": [
+     {
+      "name": "benang",
+      "quantityText": "3 lusin",
+      "amountText": "144.000",
+      "amountRp": 144000,
+      "confidence": 0.95
+     },
+     {
+      "name": "resleting",
+      "quantityText": "2 lusin",
+      "amountText": "120.000",
+      "amountRp": 120000,
+      "confidence": 0.95
+     },
+     {
+      "name": "kain katun",
+      "quantityText": "11 m",
+      "amountText": "396.000",
+      "amountRp": 396000,
+      "confidence": 0.95
+     }
+    ],
+    "itemsSumRp": 660000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "660.000",
+    "totalRp": 660000
+   },
+   "receipt-2026-08-2": {
+    "label": "Receipt 2",
+    "legible": true,
+    "merchant": "TOKO KAIN SINAR JAYA",
+    "dateText": "14/8/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "benang",
+      "quantityText": "4 lusin",
+      "amountText": "192.000",
+      "amountRp": 192000,
+      "confidence": 0.95
+     },
+     {
+      "name": "kain katun",
+      "quantityText": "7 m",
+      "amountText": "245.000",
+      "amountRp": 245000,
+      "confidence": 0.95
+     },
+     {
+      "name": "resleting",
+      "quantityText": "4 lusin",
+      "amountText": "258.000",
+      "amountRp": 258000,
+      "confidence": 0.95
+     }
+    ],
+    "itemsSumRp": 695000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "695.000",
+    "totalRp": 695000
+   },
+   "receipt-2026-08-3": {
+    "label": "Receipt 3",
+    "legible": true,
+    "merchant": "TOKO KAIN SINAR JAYA",
+    "dateText": "21/8/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "kain katun",
+      "quantityText": "6 m",
+      "amountText": "210.000",
+      "amountRp": 210000,
+      "confidence": 1.0
+     },
+     {
+      "name": "pak kancing",
+      "quantityText": "5",
+      "amountText": "125.000",
+      "amountRp": 125000,
+      "confidence": 1.0
+     },
+     {
+      "name": "lusin resleting",
+      "quantityText": "6",
+      "amountText": "375.000",
+      "amountRp": 375000,
+      "confidence": 1.0
+     }
+    ],
+    "itemsSumRp": 710000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "710.000",
+    "totalRp": 710000
+   },
+   "receipt-2026-08-4": {
+    "label": "Receipt 4",
+    "legible": true,
+    "merchant": "TOKO KAIN SINAR JAYA",
+    "dateText": "28/8/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "5 lusin benang",
+      "quantityText": "5",
+      "amountText": "240.000",
+      "amountRp": 240000,
+      "confidence": 1.0
+     },
+     {
+      "name": "7 m kain katun",
+      "quantityText": "7",
+      "amountText": "245.000",
+      "amountRp": 245000,
+      "confidence": 1.0
+     },
+     {
+      "name": "7 m kain drill",
+      "quantityText": "7",
+      "amountText": "325.000",
+      "amountRp": 325000,
+      "confidence": 1.0
+     }
+    ],
+    "itemsSumRp": 810000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "810.000",
+    "totalRp": 810000
+   },
+   "receipt-2026-09-1": {
+    "label": "Receipt 5",
+    "legible": true,
+    "merchant": "TOKO KAIN SINAR JAYA",
+    "dateText": "5/9/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "kain katun",
+      "quantityText": "9 m",
+      "amountText": "315.000",
+      "amountRp": 315000,
+      "confidence": 1.0
+     },
+     {
+      "name": "lusin resleting",
+      "quantityText": "3",
+      "amountText": "180.000",
+      "amountRp": 180000,
+      "confidence": 1.0
+     },
+     {
+      "name": "pak kancing",
+      "quantityText": "9",
+      "amountText": "235.000",
+      "amountRp": 235000,
+      "confidence": 1.0
+     }
+    ],
+    "itemsSumRp": 730000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "730.000",
+    "totalRp": 730000
+   },
+   "receipt-2026-09-2": {
+    "label": "Receipt 6",
+    "legible": true,
+    "merchant": "TOKO KAIN SINAR JAYA",
+    "dateText": "12/9/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "kain katun",
+      "quantityText": "8 m",
+      "amountText": "280.000",
+      "amountRp": 280000,
+      "confidence": 1.0
+     },
+     {
+      "name": "benang",
+      "quantityText": "3 lusin",
+      "amountText": "144.000",
+      "amountRp": 144000,
+      "confidence": 1.0
+     },
+     {
+      "name": "resleting",
+      "quantityText": "7 lusin",
+      "amountText": "421.000",
+      "amountRp": 421000,
+      "confidence": 1.0
+     }
+    ],
+    "itemsSumRp": 845000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "845.000",
+    "totalRp": 845000
+   },
+   "receipt-2026-09-3": {
+    "label": "Receipt 7",
+    "legible": true,
+    "merchant": "TOKO KAIN SINAR JAYA",
+    "dateText": "19/9/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "lusin benang",
+      "quantityText": "6",
+      "amountText": "288.000",
+      "amountRp": 288000,
+      "confidence": 1.0
+     },
+     {
+      "name": "m kain drill",
+      "quantityText": "5",
+      "amountText": "225.000",
+      "amountRp": 225000,
+      "confidence": 1.0
+     },
+     {
+      "name": "lusin resleting",
+      "quantityText": "4",
+      "amountText": "277.000",
+      "amountRp": 277000,
+      "confidence": 1.0
+     }
+    ],
+    "itemsSumRp": 790000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "790.000",
+    "totalRp": 790000
+   },
+   "receipt-2026-09-4": {
+    "label": "Receipt 8",
+    "legible": true,
+    "merchant": "TOKO KAIN SINAR JAYA",
+    "dateText": "26/9/26",
+    "handwritten": true,
+    "items": [
+     {
+      "name": "10 m kain katun",
+      "quantityText": "10",
+      "amountText": "350.000",
+      "amountRp": 350000,
+      "confidence": 1.0
+     },
+     {
+      "name": "8 pak kancing",
+      "quantityText": "8",
+      "amountText": "200.000",
+      "amountRp": 200000,
+      "confidence": 1.0
+     },
+     {
+      "name": "4 lusin resleting",
+      "quantityText": "4",
+      "amountText": "265.000",
+      "amountRp": 265000,
+      "confidence": 1.0
+     }
+    ],
+    "itemsSumRp": 815000,
+    "subtotalRp": null,
+    "taxRp": null,
+    "discountRp": null,
+    "totalText": "815.000",
+    "totalRp": 815000
+   },
+   "interview": {
+    "label": "Interview",
+    "audible": true,
+    "language": "Indonesian",
+    "summaryEn": "The owner of a sewing business has been operating for 12 years. He earns between 200,000 and 300,000 IDR per day and spends 700,000 IDR per week on materials. He is seeking a loan to purchase a second sewing machine.",
+    "claims": [
+     {
+      "topic": "years_operating",
+      "statementEn": "The owner has been running the sewing business for 12 years.",
+      "quote": "Sudah 12 tahun, Pak.",
+      "amountText": null,
+      "amountRp": null,
+      "period": null,
+      "monthlyRp": null,
+      "timeText": "0:03"
+     },
+     {
+      "topic": "sales",
+      "statementEn": "The owner earns between 200,000 and 300,000 IDR per day, depending on orders.",
+      "quote": "200 sampai 300 ribu, tergantung pesanan.",
+      "amountText": "200 sampai 300 ribu",
+      "amountRp": null,
+      "period": "day",
+      "monthlyRp": null,
+      "timeText": "0:07"
+     },
+     {
+      "topic": "purchases",
+      "statementEn": "The owner spends 700,000 IDR per week on fabric and thread.",
+      "quote": "Seminggu sekali 700 ribu-an.",
+      "amountText": "700 ribu",
+      "amountRp": 700000,
+      "period": "week",
+      "monthlyRp": 3031000,
+      "timeText": "0:13"
+     },
+     {
+      "topic": "customers",
+      "statementEn": "The owner does not have customers who pay using QRIS.",
+      "quote": "Belum, Pak, semua masih tunai.",
+      "amountText": null,
+      "amountRp": null,
+      "period": null,
+      "monthlyRp": null,
+      "timeText": "0:17"
+     },
+     {
+      "topic": "loan_purpose",
+      "statementEn": "The owner wants to use the loan to buy a second sewing machine to speed up production.",
+      "quote": "Untuk beli mesin jahit kedua, supaya pesanan seragam bisa lebih cepat.",
+      "amountText": null,
+      "amountRp": null,
+      "period": "once",
+      "monthlyRp": null,
+      "timeText": "0:20"
+     }
+    ]
+   }
+  },
+  "unreadable": [],
+  "readerModels": [
+   "gemini-3.1-flash-lite",
+   "gemini-3.5-flash-lite"
+  ],
+  "round": 0
+ }
 }

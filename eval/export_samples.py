@@ -48,10 +48,14 @@ def export(slug: str, data: Path) -> dict:
     evidence = []
     for item in manifest["evidence"]:
         source = data / slug / item["path"]
-        name = Path(item["path"]).with_suffix(".webp").name
-        image = Image.open(source).convert("RGB")
-        image.thumbnail((900, 1400))
-        image.save(out / name, quality=74, method=6)
+        if item["type"] == "interview_audio":
+            name = Path(item["path"]).name  # recordings are published as they are
+            (out / name).write_bytes(source.read_bytes())
+        else:
+            name = Path(item["path"]).with_suffix(".webp").name
+            image = Image.open(source).convert("RGB")
+            image.thumbnail((900, 1400))
+            image.save(out / name, quality=74, method=6)
         evidence_id = Path(item["path"]).stem
         evidence.append(
             {

@@ -102,6 +102,53 @@ function Reading({ item, locator }: { item: EvidenceItem; locator: string | null
     )
   }
 
+  if (item.type === 'interview_audio') {
+    return (
+      <>
+        {reading.summaryEn ? <p className="fine">{String(reading.summaryEn)}</p> : null}
+        <table className="ledger compact">
+          <thead>
+            <tr>
+              <th scope="col">At</th>
+              <th scope="col">The owner said</th>
+              <th scope="col" className="num">
+                Rupiah
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rowsOf(reading, 'claims').map((claim, index) => (
+              <tr
+                key={index}
+                className={locator && claim.timeText === locator ? 'marked' : undefined}
+              >
+                <td className="col-line">{String(claim.timeText ?? '')}</td>
+                <td>
+                  <span lang="id">“{String(claim.quote)}”</span>
+                  <span className="kind"> {String(claim.statementEn)}</span>
+                </td>
+                <td className="num">
+                  {claim.amountRp == null ? '' : money(claim.amountRp)}
+                  {claim.period ? <span className="kind"> /{String(claim.period)}</span> : null}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </>
+    )
+  }
+
+  if (item.type === 'shop_photo') {
+    return (
+      <ul>
+        {rowsOf(reading, 'observations').map((o, index) => (
+          <li key={index}>{String(o)}</li>
+        ))}
+      </ul>
+    )
+  }
+
   return <pre className="reading-raw">{JSON.stringify(reading, null, 1)}</pre>
 }
 
@@ -135,7 +182,14 @@ export default function EvidenceViewer({
             </button>
           </div>
           <div className="viewer-body">
-            <img src={item.image} alt={`${item.reading?.label ?? 'Evidence'} as photographed`} />
+            {item.type === 'interview_audio' ? (
+              <div className="recording">
+                <p className="fine">The interview as recorded, in Bahasa Indonesia.</p>
+                <audio controls preload="none" src={item.image} />
+              </div>
+            ) : (
+              <img src={item.image} alt={`${item.reading?.label ?? 'Evidence'} as photographed`} />
+            )}
             <div>
               <h4>What the reader extracted</h4>
               <Reading item={item} locator={locator} />

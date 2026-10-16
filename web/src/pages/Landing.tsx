@@ -21,9 +21,9 @@ const KIND_LABEL: Record<SpecimenLine['kind'], string> = {
 
 // What each sample file was built from; the outcome and findings come from the real analysis.
 const EVIDENCE_ON_FILE: Record<string, string> = {
-  'bu-sari': 'Notebook, QRIS history, supplier receipts',
-  'pak-joko': 'Notebook, fabric receipts; no QRIS',
-  'pak-hendra': 'Notebook, QRIS history, market receipts',
+  'bu-sari': 'Notebook, QRIS history, supplier receipts, interview',
+  'pak-joko': 'Notebook, fabric receipts, interview; no QRIS',
+  'pak-hendra': 'Notebook, QRIS history, market receipts, interview',
 }
 
 type Actor = 'Officer' | 'Gemini' | 'Code'
@@ -217,8 +217,8 @@ export default function Landing() {
           <div className="section-head">
             <h2 id="samples-heading">Three sample files</h2>
             <p>
-              Three fictional businesses, each with two months of notebook pages, receipts and,
-              where they have it, QRIS history. These are the files LedgerLens produced from them,
+              Three fictional businesses, each with two months of notebook pages, receipts, a short
+              interview with the owner and, where they have it, QRIS history. These are the files LedgerLens produced from them,
               unedited.
             </p>
           </div>

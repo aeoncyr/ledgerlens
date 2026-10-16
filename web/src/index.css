@@ -1085,6 +1085,15 @@ h3 {
   margin-top: 40px;
 }
 
+.evidence-list .audio-tile {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-weight: 600;
+}
+
 /* Evidence viewer */
 .viewer {
   width: min(1040px, calc(100vw - 32px));
@@ -1147,6 +1156,10 @@ h3 {
 
 .ledger tr.marked > * {
   background: #f4ead2;
+}
+
+.recording audio {
+  width: 100%;
 }
 
 .reading-raw {

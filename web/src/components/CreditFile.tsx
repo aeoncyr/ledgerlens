@@ -292,7 +292,13 @@ export default function CreditFile({
             {file.evidence.map((item) => (
               <li key={item.id}>
                 <button type="button" onClick={() => setOpen({ item, locator: null })}>
-                  <img src={item.image} alt="" loading="lazy" />
+                  {item.type === 'interview_audio' ? (
+                    <span className="audio-tile" aria-hidden="true">
+                      ▶ Recording
+                    </span>
+                  ) : (
+                    <img src={item.image} alt="" loading="lazy" />
+                  )}
                   <span>{label(item.id)}</span>
                 </button>
               </li>

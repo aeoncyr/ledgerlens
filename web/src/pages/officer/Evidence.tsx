@@ -105,7 +105,7 @@ export default function Evidence() {
       for (const [index, item] of file.evidence.entries()) {
         setProgress(`Uploading ${index + 1} of ${file.evidence.length}…`)
         const blob = await (await fetch(item.image)).blob()
-        const name = item.image.split('/').pop() ?? `${item.id}.webp`
+        const name = item.image.split('/').pop() ?? item.id
         await addEvidence(id, item.type, blob, name, new Date(item.capturedAt))
       }
     } catch (e) {
@@ -193,8 +193,8 @@ export default function Evidence() {
       <section className="sample-picker" aria-labelledby="sample-evidence">
         <h2 id="sample-evidence">Or add a sample business’s records</h2>
         <p className="fine">
-          Two months of photographed notebook pages, receipts and QRIS screenshots of a fictional
-          business, uploaded as if you had just taken them.
+          Two months of photographed notebook pages, receipts, QRIS screenshots and a short
+          interview with the owner of a fictional business, uploaded as if you had just taken them.
         </p>
         <div className="page-actions">
           <select value={sample} onChange={(e) => setSample(e.target.value)} disabled={!!progress}>
