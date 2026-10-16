@@ -99,6 +99,7 @@ export type EvidenceItem = {
   type: EvidenceType
   image: string
   capturedAt: string
+  submittedBy?: 'owner' | 'officer'
   // What the reader extracted; its shape depends on the type of evidence.
   reading: (Record<string, unknown> & { label?: string }) | null
 }

@@ -2417,3 +2417,36 @@ textarea:focus {
     padding: 22px 18px;
   }
 }
+
+/* Owner-shared files in the officer's workspace */
+.share-open {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.share-open label {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.share-open input {
+  width: 200px;
+}
+
+.tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.owner-tag {
+  background: #f4ead2;
+  color: var(--owner);
+}

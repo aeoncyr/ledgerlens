@@ -11,6 +11,7 @@ const NewApplication = lazy(() => import('./pages/officer/NewApplication.tsx'))
 const Consent = lazy(() => import('./pages/officer/Consent.tsx'))
 const Evidence = lazy(() => import('./pages/officer/Evidence.tsx'))
 const ApplicationFile = lazy(() => import('./pages/officer/ApplicationFile.tsx'))
+const OpenShared = lazy(() => import('./pages/officer/OpenShared.tsx'))
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/app/:id" element={<ApplicationFile />} />
         <Route path="/app/:id/consent" element={<Consent />} />
         <Route path="/app/:id/evidence" element={<Evidence />} />
+        <Route path="/app/shared/:code" element={<OpenShared />} />
         <Route path="*" element={<Landing />} />
       </Routes>
     </Suspense>

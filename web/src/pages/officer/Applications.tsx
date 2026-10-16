@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState, type FormEvent } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { ensureSignedIn } from '../../firebase.ts'
 import { STATUS_LABEL, useApplications } from '../../officer.ts'
 import { ASSESSMENT_LABEL, ASSESSMENT_TONE } from '../../types.ts'
@@ -13,6 +13,14 @@ export default function Applications() {
     ensureSignedIn().then((user) => setUid(user.uid))
   }, [])
   const { data: applications, loading, error } = useApplications(uid)
+  const navigate = useNavigate()
+  const [code, setCode] = useState('')
+
+  function openShared(event: FormEvent) {
+    event.preventDefault()
+    const clean = code.trim().split('/').pop() ?? ''
+    if (clean) navigate(`/app/shared/${clean}`)
+  }
 
   return (
     <OfficerShell title="Applications">
@@ -20,10 +28,22 @@ export default function Applications() {
         <Link className="button" to="/app/new">
           New application
         </Link>
-        <p className="fine">
-          Each visitor has a private workspace, so your applications are visible only to you.
-        </p>
+        <form className="share-open" onSubmit={openShared}>
+          <label htmlFor="share-code">A business owner shared a file with you?</label>
+          <input
+            id="share-code"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="Share code or link"
+          />
+          <button className="button quiet" disabled={!code.trim()}>
+            Open
+          </button>
+        </form>
       </div>
+      <p className="fine">
+        Each visitor has a private workspace, so your applications are visible only to you.
+      </p>
       {error && <p className="error">Could not load applications: {error}</p>}
       {loading && <p className="fine">Loading…</p>}
       {!loading && applications.length === 0 && (
@@ -55,6 +75,7 @@ export default function Applications() {
                     <Link to={`/app/${app.id}`}>{app.business.alias}</Link>
                     <span className="sub">
                       {app.business.type}, {app.business.city}
+                      {app.origin === 'owner' && <span className="tag owner-tag">Shared by owner</span>}
                     </span>
                   </th>
                   <td className="num" data-label="Requested">

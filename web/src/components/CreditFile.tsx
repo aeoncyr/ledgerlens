@@ -299,7 +299,10 @@ export default function CreditFile({
                   ) : (
                     <img src={item.image} alt="" loading="lazy" />
                   )}
-                  <span>{label(item.id)}</span>
+                  <span>
+                    {label(item.id)}
+                    {item.submittedBy === 'owner' && <span className="tag owner-tag">sent by owner</span>}
+                  </span>
                 </button>
               </li>
             ))}
