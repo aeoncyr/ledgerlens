@@ -100,7 +100,7 @@ function HeroVisual() {
 export default function Landing() {
   return (
     <>
-      <SiteNav home />
+      <SiteNav />
 
       <main>
         <div className="hero-band">

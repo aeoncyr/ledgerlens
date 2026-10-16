@@ -14,51 +14,7 @@
   background: var(--paper);
 }
 
-/* Header */
-.ow-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--brand-deep);
-  color: var(--brand-ink);
-  border-bottom: 3px solid var(--brass);
-}
-
-.ow-header-inner {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 560px;
-  margin: 0 auto;
-  padding: 8px 16px;
-}
-
-.ow-brand {
-  display: flex;
-  min-height: 44px;
-  gap: 9px;
-  align-items: center;
-  color: inherit;
-  font-family: var(--serif);
-  font-size: 19px;
-  font-weight: 600;
-  line-height: 1.1;
-  text-decoration: none;
-}
-
-.ow-brand:hover {
-  color: inherit;
-}
-
-.ow-tagline {
-  display: block;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--brand-muted);
-}
-
+/* Header: the shared app bar (index.css); only the language switch is the owner's own. */
 .ow-lang {
   display: flex;
   flex-shrink: 0;
@@ -98,27 +54,6 @@
   max-width: 560px;
   margin: 0 auto;
   padding: 16px 16px 48px;
-}
-
-.ow-footer {
-  border-top: 1px solid #e3d3a8;
-  background: #f4ead2;
-  color: #5b4a1f;
-  font-size: 13px;
-}
-
-.ow-footer p {
-  max-width: 560px;
-  margin: 0 auto;
-  padding: 10px 16px 0;
-}
-
-.ow-footer p:last-child {
-  padding-bottom: 14px;
-}
-
-.ow-footer a {
-  color: inherit;
 }
 
 /* Type */
@@ -1463,10 +1398,6 @@
   .ow-share-actions,
   .ow-field-row {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .ow-tagline {
-    display: none;
   }
 }
 
