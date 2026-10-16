@@ -58,8 +58,10 @@ the loan is for, how long the business has run, and its customers. For each, giv
 statement, the owner's own words, and when it was said (m:ss from the start).
 
 If the owner states an amount, copy it into amount_text in digits and units as spoken ("1,5 juta",
-"300 ribu", "2 jt"), with the period it covers. Never calculate, convert or total anything, and
-never invent an amount the owner didn't say.
+"300 ribu", "2 jt"), with the period it covers. People often drop the unit when they repeat it
+("lima ratus ribu, kalau ramai enam ratus"): if the unit is clear from the same answer, write it
+in ("600 ribu"). Never calculate, convert or total anything, and never invent an amount the owner
+didn't say.
 """
 
 # Used only to set interview claims beside monthly figures, and labelled as an estimate
