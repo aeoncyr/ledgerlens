@@ -136,13 +136,25 @@ class AnalyzeResponse(CamelModel):
 
 class FollowUpAnswerRequest(CamelModel):
     text: str | None = None
-    audio_path: str | None = None
+    audio_path: str | None = Field(
+        default=None, description="A recorded answer in Storage, under the caller's own folder"
+    )
+    declined: bool = Field(default=False, description="The owner prefers not to answer")
 
     @model_validator(mode="after")
     def _needs_an_answer(self) -> FollowUpAnswerRequest:
-        if not (self.text or self.audio_path):
-            raise ValueError("Provide the owner's answer as text or as an audio path")
+        if not (self.text or self.audio_path or self.declined):
+            raise ValueError("Give the answer as text or a recording, or record that they declined")
         return self
+
+
+class ConfirmReadingRequest(CamelModel):
+    line: int = Field(ge=1, description="The disputed line on the notebook page")
+    amount_rp: int = Field(ge=0, description="The amount the officer read on the photo")
+
+
+class ConfirmReadingResponse(CamelModel):
+    pending: int = Field(description="Disputed lines on this file still to confirm")
 
 
 class DecisionRequest(CamelModel):

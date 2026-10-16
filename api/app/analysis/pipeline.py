@@ -49,7 +49,8 @@ from app.tools.policy import monthly_installment as installment_for
 
 log = logging.getLogger(__name__)
 
-Progress = Callable[[str, str, str], Awaitable[None]]  # agent, message, state
+# agent, message, state, and optionally detail={"model": ..., "sample": ...} for the live trace
+Progress = Callable[..., Awaitable[None]]
 
 KUR_COLLATERAL_FREE_LIMIT = 100_000_000  # KUR loans up to this amount need no extra collateral
 MAX_PARALLEL_READS = 8
@@ -96,6 +97,8 @@ class ItemResult:
     digest: dict[str, Any] = field(default_factory=dict)
     written: list[str] = field(default_factory=list)  # amounts as written, which may be quoted
     error: str | None = None
+    dispute: Finding | None = None  # the check listing lines whose two readings disagree
+    dispute_lines: list[int] = field(default_factory=list)
 
 
 class Context(BaseModel):
@@ -113,6 +116,14 @@ class Context(BaseModel):
     unreadable: list[str]
     reader_models: list[str]
     round: int = 0
+    # For re-judging after an officer confirms a disputed reading:
+    entries: list[Entry] = []
+    item_keys: dict[str, list[str]] = {}  # evidence id -> [fact key prefix, label]
+    disputes: dict[str, dict[str, Any]] = {}  # check id -> {evidence_id, lines}
+    consistency_ids: list[str] = []  # checks that come from the cash-flow arithmetic
+    confirmed: dict[str, dict[str, int]] = {}  # evidence id -> {line: amount the officer confirmed}
+    pending_confirmations: bool = False
+    answered: list[str] = []  # questions whose answers the last judging already weighed
 
 
 class AnalysisResult(BaseModel):
@@ -244,15 +255,15 @@ async def _read_ledger(
 
     if disagreements:
         detail = "; ".join(f"line {n}: {_rp(a)} or {_rp(b)}" for n, a, b in disagreements)
-        result.checks.append(
-            Finding(
-                kind="low_confidence",
-                severity="low",
-                source="code",
-                text=f"The two readings of {item.label} disagree ({detail}). Confirm on the photo.",
-                citations=[_cite(item, f"line {n}") for n, _, _ in disagreements],
-            )
+        result.dispute = Finding(
+            kind="low_confidence",
+            severity="low",
+            source="code",
+            text=f"The two readings of {item.label} disagree ({detail}). Confirm on the photo.",
+            citations=[_cite(item, f"line {n}") for n, _, _ in disagreements],
         )
+        result.dispute_lines = [n for n, _, _ in disagreements]
+        result.checks.append(result.dispute)
     unclear = [
         line
         for line in lines
@@ -279,7 +290,11 @@ async def _read_ledger(
     facts.add(
         f"{item.key}_purchases", f"Purchases written on {item.label}", "rupiah", by_kind["purchase"]
     )
-    result.extraction = {"lines": [line.model_dump(by_alias=True) for line in lines]}
+    result.extraction = {
+        "lines": [line.model_dump(by_alias=True) for line in lines],
+        # Lines where the two readings disagree; an officer can confirm the right amount.
+        "disagreements": [{"line": n, "first": a, "second": b} for n, a, b in disagreements],
+    }
     result.digest = {
         "lines": [
             {
@@ -565,8 +580,62 @@ async def read_item(
             )
             await progress(agent, f"Could not read {item.label}", "failed")
             return result
-    await progress(agent, message, "done")
+    await progress(agent, message, "done", detail=_detail(result))
     return result
+
+
+def apply_confirmations(
+    context: Context, facts: FactTable, application: Application, policy: LenderPolicy
+) -> tuple[CashFlowSummary, dict[str, Finding]]:
+    """Rebuild the cash flow and the arithmetic checks with the amounts an officer confirmed."""
+    entries = []
+    for entry in context.entries:
+        line = entry.locator.removeprefix("line ")
+        confirmed = context.confirmed.get(entry.evidence_id, {}).get(line)
+        entries.append(
+            entry if confirmed is None else entry.model_copy(update={"amount_rp": confirmed})
+        )
+    summary = summarise(_analysis_window(entries))
+    add_summary_facts(facts, summary, application)
+    for evidence_id, (key, label) in context.item_keys.items():
+        page = [e for e in entries if e.evidence_id == evidence_id]
+        if page and page[0].evidence_type is EvidenceType.LEDGER_PAGE:
+            sales = sum(e.amount_rp for e in page if e.kind == "sale")
+            buys = sum(e.amount_rp for e in page if e.kind == "purchase")
+            facts.add(f"{key}_sales", f"Sales written on {label}", "rupiah", sales)
+            facts.add(f"{key}_purchases", f"Purchases written on {label}", "rupiah", buys)
+
+    checks = {
+        i: c
+        for i, c in context.checks.items()
+        if i not in context.consistency_ids
+        and not _settled(context.disputes.get(i), context.confirmed)
+    }
+    for finding in consistency_findings(summary, policy, application.business_type):
+        checks[f"check-{len(context.checks) + len(checks) + 1}"] = finding
+    return summary, checks
+
+
+def _settled(dispute: dict[str, Any] | None, confirmed: dict[str, dict[str, int]]) -> bool:
+    """A disagreement is settled once the officer has confirmed every disputed line."""
+    if not dispute:
+        return False
+    done = confirmed.get(dispute["evidence_id"], {})
+    return all(str(line) in done for line in dispute["lines"])
+
+
+def _detail(result: ItemResult) -> dict[str, Any]:
+    """What the live trace shows about a finished reader: its model, and for a notebook page a few
+    of the lines it extracted, so a viewer can see the structured output itself."""
+    detail: dict[str, Any] = {"model": result.models[0] if result.models else None}
+    lines = (result.extraction or {}).get("lines")
+    if result.item.type is EvidenceType.LEDGER_PAGE and lines:
+        keep = ("dateText", "description", "amountText", "amountRp", "kind", "confidence")
+        detail["sample"] = [
+            {k: line.get(k) for k in keep} for line in lines if line.get("amountText")
+        ][:3]
+        detail["sampleLabel"] = f"{result.item.label} · first lines"
+    return detail
 
 
 # --- Pipeline --------------------------------------------------------------------------------
@@ -731,10 +800,18 @@ async def run_pipeline(
     )
 
     checks: dict[str, Finding] = {}
-    for finding in [c for r in results for c in r.checks] + consistency_findings(
-        summary, policy, application.business_type
-    ):
-        checks[f"check-{len(checks) + 1}"] = finding
+    disputes: dict[str, dict[str, Any]] = {}
+    for r in results:
+        for finding in r.checks:
+            check_id = f"check-{len(checks) + 1}"
+            checks[check_id] = finding
+            if finding is r.dispute:
+                disputes[check_id] = {"evidence_id": r.item.id, "lines": r.dispute_lines}
+    consistency_ids = []
+    for finding in consistency_findings(summary, policy, application.business_type):
+        check_id = f"check-{len(checks) + 1}"
+        checks[check_id] = finding
+        consistency_ids.append(check_id)
     present = {r.item.type for r in readable}
     qris = [r for r in readable if r.item.type is EvidenceType.QRIS_HISTORY]
     if qris and all(r.item.submitted_by == "owner" for r in qris):
@@ -804,6 +881,10 @@ async def run_pipeline(
         extractions={r.item.id: {"label": r.item.label, **(r.extraction or {})} for r in results},
         unreadable=[r.item.label for r in results if r.error],
         reader_models=sorted({m for r in results for m in r.models}),
+        entries=[e for r in results for e in r.entries],
+        item_keys={r.item.id: [r.item.key, r.item.label] for r in results},
+        disputes=disputes,
+        consistency_ids=consistency_ids,
     )
     return await judge(gemini=gemini, context=context, progress=progress, policy=policy)
 
@@ -829,6 +910,20 @@ async def judge(
     quoted = set(context.quoted)
     evidence_ids = set(context.evidence_ids)
     case_file = dict(context.case_file)
+    if context.confirmed:
+        summary, checks = apply_confirmations(context, facts, application, policy)
+        case_file["facts"] = facts.for_prompt()
+        case_file["checks"] = [
+            {"check_id": i, "kind": c.kind, "severity": c.severity, "text": c.text}
+            for i, c in checks.items()
+        ]
+        case_file["officer_confirmed"] = [
+            {"evidence_id": ev, "locator": f"line {line}", "amount": _rp(amount)}
+            for ev, lines in context.confirmed.items()
+            for line, amount in lines.items()
+        ]
+        quoted |= number_tokens([c.text for c in checks.values()])
+        quoted |= number_tokens([x["amount"] for x in case_file["officer_confirmed"]])
     if answers:
         case_file["owner_answers"] = [
             {"number": n, **answer} for n, answer in enumerate(answers, start=1)
@@ -854,6 +949,7 @@ async def judge(
         if answers
         else f"{len(findings)} finding(s), {len(confirmations)} point(s) where the sources agree",
         "done",
+        detail={"model": verifier_model},
     )
 
     await progress("policy", "Applying the lender's policy", "running")
@@ -905,7 +1001,7 @@ async def judge(
     rendered_memo["figures"] = sorted(
         {key for text in _all_text(memo.model_dump()) for key in facts_in(text) if key in facts}
     )
-    await progress("memo_writer", "Credit memo ready", "done")
+    await progress("memo_writer", "Credit memo ready", "done", detail={"model": memo_model})
 
     return AnalysisResult(
         assessment=result.assessment,

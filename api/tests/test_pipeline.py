@@ -120,7 +120,7 @@ def run(verification: Verification, memo: MemoDraft = MEMO):
     gemini = ScriptedGemini(verification, memo)
     steps = []
 
-    async def progress(agent, message, state):
+    async def progress(agent, message, state, detail=None):
         steps.append((agent, state, message))
 
     result = asyncio.run(
@@ -197,7 +197,7 @@ def test_code_checks_keep_their_severity_even_if_the_verifier_softens_them():
     gemini = ScriptedGemini(verification, MEMO)
     gemini.answers[QrisReading] = qris
 
-    async def progress(*_):
+    async def progress(*_, **__):
         pass
 
     result = asyncio.run(
@@ -243,7 +243,7 @@ def test_a_reader_failure_becomes_a_finding_not_a_crash():
                 raise OSError("file missing")
             return await super().read(path)
 
-    async def progress(*_):
+    async def progress(*_, **__):
         pass
 
     gemini = ScriptedGemini(Verification(findings=[], confirmations=[]), MEMO)
@@ -306,7 +306,7 @@ def test_reconcile_tolerates_readings_that_number_lines_differently():
 def test_a_single_read_saves_calls_on_the_free_tier():
     gemini = ScriptedGemini(Verification(findings=[], confirmations=[]), MEMO)
 
-    async def progress(*_):
+    async def progress(*_, **__):
         pass
 
     asyncio.run(
@@ -361,7 +361,7 @@ def test_an_answer_resolves_a_question_but_not_a_material_contradiction():
         confirmations=[],
     )
 
-    async def progress(*_):
+    async def progress(*_, **__):
         pass
 
     result = asyncio.run(judge(gemini=gemini, context=context, progress=progress, answers=answers))
@@ -389,7 +389,7 @@ def test_qris_only_the_owner_sent_needs_an_officer_to_confirm_it():
         ),
     ]
 
-    async def progress(*_):
+    async def progress(*_, **__):
         pass
 
     result = asyncio.run(
@@ -404,3 +404,37 @@ def test_qris_only_the_owner_sent_needs_an_officer_to_confirm_it():
 
     assert any("sent by the owner" in f.text for f in result.findings)
     assert result.assessment is Assessment.PARTIALLY_VERIFIED
+
+
+def test_a_confirmed_reading_changes_the_cash_flow_and_settles_the_dispute():
+    from app.analysis.pipeline import apply_confirmations
+    from app.tools.cashflow import Entry
+    from app.tools.facts import FactTable
+    from app.tools.policy import LenderPolicy
+
+    first, _, _ = run(Verification(findings=[], confirmations=[]))
+    dispute = Finding(kind="low_confidence", severity="low", source="code", text="Readings differ.")
+    context = first.context.model_copy(
+        update={
+            "entries": [
+                Entry(
+                    month="2026-09",
+                    kind="sale",
+                    amount_rp=850_000,
+                    evidence_type=EvidenceType.LEDGER_PAGE,
+                    evidence_id="ev-page",
+                    locator="line 2",
+                ),
+            ],
+            "checks": {**first.context.checks, "check-99": dispute},
+            "disputes": {"check-99": {"evidence_id": "ev-page", "lines": [2]}},
+            "confirmed": {"ev-page": {"2": 650_000}},
+        }
+    )
+    facts = FactTable.from_facts(context.facts)
+
+    summary, checks = apply_confirmations(context, facts, APPLICATION, LenderPolicy())
+
+    assert summary.avg_claimed_sales == 650_000
+    assert "check-99" not in checks
+    assert facts.render("[[avg_claimed_sales]]") == "Rp 650.000"

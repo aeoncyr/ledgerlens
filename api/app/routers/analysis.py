@@ -18,6 +18,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from google.cloud import firestore
 
+from app.agents.interview_listener import transcribe_answer
 from app.analysis.evidence_store import CloudStorageStore, EvidenceStore
 from app.analysis.pipeline import (
     AnalysisResult,
@@ -31,8 +32,15 @@ from app.analysis.pipeline import (
 from app.auth import User, current_user
 from app.config import get_settings
 from app.gemini import Gemini, GeminiQuotaExhausted, get_gemini
-from app.routers.applications import EITHER, _audit, _owned_application
-from app.schemas import AnalyzeResponse, ApplicationStatus, EvidenceType, FollowUpAnswerRequest
+from app.routers.applications import EITHER, OFFICER, _audit, _owned_application, role_of
+from app.schemas import (
+    AnalyzeResponse,
+    ApplicationStatus,
+    ConfirmReadingRequest,
+    ConfirmReadingResponse,
+    EvidenceType,
+    FollowUpAnswerRequest,
+)
 from app.store import get_firestore
 from app.tools.camel import camelize
 from app.usage import claim_run
@@ -41,6 +49,8 @@ router = APIRouter(prefix="/api/applications", tags=["analysis"])
 
 STALE_RUN_SECONDS = 15 * 60  # a run older than this is treated as dead, so it can be restarted
 MAX_FOLLOW_UP_ROUNDS = 2  # the owner is asked at most twice; after that, more evidence is needed
+DECLINED = "(prefers not to answer)"  # shown where an answer would be
+OWNER_DECLINED = "The owner preferred not to answer this question."  # what the verifier reads
 
 
 @lru_cache
@@ -127,29 +137,116 @@ async def answer_follow_up(
     body: FollowUpAnswerRequest,
     user: Annotated[User, Depends(current_user)],
     db: Annotated[firestore.AsyncClient, Depends(get_firestore)],
+    gemini: Annotated[Gemini, Depends(get_gemini)],
+    store: Annotated[EvidenceStore, Depends(get_evidence_store)],
 ) -> None:
-    """Record the owner's answer to one follow-up question, as the officer heard it."""
-    ref, _ = await _owned_application(db, application_id, user, EITHER)
-    if not body.text:
-        raise HTTPException(
-            status.HTTP_422_UNPROCESSABLE_CONTENT, "Type the owner's answer; voice notes come later"
-        )
+    """Record the owner's answer to one question: typed, spoken (Gemini transcribes it), or that
+    they prefer not to answer, which is recorded neutrally."""
+    ref, data = await _owned_application(db, application_id, user, EITHER)
     memo_ref = ref.collection("memo").document("current")
     snapshot = await memo_ref.get()
     findings = (snapshot.to_dict() or {}).get("findings", []) if snapshot.exists else []
     if not 0 <= index < len(findings) or not findings[index].get("followUpQuestion"):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "There is no such question")
-    findings[index] = {**findings[index], "answer": body.text.strip()}
+    question = findings[index]["followUpQuestion"]
+
+    answer: dict[str, Any] = {"answerBy": role_of(data, user), "declined": False}
+    if body.declined:
+        answer.update(answer=DECLINED, answerEn=DECLINED, declined=True)
+    elif body.audio_path:
+        if not body.audio_path.startswith(f"evidence/{application_id}/{user.uid}/"):
+            raise HTTPException(
+                status.HTTP_422_UNPROCESSABLE_CONTENT, "Recordings must be in your own folder"
+            )
+        audio, mime_type = await store.read(body.audio_path)
+        spoken, _ = await transcribe_answer(gemini, audio, mime_type, question)
+        if not spoken.audible:
+            raise HTTPException(
+                status.HTTP_422_UNPROCESSABLE_CONTENT,
+                "The recording could not be understood; please record it again",
+            )
+        answer.update(
+            answer=spoken.transcript, answerEn=spoken.transcript_en, answerAudio=body.audio_path
+        )
+    else:
+        answer.update(answer=(body.text or "").strip(), answerEn=None)
+
+    findings[index] = {**findings[index], **answer}
     await memo_ref.update({"findings": findings})
     owner_ref = ref.collection("owner").document("summary")
     owner_summary = await owner_ref.get()
     if owner_summary.exists:
         questions = [
-            {**q, "answer": body.text.strip()} if q.get("index") == index else q
+            {**q, "answer": answer["answer"], "declined": answer["declined"]}
+            if q.get("index") == index
+            else q
             for q in (owner_summary.to_dict() or {}).get("questions", [])
         ]
         await owner_ref.update({"questions": questions})
-    await _audit(ref, user, "follow_up_answered", question=findings[index]["followUpQuestion"])
+    await _audit(
+        ref,
+        user,
+        "follow_up_declined" if body.declined else "follow_up_answered",
+        question=question,
+        spoken=bool(body.audio_path),
+    )
+
+
+@router.post(
+    "/{application_id}/evidence/{evidence_id}/confirm", response_model=ConfirmReadingResponse
+)
+async def confirm_reading(
+    application_id: str,
+    evidence_id: str,
+    body: ConfirmReadingRequest,
+    user: Annotated[User, Depends(current_user)],
+    db: Annotated[firestore.AsyncClient, Depends(get_firestore)],
+) -> ConfirmReadingResponse:
+    """The officer settles a line where the two readings of a notebook page disagree."""
+    ref, _ = await _owned_application(db, application_id, user, (OFFICER,))
+    context_ref = ref.collection("memo").document("context")
+    saved = await context_ref.get()
+    if not saved.exists:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Run the analysis first")
+    context = Context.model_validate(saved.to_dict())
+    extraction = context.extractions.get(evidence_id) or {}
+    disputed = {d["line"] for d in extraction.get("disagreements", [])}
+    if body.line not in disputed:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "That line is not in dispute")
+
+    confirmed = {k: dict(v) for k, v in context.confirmed.items()}
+    confirmed.setdefault(evidence_id, {})[str(body.line)] = body.amount_rp
+    lines = [
+        {**line, "amountRp": body.amount_rp, "confidence": 1.0, "confirmedByOfficer": True}
+        if line.get("line") == body.line
+        else line
+        for line in extraction.get("lines", [])
+    ]
+    extractions = {**context.extractions, evidence_id: {**extraction, "lines": lines}}
+    context = context.model_copy(
+        update={"confirmed": confirmed, "extractions": extractions, "pending_confirmations": True}
+    )
+    await context_ref.set(context.model_dump(mode="json"))
+    await (
+        ref.collection("evidence")
+        .document(evidence_id)
+        .update({"extraction": camelize(extractions[evidence_id])})
+    )
+    await _audit(
+        ref,
+        user,
+        "reading_confirmed",
+        evidenceId=evidence_id,
+        line=body.line,
+        amount=body.amount_rp,
+    )
+    pending = sum(
+        1
+        for ev, ex in context.extractions.items()
+        for d in ex.get("disagreements", [])
+        if str(d["line"]) not in context.confirmed.get(ev, {})
+    )
+    return ConfirmReadingResponse(pending=pending)
 
 
 @router.post("/{application_id}/reverify", response_model=AnalyzeResponse)
@@ -168,20 +265,36 @@ async def reverify(
     if not (memo.exists and saved.exists):
         raise HTTPException(status.HTTP_409_CONFLICT, "Run the analysis first")
     context = Context.model_validate(saved.to_dict())
-    if context.round >= MAX_FOLLOW_UP_ROUNDS:
+    answers = [
+        {
+            "finding": f["text"],
+            "question": f["followUpQuestion"],
+            "answer": OWNER_DECLINED if f.get("declined") else f["answer"],
+        }
+        for f in (memo.to_dict() or {}).get("findings", [])
+        if f.get("answer") and f.get("followUpQuestion")
+    ]
+    new_answers = [a for a in answers if a["question"] not in context.answered]
+    if not new_answers and not context.pending_confirmations:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "Record one of the owner's answers or confirm a disputed reading first",
+        )
+    if new_answers and context.round >= MAX_FOLLOW_UP_ROUNDS:
         raise HTTPException(
             status.HTTP_409_CONFLICT,
             "The owner has been asked twice; collect more evidence instead",
         )
-    answers = [
-        {"finding": f["text"], "question": f["followUpQuestion"], "answer": f["answer"]}
-        for f in (memo.to_dict() or {}).get("findings", [])
-        if f.get("answer") and f.get("followUpQuestion")
-    ]
-    if not answers:
-        raise HTTPException(status.HTTP_409_CONFLICT, "Record at least one of the owner's answers")
     await claim_run(db, user.uid, get_settings())
-    context = context.model_copy(update={"round": context.round + 1})
+    context = context.model_copy(
+        update={
+            # A new round only when the owner answered something new; confirming a reading is
+            # the officer's own check and does not use up one of the owner's two rounds.
+            "round": context.round + (1 if new_answers else 0),
+            "answered": [a["question"] for a in answers],
+            "pending_confirmations": False,
+        }
+    )
     return await _run(
         ref,
         user,
@@ -214,11 +327,14 @@ async def _run(
         }
     )
 
-    async def progress(agent: str, message: str, state: str) -> None:
+    async def progress(
+        agent: str, message: str, state: str, detail: dict[str, Any] | None = None
+    ) -> None:
         async with lock:
-            steps.append(
-                {"agent": agent, "message": message, "state": state, "at": datetime.now(UTC)}
-            )
+            step = {"agent": agent, "message": message, "state": state, "at": datetime.now(UTC)}
+            if detail:
+                step["detail"] = camelize(detail)
+            steps.append(step)
             await run_ref.update({"steps": list(steps)})
 
     try:
