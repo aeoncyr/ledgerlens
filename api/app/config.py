@@ -42,6 +42,7 @@ class Settings:
     runs_per_user_per_day: int
     max_parallel_calls: int
     ledger_double_read: bool
+    public_app_url: str
     version: str
 
     @property
@@ -91,6 +92,8 @@ class Settings:
             # Calls are paced per model on the free tier; this only caps how many are in flight.
             max_parallel_calls=int(env.get("MAX_PARALLEL_CALLS", "4" if api_key else "8")),
             ledger_double_read=env.get("LEDGER_DOUBLE_READ", "true").lower() == "true",
+            # Where the web app lives, for links in webhooks and exports.
+            public_app_url=env.get("PUBLIC_APP_URL", "https://ledger-lens-511708.web.app"),
             version=env.get("APP_VERSION", "0.1.0"),
         )
 

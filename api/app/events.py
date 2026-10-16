@@ -1,5 +1,5 @@
-"""Events other parts of LedgerLens can react to (webhooks, notifications), without the decision code
-knowing about them. Listeners must never raise into the caller."""
+"""Events other parts of LedgerLens can react to (webhooks, notifications), without the decision
+code knowing about them. Listeners must never raise into the caller."""
 
 import logging
 from collections.abc import Awaitable, Callable
