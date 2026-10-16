@@ -78,6 +78,11 @@
       "type": "receipt",
       "path": "receipt-2026-09-4.jpg",
       "capturedAt": "2026-10-06T09:58:00+00:00"
+    },
+    {
+      "type": "interview_audio",
+      "path": "interview.wav",
+      "capturedAt": "2026-10-06T09:58:00+00:00"
     }
   ],
   "truth": {

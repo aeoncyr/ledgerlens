@@ -88,6 +88,11 @@
       "type": "qris_history",
       "path": "qris-2026-09.png",
       "capturedAt": "2026-10-06T10:02:00+00:00"
+    },
+    {
+      "type": "interview_audio",
+      "path": "interview.wav",
+      "capturedAt": "2026-10-06T10:02:00+00:00"
     }
   ],
   "truth": {
