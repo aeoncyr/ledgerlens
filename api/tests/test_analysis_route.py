@@ -88,6 +88,9 @@ def test_analyze_stores_the_credit_file_and_progress(client, fake_db, ready_appl
     assert application["evidenceStrength"] == 80
     memo = fake_db.docs[("applications", app_id, "memo", "current")]
     assert memo["memo"]["headline"] == "Sources agree."
+    assert (
+        memo["policy"]["maxInstallment"] == 1_500_000
+    )  # stored camelCase, as the web app reads it
     run = fake_db.docs[("applications", app_id, "runs", body["runId"])]
     assert run["state"] == "done"
     assert run["steps"][0]["message"] == "Read 14 lines from Notebook page 1"
