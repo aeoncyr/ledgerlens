@@ -1,0 +1,496 @@
+{
+ "id": "LNBgjJzFXIdyalgjRXDS",
+ "recordedAt": "2026-10-16",
+ "latencyMs": 62544,
+ "models": [
+  "gemini-3.1-flash-lite",
+  "gemini-3.5-flash-lite",
+  "gemini-3.8-flash"
+ ],
+ "outcome": "partially_verified",
+ "steps": [
+  {
+   "agent": "intake",
+   "message": "Reading 17 pieces of evidence in parallel",
+   "state": "running",
+   "t": 0.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 1",
+   "state": "running",
+   "t": 0.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 2",
+   "state": "running",
+   "t": 0.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 3",
+   "state": "running",
+   "t": 0.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 4",
+   "state": "running",
+   "t": 0.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 14 lines from Notebook page 4",
+   "state": "done",
+   "t": 7.3,
+   "detail": {
+    "sampleLabel": "Notebook page 4 · first lines",
+    "model": "gemini-3.5-flash-lite",
+    "sample": [
+     {
+      "confidence": 0.95,
+      "amountText": "590rb",
+      "kind": "sale",
+      "dateText": "1/9",
+      "amountRp": 590000,
+      "description": "jual"
+     },
+     {
+      "confidence": 0.95,
+      "amountText": "605.000",
+      "kind": "sale",
+      "dateText": "2/9",
+      "amountRp": 605000,
+      "description": "laku"
+     },
+     {
+      "confidence": 0.95,
+      "amountText": "Rp 660.000",
+      "kind": "sale",
+      "dateText": "3/9",
+      "amountRp": 660000,
+      "description": "laku"
+     }
+    ]
+   }
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 5",
+   "state": "running",
+   "t": 7.3
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 18 lines from Notebook page 1",
+   "state": "done",
+   "t": 7.5,
+   "detail": {
+    "sampleLabel": "Notebook page 1 · first lines",
+    "model": "gemini-3.5-flash-lite",
+    "sample": [
+     {
+      "confidence": 1.0,
+      "amountText": "2,3jt",
+      "kind": "sale",
+      "dateText": "1/8",
+      "amountRp": 2300000,
+      "description": "Sabtu pasar"
+     },
+     {
+      "confidence": 1.0,
+      "amountText": "20.000",
+      "kind": "receivable",
+      "dateText": null,
+      "amountRp": 20000,
+      "description": "kasbon Pak Ujang"
+     },
+     {
+      "confidence": 1.0,
+      "amountText": "Rp 680.000",
+      "kind": "sale",
+      "dateText": "2/8",
+      "amountRp": 680000,
+      "description": "jual + pulsa"
+     }
+    ]
+   }
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 6",
+   "state": "running",
+   "t": 7.5
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 14 lines from Notebook page 2",
+   "state": "done",
+   "t": 8.4,
+   "detail": {
+    "sampleLabel": "Notebook page 2 · first lines",
+    "model": "gemini-3.5-flash-lite",
+    "sample": [
+     {
+      "confidence": 0.95,
+      "amountText": "615 rb",
+      "kind": "sale",
+      "dateText": "11/8",
+      "amountRp": 615000,
+      "description": "jual"
+     },
+     {
+      "confidence": 0.95,
+      "amountText": "545.000",
+      "kind": "sale",
+      "dateText": "12/8",
+      "amountRp": 545000,
+      "description": "jual + pulsa"
+     },
+     {
+      "confidence": 0.95,
+      "amountText": "4,7 jt",
+      "kind": "purchase",
+      "dateText": null,
+      "amountRp": 4700000,
+      "description": "kulakan minyak"
+     }
+    ]
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 1",
+   "state": "running",
+   "t": 8.5
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 15 lines from Notebook page 3",
+   "state": "done",
+   "t": 13.5,
+   "detail": {
+    "sampleLabel": "Notebook page 3 · first lines",
+    "model": "gemini-3.5-flash-lite",
+    "sample": [
+     {
+      "confidence": 0.95,
+      "amountText": "485 rb",
+      "kind": "sale",
+      "dateText": "21/8",
+      "amountRp": 485000,
+      "description": "jual sembako"
+     },
+     {
+      "confidence": 0.95,
+      "amountText": "2,2 jt",
+      "kind": "sale",
+      "dateText": "22/8",
+      "amountRp": 2200000,
+      "description": "Sabtu pasar"
+     },
+     {
+      "confidence": 0.95,
+      "amountText": "15rb",
+      "kind": "receivable",
+      "dateText": null,
+      "amountRp": 15000,
+      "description": "kasbon Bu Tini"
+     }
+    ]
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 2",
+   "state": "running",
+   "t": 13.5
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 1: 3 items, total Rp 4.300.000",
+   "state": "done",
+   "t": 14.7,
+   "detail": {
+    "model": "gemini-3.5-flash-lite"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 3",
+   "state": "running",
+   "t": 14.7
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 14 lines from Notebook page 5",
+   "state": "done",
+   "t": 15.2,
+   "detail": {
+    "sampleLabel": "Notebook page 5 · first lines",
+    "model": "gemini-3.5-flash-lite",
+    "sample": [
+     {
+      "confidence": 0.95,
+      "amountText": "500rb",
+      "kind": "sale",
+      "dateText": "11/9",
+      "amountRp": 500000,
+      "description": "11/9 jual"
+     },
+     {
+      "confidence": 0.95,
+      "amountText": "2,2 jt",
+      "kind": "sale",
+      "dateText": "12/9",
+      "amountRp": 2200000,
+      "description": "12/9 Sabtu pasar"
+     },
+     {
+      "confidence": 0.95,
+      "amountText": "4,8jt",
+      "kind": "purchase",
+      "dateText": null,
+      "amountRp": 4800000,
+      "description": "belanja agen beras"
+     }
+    ]
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 4",
+   "state": "running",
+   "t": 15.2
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 2: 3 items, total Rp 4.700.000",
+   "state": "done",
+   "t": 17.3,
+   "detail": {
+    "model": "gemini-3.5-flash-lite"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 5",
+   "state": "running",
+   "t": 17.3
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 4: 3 items, total Rp 4.600.000",
+   "state": "done",
+   "t": 18.0,
+   "detail": {
+    "model": "gemini-3.1-flash-lite"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 6",
+   "state": "running",
+   "t": 18.0
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 5: 3 items, total Rp 4.500.000",
+   "state": "done",
+   "t": 19.8,
+   "detail": {
+    "model": "gemini-3.1-flash-lite"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 7",
+   "state": "running",
+   "t": 19.8
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 3: 3 items, total Rp 4.300.000",
+   "state": "done",
+   "t": 20.5,
+   "detail": {
+    "model": "gemini-3.5-flash-lite"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 8",
+   "state": "running",
+   "t": 20.5
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 6: 3 items, total Rp 4.800.000",
+   "state": "done",
+   "t": 20.7,
+   "detail": {
+    "model": "gemini-3.1-flash-lite"
+   }
+  },
+  {
+   "agent": "qris_reader",
+   "message": "Reading QRIS history 1",
+   "state": "running",
+   "t": 20.7
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 7: 3 items, total Rp 4.900.000",
+   "state": "done",
+   "t": 22.2,
+   "detail": {
+    "model": "gemini-3.1-flash-lite"
+   }
+  },
+  {
+   "agent": "qris_reader",
+   "message": "Reading QRIS history 2",
+   "state": "running",
+   "t": 22.3
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 8: 3 items, total Rp 4.700.000",
+   "state": "done",
+   "t": 24.4,
+   "detail": {
+    "model": "gemini-3.1-flash-lite"
+   }
+  },
+  {
+   "agent": "interview_listener",
+   "message": "Reading Interview",
+   "state": "running",
+   "t": 24.4
+  },
+  {
+   "agent": "qris_reader",
+   "message": "Read QRIS history 2: 10 transactions, 1 totals",
+   "state": "done",
+   "t": 27.1,
+   "detail": {
+    "model": "gemini-3.1-flash-lite"
+   }
+  },
+  {
+   "agent": "interview_listener",
+   "message": "Listened to the interview: 5 claims",
+   "state": "done",
+   "t": 30.5,
+   "detail": {
+    "model": "gemini-3.1-flash-lite"
+   }
+  },
+  {
+   "agent": "qris_reader",
+   "message": "Read QRIS history 1: 10 transactions, 1 totals",
+   "state": "done",
+   "t": 32.0,
+   "detail": {
+    "model": "gemini-3.1-flash-lite"
+   }
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 17 lines from Notebook page 6",
+   "state": "done",
+   "t": 39.8,
+   "detail": {
+    "sampleLabel": "Notebook page 6 · first lines",
+    "model": "gemini-3.5-flash-lite",
+    "sample": [
+     {
+      "confidence": 1.0,
+      "amountText": "Rp 595.000",
+      "kind": "sale",
+      "dateText": "21/9",
+      "amountRp": 595000,
+      "description": "jual sembako"
+     },
+     {
+      "confidence": 1.0,
+      "amountText": "575 rb",
+      "kind": "sale",
+      "dateText": "22/9",
+      "amountRp": 575000,
+      "description": "laku"
+     },
+     {
+      "confidence": 1.0,
+      "amountText": "535rb",
+      "kind": "sale",
+      "dateText": "23/9",
+      "amountRp": 535000,
+      "description": "jual + pulsa"
+     }
+    ]
+   }
+  },
+  {
+   "agent": "intake",
+   "message": "Read 17 of 17 pieces of evidence",
+   "state": "done",
+   "t": 39.8
+  },
+  {
+   "agent": "calculator",
+   "message": "Computing monthly cash flow",
+   "state": "running",
+   "t": 39.9
+  },
+  {
+   "agent": "calculator",
+   "message": "Cash flow over 2 month(s) from 96 amounts",
+   "state": "done",
+   "t": 39.9
+  },
+  {
+   "agent": "verifier",
+   "message": "Cross-checking the sources against each other",
+   "state": "running",
+   "t": 39.9
+  },
+  {
+   "agent": "verifier",
+   "message": "2 finding(s), 3 point(s) where the sources agree",
+   "state": "done",
+   "t": 48.4,
+   "detail": {
+    "model": "gemini-3.8-flash"
+   }
+  },
+  {
+   "agent": "policy",
+   "message": "Applying the lender's policy",
+   "state": "running",
+   "t": 48.4
+  },
+  {
+   "agent": "policy",
+   "message": "Outcome: partially verified",
+   "state": "done",
+   "t": 48.4
+  },
+  {
+   "agent": "memo_writer",
+   "message": "Writing the credit memo",
+   "state": "running",
+   "t": 48.4
+  },
+  {
+   "agent": "memo_writer",
+   "message": "Credit memo ready",
+   "state": "done",
+   "t": 62.0,
+   "detail": {
+    "model": "gemini-3.8-flash"
+   }
+  }
+ ]
+}

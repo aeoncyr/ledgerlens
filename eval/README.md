@@ -92,6 +92,17 @@ On the Gemini free tier a full analysis of 14 to 16 items took 30 to 220 seconds
 `export_samples.py` publishes these analysed files to the web app, where anyone can open them at
 `/samples/<slug>` without spending quota.
 
+Two more scripts serve the demo for a visitor trying LedgerLens alone. `bundle_demo_samples.py`
+copies each analysed sample into the API (`api/app/demo_samples/`), so the demo story can make a
+copy of a finished file without running the analysis. `export_runs.py` reads, never writes, the real
+runs on the sample businesses from Firestore and publishes the best one per sample as
+`web/public/samples/<slug>/run.json`, which the sample page replays at six to ten times the speed.
+
+```bash
+.venv/bin/python eval/bundle_demo_samples.py   # after export_samples.py
+source .config/env.sh && api/.venv/bin/python eval/export_runs.py
+```
+
 ### Real handwriting
 
 These pages are fonts, not real handwriting. They test robustness to layout, shorthand and photo quality.
