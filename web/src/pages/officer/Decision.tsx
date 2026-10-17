@@ -2,6 +2,7 @@
 // the owner was sent and how they answered. The reviewer's sign-off panel lives here too, because
 // it shows the same recommendation.
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import OfferSchedule from '../../components/OfferSchedule.tsx'
 import WhatsAppButton from '../../components/WhatsAppButton.tsx'
 import {
@@ -497,10 +498,18 @@ function WaitingForSignoff({ app, code }: { app: Application; code: string }) {
         label="Send to a colleague on WhatsApp"
         text={`Mohon sign-off kedua untuk berkas kredit ${app.business.alias} di LedgerLens. Second sign-off needed, please: ${url} (kode/code ${code})`}
       />
-      <p className="fine">
-        Trying LedgerLens alone? Open the link in a private window: it signs in as a different
-        person.
-      </p>
+      {app.demo ? (
+        <p>
+          <Link className="button quiet" to={signoffPath(code)}>
+            Play the supervisor: open the sign-off
+          </Link>
+        </p>
+      ) : (
+        <p className="fine">
+          Trying LedgerLens alone? Open the link in a private window: it signs in as a different
+          person.
+        </p>
+      )}
       {app.decision && <Recommendation decision={app.decision} />}
     </section>
   )

@@ -55,6 +55,9 @@ export type Application = {
   decision?: RecordedDecision
   // The second person at the lender signing off a recommendation.
   reviewerUid?: string | null
+  // A demo copy of a finished sample, on which one person plays every role (see demo.ts).
+  demo?: boolean
+  demoSample?: string
   createdAt?: Timestamp
 }
 

@@ -89,6 +89,18 @@ def _check_not_settled(data: dict[str, Any]) -> None:
         )
 
 
+def _no_gemini_on_demo(data: dict[str, Any]) -> None:
+    """A demo file is a copy of a finished sample (``routers/demo.py``) and is never read again,
+    so playing the story spends no Gemini quota."""
+    if data.get("demo") is True:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "This is a demo copy of a finished sample file, so it isn't checked again and no "
+            "Gemini quota is used. Typed answers are saved; to watch a real check, start your own "
+            "file.",
+        )
+
+
 def _is_running(data: dict[str, Any]) -> bool:
     started = data.get("analysisStartedAt")
     return (
@@ -109,6 +121,7 @@ async def analyze(
     ref, data = await _owned_application(db, application_id, user, EITHER)
     if not (data.get("consent") or {}).get("given"):
         raise HTTPException(status.HTTP_409_CONFLICT, "Record the owner's consent first")
+    _no_gemini_on_demo(data)
     _check_not_settled(data)
     if _is_running(data):
         raise HTTPException(
@@ -177,6 +190,7 @@ async def answer_follow_up(
     if body.declined:
         answer.update(answer=DECLINED, answerEn=DECLINED, declined=True)
     elif body.audio_path:
+        _no_gemini_on_demo(data)
         if not body.audio_path.startswith(f"evidence/{application_id}/{user.uid}/"):
             raise HTTPException(
                 status.HTTP_422_UNPROCESSABLE_CONTENT, "Recordings must be in your own folder"
@@ -285,6 +299,7 @@ async def reverify(
 ) -> AnalyzeResponse:
     """Check the file again with the owner's answers, without reading the evidence again."""
     ref, data = await _owned_application(db, application_id, user, EITHER)
+    _no_gemini_on_demo(data)
     _check_not_settled(data)
     if _is_running(data):
         raise HTTPException(

@@ -6,12 +6,12 @@ still tied to a Firebase user.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
 from typing import Annotated
 
 import firebase_admin
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, Header, HTTPException, status
 from fastapi.concurrency import run_in_threadpool
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from firebase_admin import auth as firebase_auth
@@ -21,10 +21,17 @@ from app.config import get_settings
 _bearer = HTTPBearer(auto_error=False)
 
 
+# Which of the two apps made a call: "owner", "officer" or "reviewer". One person plays every role
+# on a demo file, so the API needs to be told which one; ``role_of`` honours it on demo files only.
+ACT_AS_HEADER = "X-LedgerLens-Act-As"
+ACTING_ROLES = ("owner", "officer", "reviewer")
+
+
 @dataclass(frozen=True)
 class User:
     uid: str
     anonymous: bool
+    acting: str | None = None
 
 
 @lru_cache
@@ -33,7 +40,7 @@ def _firebase_app() -> firebase_admin.App:
     return firebase_admin.initialize_app(options={"projectId": project} if project else None)
 
 
-async def current_user(
+async def firebase_user(
     credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(_bearer)],
 ) -> User:
     if credentials is None:
@@ -50,3 +57,12 @@ async def current_user(
         ) from exc
     provider = claims.get("firebase", {}).get("sign_in_provider")
     return User(uid=claims["uid"], anonymous=provider == "anonymous")
+
+
+async def current_user(
+    user: Annotated[User, Depends(firebase_user)],
+    act_as: Annotated[str | None, Header(alias=ACT_AS_HEADER)] = None,
+) -> User:
+    """The signed-in user, with the role the calling app says it plays (a claim, not a right)."""
+    acting = (act_as or "").strip().lower()
+    return replace(user, acting=acting if acting in ACTING_ROLES else None)

@@ -13,10 +13,20 @@ export class ApiError extends Error {
   }
 }
 
+// Which app makes the call: the owner's (/owner…), the supervisor signing off (?as=reviewer) or
+// the officer's. On a demo file one person plays every role, so the API needs to know which one;
+// on every other file it ignores this.
+function actingRole(): 'owner' | 'officer' | 'reviewer' {
+  const { pathname, search } = window.location
+  if (pathname.startsWith('/owner')) return 'owner'
+  return new URLSearchParams(search).get('as') === 'reviewer' ? 'reviewer' : 'officer'
+}
+
 export async function apiFetch<T>(path: string, init: RequestInit = {}, base = BASE): Promise<T> {
   const user = await ensureSignedIn()
   const headers = new Headers(init.headers)
   headers.set('Authorization', `Bearer ${await user.getIdToken()}`)
+  headers.set('X-LedgerLens-Act-As', actingRole())
   const response = await fetch(`${base}${path}`, { ...init, headers })
   if (!response.ok) {
     const body = (await response.json().catch(() => null)) as { detail?: string } | null

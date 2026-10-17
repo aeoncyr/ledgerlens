@@ -76,6 +76,7 @@ export default function Applications() {
                     <span className="sub">
                       {app.business.type}, {app.business.city}
                       {app.origin === 'owner' && <span className="tag owner-tag">Shared by owner</span>}
+                      {app.demo && <span className="tag">Demo story</span>}
                     </span>
                   </th>
                   <td className="num" data-label="Requested">
