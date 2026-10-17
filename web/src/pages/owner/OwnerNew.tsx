@@ -1,6 +1,8 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useInviteStrings } from '../../i18n/invite.ts'
 import { rupiah, useLang } from '../../i18n/owner.ts'
+import { acceptInvite, getInvite } from '../../lender.ts'
 import { createOwnerFile, errorText, rememberSample, type NewOwnerFile } from '../../owner.ts'
 import { SAMPLES } from '../../samples.ts'
 import OwnerShell from './OwnerShell.tsx'
@@ -41,6 +43,16 @@ export default function OwnerNew() {
   const sampleSlug = params.get('sample')
   const sample = SAMPLES.find((s) => s.slug === sampleSlug) ?? null
   const [form, setForm] = useState<NewOwnerFile>(() => fromSample(sampleSlug) ?? EMPTY)
+  // Started from a lender's invite (/owner/invite/CODE): the file is shared with them at once.
+  const inviteCode = params.get('invite')
+  const { it } = useInviteStrings()
+  const [inviter, setInviter] = useState<string | null>(null)
+  useEffect(() => {
+    if (!inviteCode) return
+    getInvite(inviteCode)
+      .then((invite) => setInviter(invite.lenderName))
+      .catch(() => setInviter(null))
+  }, [inviteCode])
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -53,12 +65,13 @@ export default function OwnerNew() {
     setBusy(true)
     setError(null)
     try {
-      const id = await createOwnerFile({
+      const body = {
         ...form,
         alias: form.alias.trim(),
         businessType: form.businessType.trim(),
         city: form.city.trim(),
-      })
+      }
+      const id = inviteCode ? await acceptInvite(inviteCode, body) : await createOwnerFile(body)
       if (sample) rememberSample(id, sample.slug)
       navigate(`/owner/${id}`)
     } catch (e) {
@@ -75,6 +88,7 @@ export default function OwnerNew() {
       <h1 className="ow-title">{t.newTitle}</h1>
       <p className="ow-lead">{t.newLead}</p>
       {sample && <p className="ow-note">{t.sampleUsed(sample.alias)}</p>}
+      {inviter && <p className="ow-note">{it.sharedNote(inviter)}</p>}
 
       <form className="ow-form" onSubmit={submit}>
         <label className="ow-field">

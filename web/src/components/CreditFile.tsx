@@ -11,6 +11,7 @@ import CashflowChart from './CashflowChart.tsx'
 import CiteChip from './CiteChip.tsx'
 import EvidenceViewer from './EvidenceViewer.tsx'
 import { STRESS_ASSUMPTION, stressOf, stressSentence } from '../stress.ts'
+import '../lender.css'
 
 const rupiah = new Intl.NumberFormat('id-ID')
 const monthName = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' })
@@ -50,6 +51,28 @@ function month(key: string): string {
 const HAIRCUT: Partial<Record<CreditFileData['assessment'], string>> = {
   verified: '20% haircut for a verified file',
   partially_verified: '40% haircut for a partly verified file',
+}
+
+const pct = (fraction: number) => `${Math.round(fraction * 1000) / 10}%`
+
+// Whose policy set the figures, and its terms, for files that store them (newer ones).
+function PolicyApplied({ policy }: { policy: CreditFileData['policy'] }) {
+  if (policy.lenderName === undefined) return null
+  const terms = [
+    policy.maxInstallmentRatio != null && `${pct(policy.maxInstallmentRatio)} of net cash flow`,
+    policy.annualRatePct != null && `${policy.annualRatePct}% a year`,
+    policy.maxTenorMonths != null && `terms up to ${policy.maxTenorMonths} months`,
+  ].filter(Boolean)
+  return (
+    <p className="fine policy-applied">
+      <strong>
+        {policy.lenderName
+          ? `${policy.lenderName}’s policy applied`
+          : 'LedgerLens’s starting policy applied (the lender has not set its own)'}
+      </strong>
+      {terms.length > 0 && <>: {terms.join(', ')}</>}.
+    </p>
+  )
 }
 
 // A round top for the revenue scale: 1, 2, 2.5 or 5 times a power of ten, just above the high end.
@@ -205,6 +228,7 @@ export default function CreditFile({
           </div>
         </div>
         <p className="file-headline">{file.memo.headline}</p>
+        {file.memoNote && <p className="memo-note">{file.memoNote}</p>}
         <div className="file-figures-row">
           <RevenueRange low={file.cashflow.revenueLow} high={file.cashflow.revenueHigh} />
           <div className="instalment">
@@ -219,11 +243,17 @@ export default function CreditFile({
                   {rp(file.policy.maxInstallment)} <span>/month</span>
                 </p>
                 <p className="fine">
-                  30% of net cash flow after a {HAIRCUT[file.assessment] ?? 'policy haircut'}
+                  {pct(file.policy.maxInstallmentRatio ?? 0.3)} of net cash flow after a{' '}
+                  {file.policy.haircut != null
+                    ? `${pct(file.policy.haircut)} haircut for a ${file.assessment === 'verified' ? 'verified' : 'partly verified'} file`
+                    : (HAIRCUT[file.assessment] ?? 'policy haircut')}
                   {file.policy.capacityBasis !== null && (
                     <> ({rp(file.policy.capacityBasis)} a month after the haircut)</>
                   )}
-                  {!!app.existingMonthlyDebt && <>, less the other loan instalments below</>}.
+                  {!!(file.policy.existingMonthlyDebt ?? app.existingMonthlyDebt) && (
+                    <>, less the other loan instalments below</>
+                  )}
+                  .
                 </p>
               </>
             )}
@@ -233,7 +263,16 @@ export default function CreditFile({
                 {file.policy.withinPolicy ? 'within policy' : 'not supported'}
               </span>
             </p>
-            {app.existingMonthlyDebt !== undefined && (
+            {file.policy.debtSource === 'slik' ? (
+              <p className="other-debts">
+                Other loan instalments:{' '}
+                <span className="mono">{rp(file.policy.existingMonthlyDebt ?? 0)}</span> a month
+                from the SLIK check the lender recorded
+                {app.existingMonthlyDebt !== undefined && (
+                  <> (the application declares {rp(app.existingMonthlyDebt)})</>
+                )}
+              </p>
+            ) : app.existingMonthlyDebt !== undefined && (
               <p className="other-debts">
                 Other loan instalments, including online loans:{' '}
                 {app.existingMonthlyDebt > 0 ? (
@@ -249,6 +288,7 @@ export default function CreditFile({
             <StressTest policy={file.policy} />
           </div>
         </div>
+        <PolicyApplied policy={file.policy} />
         <ul className="reasons">
           {file.policy.reasons.map((reason) => (
             <li key={reason}>{reason}</li>
@@ -266,7 +306,9 @@ export default function CreditFile({
                 <li key={index} className={`finding ${finding.severity}`}>
                   <span className="severity">
                     {SEVERITY_LABEL[finding.severity]}
-                    {finding.source === 'code' && ' · arithmetic check'}
+                    {finding.kind === 'credit_history'
+                      ? ' · from the lender’s SLIK check'
+                      : finding.source === 'code' && ' · arithmetic check'}
                     {finding.resolved && <span className="resolved"> · explained by the owner</span>}
                   </span>
                   <p>{finding.text}</p>

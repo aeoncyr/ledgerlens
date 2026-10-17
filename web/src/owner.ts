@@ -39,6 +39,8 @@ export type OwnerApplication = Omit<Application, 'officerUid' | 'consent'> & {
   consent: { given: boolean; version?: string; by?: 'owner' | 'officer' } | null
   shareCode?: string | null
   sharedAt?: Timestamp | null
+  // The name of the lender holding the file, once one does (set by the API).
+  lenderName?: string | null
 }
 
 export type OwnerEvidence = StoredEvidence & {

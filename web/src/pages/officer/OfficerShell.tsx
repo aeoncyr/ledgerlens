@@ -74,10 +74,15 @@ export default function OfficerShell({
           <NavLink to="/app/new" end>
             New<span className="appbar-long"> application</span>
           </NavLink>
+          <NavLink to="/app/pilot" end>
+            Pilot
+          </NavLink>
           <NavLink to="/app/integrations" end>
             Integrations
           </NavLink>
-          <NavLink to="/app/pilot" end>Pilot</NavLink>
+          <NavLink to="/app/settings" end>
+            Settings
+          </NavLink>
         </nav>
       </AppBar>
       <main className="container officer-page">

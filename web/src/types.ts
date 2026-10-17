@@ -48,7 +48,8 @@ export const ASSESSMENT_TONE: Record<Assessment, string> = {
 export type Citation = { evidenceId: string; locator: string }
 
 export type Finding = {
-  kind: 'discrepancy' | 'low_confidence' | 'missing_evidence' | 'fraud_signal'
+  // credit_history comes only from the SLIK check a lender records, never from the evidence.
+  kind: 'discrepancy' | 'low_confidence' | 'missing_evidence' | 'fraud_signal' | 'credit_history'
   severity: Severity
   text: string
   citations: Citation[]
@@ -133,6 +134,15 @@ export type CreditFileData = {
     // and the samples don't store it.
     stressDropPct?: number | null
     reasons: string[]
+    // What was applied (api/app/tools/policy.py). Files checked before these were stored, and the
+    // samples, don't have them; null lenderName means LedgerLens's starting values.
+    lenderName?: string | null
+    maxInstallmentRatio?: number | null
+    haircut?: number | null
+    annualRatePct?: number | null
+    maxTenorMonths?: number | null
+    existingMonthlyDebt?: number | null
+    debtSource?: 'declared' | 'slik' | null
   }
   cashflow: {
     months: MonthFigures[]
@@ -149,6 +159,9 @@ export type CreditFileData = {
   facts: Fact[]
   models: string[]
   round?: number
+  // Set when a lender's policy was applied after the memo was written and changed more than its
+  // figures (api/app/analysis/reapply.py).
+  memoNote?: string | null
 }
 
 export const EVIDENCE_LABEL: Record<EvidenceType, string> = {

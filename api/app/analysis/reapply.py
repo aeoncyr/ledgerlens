@@ -139,10 +139,10 @@ def reapply_policy(
     if not placed or was_within != result.within_policy:
         whose = f"{policy.lender_name}'s policy" if policy.lender_name else "this policy"
         note = (
-            f"The memo's wording was written before {whose} was applied"
+            f"The memo's wording, this headline included, was written before {whose} was applied"
             + (" and the SLIK check was recorded" if slik else "")
-            + ". The figures and the outcome above are current; check the file again to have the "
-            "memo rewritten."
+            + ". The figures, the outcome and the instalment shown are current; check the file "
+            "again to have the memo rewritten."
         )
     return {
         "assessment": result.assessment.value,

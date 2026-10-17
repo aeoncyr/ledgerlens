@@ -4291,3 +4291,30 @@ textarea:focus {
 .button.whatsapp:hover {
   background: #17623b;
 }
+
+/* The officer app has five places to go. On narrower screens they move to their own row under the
+   bar, which scrolls sideways if it must, so the page itself never does. */
+@media (max-width: 960px) {
+  .appbar-officer .appbar-inner {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+
+  .appbar-officer .appbar-tools {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .appbar-officer .appbar-tools::-webkit-scrollbar {
+    display: none;
+  }
+
+  .appbar-officer .appbar-nav {
+    flex-wrap: nowrap;
+    gap: 20px;
+    white-space: nowrap;
+  }
+}

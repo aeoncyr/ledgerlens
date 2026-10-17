@@ -32,6 +32,7 @@ import {
 } from '../../types.ts'
 import Decision, { SignoffPanel } from './Decision.tsx'
 import HandOff from './HandOff.tsx'
+import LenderChecks from './LenderChecks.tsx'
 import OfficerShell, { type OfficerStep } from './OfficerShell.tsx'
 
 function useImageUrls(evidence: StoredEvidence[]): Map<string, string> {
@@ -335,6 +336,11 @@ const AUDIT_LABEL: Record<string, string> = {
   follow_up_declined: 'The owner preferred not to answer a question',
   share_link_created: 'Share link created',
   opened_by_lender: 'Opened from the owner’s share link',
+  invite_created: 'Invite sent to the owner',
+  invite_opened: 'The owner accepted the invite and started this file',
+  slik_recorded: 'SLIK check recorded',
+  slik_removed: 'SLIK check removed',
+  policy_reapplied: 'Lender policy applied (code only)',
   share_withdrawn: 'Share withdrawn',
   demo_story_started: 'Demo copy made from a finished sample file',
   assessment_agreed: 'Agreed with LedgerLens’s assessment',
@@ -349,6 +355,26 @@ const auditTime = new Intl.DateTimeFormat('en-GB', {
 })
 
 type AuditRow = { entry: AuditEntry; label: string; detail: string | null }
+
+const rupiahAudit = new Intl.NumberFormat('id-ID')
+
+// What the lender's own steps record: whose policy, and the SLIK figures.
+function lenderDetail(action: string, details: Record<string, unknown>): string | null {
+  if (action === 'policy_reapplied') {
+    const lender =
+      typeof details.lender === 'string' ? `${details.lender}’s policy` : 'Starting policy'
+    const limit =
+      typeof details.maxInstallment === 'number'
+        ? `, up to Rp ${rupiahAudit.format(details.maxInstallment)} a month`
+        : ''
+    return `${lender}${limit}`
+  }
+  if (action === 'slik_recorded' && typeof details.monthlyInstalments === 'number') {
+    return `Rp ${rupiahAudit.format(details.monthlyInstalments)} a month, collectibility ${String(details.worstCollectibility)}`
+  }
+  if (action === 'invite_created' && typeof details.lender === 'string') return details.lender
+  return null
+}
 
 // Consecutive uploads by the same person read as one line: "14 pieces of evidence added".
 function auditRows(entries: AuditEntry[]): AuditRow[] {
@@ -396,6 +422,7 @@ function auditRows(entries: AuditEntry[]): AuditRow[] {
         : (question ??
           text ??
           letter ??
+          lenderDetail(entry.action, details) ??
           (count !== null ? `${count} new record${count > 1 ? 's' : ''}` : null))
     rows.push({ entry, label: AUDIT_LABEL[entry.action] ?? entry.action, detail })
     i++
@@ -553,6 +580,7 @@ export default function ApplicationFile() {
     facts: stored.facts,
     models: stored.models,
     round: stored.round ?? 0,
+    memoNote: stored.memoNote ?? null,
   }
 
   return (
@@ -580,6 +608,9 @@ export default function ApplicationFile() {
       )}
       {editable && app.status !== 'analyzing' && (
         <ConfirmReadings id={id} evidence={evidence} urls={urls} />
+      )}
+      {app.status !== 'analyzing' && (
+        <LenderChecks id={id} policy={file.policy} editable={editable} />
       )}
       <CreditFile
         file={file}

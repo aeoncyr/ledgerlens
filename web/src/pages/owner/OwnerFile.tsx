@@ -182,7 +182,7 @@ export default function OwnerFile() {
         <div className="ow-banner" role="status">
           <TickIcon size={22} />
           <div>
-            <strong>{t.sharedBanner}</strong>
+            <strong>{app.lenderName ? `${t.sharedBanner}: ${app.lenderName}` : t.sharedBanner}</strong>
             <p>{t.sharedBannerText}</p>
           </div>
         </div>

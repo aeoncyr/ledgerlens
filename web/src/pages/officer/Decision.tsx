@@ -242,7 +242,9 @@ function DecisionForm({
   const [months, setMonths] = useState(
     String(returned?.offer?.tenorMonths ?? app.request.tenorMonths),
   )
-  const [rate, setRate] = useState(String(returned?.offer?.annualRatePct ?? DEFAULT_RATE_PCT))
+  const [rate, setRate] = useState(
+    String(returned?.offer?.annualRatePct ?? policy?.annualRatePct ?? DEFAULT_RATE_PCT),
+  )
   const [conditions, setConditions] = useState<DraftCondition[]>(
     (returned?.conditions ?? []).map((c) => ({ text: c.text, evidenceType: c.evidenceType ?? '' })),
   )

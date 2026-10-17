@@ -20,11 +20,11 @@ export const STRESS_ASSUMPTION =
  * ratio × capacity − other debts, so d = (limit − instalment) / (ratio × capacity).
  */
 export function stressDropPct(
-  policy: Pick<Policy, 'capacityBasis' | 'maxInstallment'>,
+  policy: Pick<Policy, 'capacityBasis' | 'maxInstallment' | 'maxInstallmentRatio'>,
   instalment: number,
 ): number | null {
   if (policy.capacityBasis === null || policy.maxInstallment === null) return null
-  const base = policy.capacityBasis * MAX_INSTALLMENT_RATIO
+  const base = policy.capacityBasis * (policy.maxInstallmentRatio ?? MAX_INSTALLMENT_RATIO)
   const room = policy.maxInstallment - instalment
   if (base <= 0 || room <= 0) return 0
   // The small epsilon keeps an exact 18.0% from flooring to 17 through float error.

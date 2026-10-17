@@ -28,6 +28,9 @@ export default function Applications() {
         <Link className="button" to="/app/new">
           New application
         </Link>
+        <Link className="button quiet" to="/app/settings#invite">
+          Invite a business owner
+        </Link>
         <form className="share-open" onSubmit={openShared}>
           <label htmlFor="share-code">A business owner shared a file with you?</label>
           <input
