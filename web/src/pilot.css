@@ -6,7 +6,7 @@
 }
 
 .pilot-stats dd {
-  font-size: clamp(32px, 4vw, 44px);
+  font-size: clamp(28px, 3.2vw, 38px);
 }
 
 .stats dd.pilot-note {
@@ -112,6 +112,7 @@
 .pilot-table .register .num {
   text-align: right;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .pilot-table .button {

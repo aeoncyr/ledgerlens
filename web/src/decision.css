@@ -51,7 +51,7 @@
 }
 
 /* Agree or disagree with LedgerLens's assessment, asked with every decision. */
-.decision-agree {
+.decision .decision-agree {
   padding: 14px 16px;
   border: 1px solid var(--rule);
   background: var(--paper);

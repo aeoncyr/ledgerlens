@@ -289,16 +289,16 @@ function Dashboard({ report }: { report: PilotReport }) {
                       <span className="fine">Not checked</span>
                     )}
                   </td>
-                  <td className="num mono" data-label="Findings">
+                  <td className="num" data-label="Findings">
                     {r.findings}
                     {r.findingsByKind.fraud_signal > 0 && (
                       <span className="sub">{plural(r.findingsByKind.fraud_signal, 'fraud signal')}</span>
                     )}
                   </td>
-                  <td className="num mono" data-label="To checked file">
+                  <td className="num" data-label="To checked file">
                     {duration(r.minutesToAnalysis)}
                   </td>
-                  <td className="num mono" data-label="To decision">
+                  <td className="num" data-label="To decision">
                     {duration(r.minutesToDecision)}
                   </td>
                   <td data-label="Decision">
