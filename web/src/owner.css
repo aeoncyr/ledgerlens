@@ -781,6 +781,17 @@
   font-size: 16px;
 }
 
+/* The link to the trust page, kept a full-size target on a phone. */
+.ow-consent-more {
+  margin: -10px 0 14px;
+}
+
+.ow-consent-more a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 /* Evidence tiles */
 .ow-tiles {
   display: grid;

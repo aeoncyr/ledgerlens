@@ -1,0 +1,217 @@
+/* "Trust and data" and "For lenders": annexes to the AI page, built on its classes (ai-page.css). */
+.trust-table {
+  min-width: 720px;
+}
+
+.trust-table tbody th {
+  min-width: 150px;
+  font-size: 17px;
+}
+
+.trust-table td {
+  color: var(--ink-soft);
+}
+
+.trust-grid {
+  row-gap: 28px;
+}
+
+.trust-not-yet {
+  max-width: 760px;
+  margin-top: 32px;
+  padding: 18px 22px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: 6px;
+  background: var(--paper-raised);
+}
+
+.trust-not-yet h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+/* Cards use a heading (not bold text) for their name, so the page outline lists every agent. */
+.trust-page .ai-agent header h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.trust-page .ai-agent > p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.trust-cards dd.mono {
+  font-size: 13px;
+}
+
+/* A connection that is not built yet is drawn in the muted "insufficient" colour. */
+.ai-agent.later {
+  border-top-color: var(--insufficient);
+  border-top-style: dashed;
+}
+
+.ai-agent.later .ai-kind {
+  background: #eceeeb;
+  color: var(--insufficient);
+}
+
+/* The pilot's four steps. */
+.pilot-steps p {
+  max-width: 72ch;
+  margin: 0 0 0 44px;
+  color: var(--ink-soft);
+}
+
+.pilot-steps h3 {
+  flex-wrap: wrap;
+}
+
+.pilot-when {
+  padding: 1px 10px;
+  border-radius: 999px;
+  background: #f3ead6;
+  color: #6b5320;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+/* The calculator: assumptions on the left, the month they add up to on the right. */
+.roi {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 28px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+.roi-inputs {
+  display: grid;
+  gap: 14px;
+  padding: 20px 22px;
+  border: 1px solid var(--rule);
+  border-top: 4px dashed var(--brass);
+  border-radius: 6px;
+  background: var(--paper-raised);
+}
+
+.roi-inputs label {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.roi-inputs .button {
+  justify-self: start;
+}
+
+.roi-flag {
+  justify-self: start;
+  margin: 0;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #f3ead6;
+  color: #6b5320;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.roi-result {
+  padding: 20px 22px;
+  border-radius: 8px;
+  background: var(--brand-deep);
+  color: var(--brand-ink);
+  box-shadow: var(--shadow-2);
+}
+
+.roi-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.roi-table th,
+.roi-table td {
+  padding: 10px 0;
+  border-bottom: 1px solid rgb(238 242 238 / 0.15);
+  text-align: left;
+  font-weight: 400;
+}
+
+.roi-table td {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.roi-table .roi-total th,
+.roi-table .roi-total td {
+  padding-top: 14px;
+  border-top: 1px solid var(--brass-light);
+  color: var(--brass-light);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.roi-result .fine {
+  margin: 14px 0 0;
+  color: var(--brand-muted);
+}
+
+.roi-result .fine strong {
+  color: var(--brand-ink);
+}
+
+/* Request a pilot. Fields in a row line up at the top, whatever hint sits under one of them. */
+.pilot-form .form-row {
+  align-items: start;
+}
+
+/* The whole consent row is the target, so it stays at least 44px tall. */
+.pilot-form .pilot-consent {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  min-height: 44px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.pilot-form .pilot-consent input {
+  flex: none;
+  width: 22px;
+  min-height: 22px;
+  height: 22px;
+  margin: 2px 0 0;
+  padding: 0;
+  accent-color: var(--accent);
+}
+
+.pilot-form .fine,
+.pilot-done p {
+  margin: 0;
+}
+
+.pilot-done h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+@media (max-width: 900px) {
+  .roi {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .pilot-steps p {
+    margin-left: 0;
+  }
+}

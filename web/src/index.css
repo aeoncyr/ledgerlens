@@ -3957,14 +3957,32 @@ textarea:focus {
   box-shadow: inset 0 -2px 0 var(--brass);
 }
 
-/* On a phone the site nav takes two rows: the brand and the AI page, then the two apps side by side. */
+/* A nav label has a short form for phones ("The AI" for "How the AI works"). */
+.nav-short {
+  display: none;
+}
+
+/* On a phone the site nav takes two rows: the brand and the two pages to read (short labels), then
+   the two apps side by side. */
 @media (max-width: 560px) {
   .masthead[aria-label='Main'] .nav-links {
     display: contents;
   }
 
+  .masthead[aria-label='Main'] .container {
+    column-gap: 18px;
+  }
+
   .masthead[aria-label='Main'] .nav-links > a:first-child {
     margin-left: auto;
+  }
+
+  .masthead[aria-label='Main'] .nav-full {
+    display: none;
+  }
+
+  .masthead[aria-label='Main'] .nav-short {
+    display: inline;
   }
 
   .masthead[aria-label='Main'] .nav-cta {

@@ -2,6 +2,7 @@
 // that keep numbers honest. Everything here describes the deployed system; nothing is aspirational.
 import { Link } from 'react-router-dom'
 import SiteNav from '../components/SiteNav.tsx'
+import { READERS, WRITERS } from '../models.ts'
 import { SAMPLES } from '../samples.ts'
 import { SPECIMEN_LINES } from '../specimen.ts'
 import '../ai-page.css'
@@ -13,9 +14,6 @@ type Agent = {
   returns: string
   guard: string
 }
-
-const READERS = 'gemini-3.5-flash-lite, then gemini-3.1-flash-lite'
-const WRITERS = 'gemini-3.8-flash, then 3.7, 3.6 and 3 Flash, then Flash-Lite · low thinking'
 
 const AGENTS: { stage: string; agents: Agent[] }[] = [
   {
@@ -303,13 +301,17 @@ export default function HowItWorks() {
               </li>
             </ul>
           </div>
+          <p className="ai-lead">
+            Each agent’s model card, where the data lives today and what changes before a lender
+            uses real data are on <Link to="/trust">Trust and data</Link>.
+          </p>
         </section>
       </main>
       <footer className="footer">
         <div className="container">
           <span>Built with Gemini, Firebase, Firestore and Cloud Run</span>
           <span>
-            <Link to="/">Back to LedgerLens</Link>
+            <Link to="/trust">Trust and data</Link> · <Link to="/">Back to LedgerLens</Link>
           </span>
         </div>
       </footer>

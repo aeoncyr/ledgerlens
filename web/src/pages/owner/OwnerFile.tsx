@@ -356,6 +356,11 @@ function ConsentCard({
           </li>
         ))}
       </ul>
+      <p className="ow-fine ow-consent-more">
+        <Link to="/trust" target="_blank" rel="noopener">
+          {t.consentMore}
+        </Link>
+      </p>
       <button className="ow-button ow-button-wide" onClick={onAgree} disabled={busy}>
         {busy ? t.consentSaving : t.consentButton}
       </button>

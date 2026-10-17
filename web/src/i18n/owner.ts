@@ -135,6 +135,7 @@ const EN = {
   consentDecide:
     'The check helps a lender understand your business; it does not decide. A person at the lender always makes the decision.',
   consentWithdraw: 'You can stop sharing or withdraw your agreement at any time.',
+  consentMore: 'How LedgerLens protects your data',
   consentButton: 'I agree, let’s start',
   consentNotNow: 'Not now',
   consentSaving: 'Saving…',
@@ -483,6 +484,7 @@ const ID: OwnerStrings = {
   consentDecide:
     'Pemeriksaan ini membantu pemberi pinjaman memahami usaha Anda; bukan yang memutuskan. Keputusan selalu diambil oleh petugas di lembaga pemberi pinjaman.',
   consentWithdraw: 'Anda boleh berhenti berbagi atau menarik persetujuan kapan saja.',
+  consentMore: 'Cara LedgerLens melindungi data Anda (dalam bahasa Inggris)',
   consentButton: 'Saya setuju, mulai',
   consentNotNow: 'Nanti saja',
   consentSaving: 'Menyimpan…',
