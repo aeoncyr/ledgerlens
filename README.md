@@ -128,6 +128,12 @@ the work:
    officer sees it. Each step can be handed off on WhatsApp, lands as a row in the lender's own Google Sheet
    (or any webhook), and the file exports as JSON, CSV or a printed memo, with a Google Calendar field visit
    listing what to check on site.
+8. **Run a pilot.** Each lender sets its own name and credit policy, invites owners with a link that carries
+   its name, records the result of its own credit bureau (SLIK) check, and says on every decision whether it
+   agrees with LedgerLens. A pilot dashboard counts what happened on its files. The
+   [Trust and data](https://ledger-lens-511708.web.app/trust) page says what runs where today and what
+   changes before real data, and [For lenders](https://ledger-lens-511708.web.app/lenders) explains a
+   three-month shadow pilot.
 
 The two sides see different things on purpose. The owner sees their records, a plain summary of what could be
 confirmed and what is still missing, three tips to make the file stronger and the questions put to them. The
