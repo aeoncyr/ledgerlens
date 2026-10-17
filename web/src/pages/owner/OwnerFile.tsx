@@ -539,7 +539,7 @@ function Records({
         </ul>
       )}
 
-      {!(remembered && evidence.length === 0) && samplePicker}
+      {!locked && !(remembered && evidence.length === 0) && samplePicker}
 
       <div className="ow-sticky">
         {locked && <p className="ow-fine">{t.checkLocked}</p>}
