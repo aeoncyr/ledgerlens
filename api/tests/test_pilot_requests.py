@@ -1,6 +1,6 @@
 """Pilot requests from the public "For lenders" page: validation, storage and daily limits."""
 
-from app.routers import pilot
+from app.routers import pilot_requests
 
 REQUEST = {
     "lenderName": "BPR Contoh Sejahtera",
@@ -28,7 +28,7 @@ def test_a_request_is_stored_with_its_consent(client, fake_db):
     assert saved["filesPerMonth"] == 40
     assert saved["email"] == "kredit@example.com"
     assert saved["whatsapp"] is None
-    assert saved["consent"] == {"given": True, "text": pilot.CONSENT_TEXT}
+    assert saved["consent"] == {"given": True, "text": pilot_requests.CONSENT_TEXT}
     assert saved["uid"] == "judge-1"
     assert saved["status"] == "new"
 
@@ -74,16 +74,16 @@ def test_an_unknown_lender_type_is_refused(client):
 
 
 def test_a_visitor_can_send_only_a_few_requests_a_day(client, fake_db):
-    for _ in range(pilot.REQUESTS_PER_USER_PER_DAY):
+    for _ in range(pilot_requests.REQUESTS_PER_USER_PER_DAY):
         assert client.post("/api/pilot-requests", json=REQUEST).status_code == 201
     response = client.post("/api/pilot-requests", json=REQUEST)
     assert response.status_code == 429
     assert "no need to send it again" in response.json()["detail"]
-    assert len(_requests(fake_db)) == pilot.REQUESTS_PER_USER_PER_DAY
+    assert len(_requests(fake_db)) == pilot_requests.REQUESTS_PER_USER_PER_DAY
 
 
 def test_the_site_has_a_daily_limit(client_as, fake_db, monkeypatch):
-    monkeypatch.setattr(pilot, "REQUESTS_PER_DAY", 2)
+    monkeypatch.setattr(pilot_requests, "REQUESTS_PER_DAY", 2)
     assert client_as("lender-a").post("/api/pilot-requests", json=REQUEST).status_code == 201
     assert client_as("lender-b").post("/api/pilot-requests", json=REQUEST).status_code == 201
     response = client_as("lender-c").post("/api/pilot-requests", json=REQUEST)

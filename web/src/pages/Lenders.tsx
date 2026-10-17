@@ -17,7 +17,7 @@ import {
   type LenderType,
   type PilotRequestSaved,
   type RoiInputs,
-} from '../pilot.ts'
+} from '../lenders.ts'
 import { SAMPLES } from '../samples.ts'
 import '../ai-page.css'
 import '../trust-page.css'
