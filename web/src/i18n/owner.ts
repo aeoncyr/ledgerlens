@@ -304,7 +304,7 @@ const EN = {
   // Who has seen my file: the owner's timeline (api/app/routers/activity.py)
   activityTitle: 'Who has seen your file',
   activityLead:
-    'Each time a lender opens your file or decides on it, it shows here. The names of the lender’s staff and their notes stay with the lender.',
+    'Each time a lender opens your file or decides on it, it shows here. The lender’s staff names and their notes are not shown here.',
   activityEmpty: 'Nothing has happened to your file yet.',
   activityFailed: 'We couldn’t load this list just now. It will try again when the page reloads.',
   activityTimes: (n: number) => `${n} times`,
@@ -678,7 +678,7 @@ const ID: OwnerStrings = {
 
   activityTitle: 'Siapa yang sudah melihat berkas Anda',
   activityLead:
-    'Setiap kali pemberi pinjaman membuka atau memutuskan berkas Anda, hal itu tampil di sini. Nama petugas dan catatan mereka tetap di pihak pemberi pinjaman.',
+    'Setiap kali pemberi pinjaman membuka atau memutuskan berkas Anda, hal itu tampil di sini. Nama petugas dan catatan mereka tidak ditampilkan di sini.',
   activityEmpty: 'Belum ada yang terjadi pada berkas Anda.',
   activityFailed: 'Daftar ini belum bisa dimuat. Akan dicoba lagi saat halaman dimuat ulang.',
   activityTimes: (n: number) => `${n} kali`,
