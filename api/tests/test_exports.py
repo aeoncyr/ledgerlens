@@ -83,7 +83,11 @@ def test_the_json_export_carries_findings_with_their_citations(client_as, stored
     exported = response.json()
     assert exported["format"] == "ledgerlens.credit-file/v1"
     assert exported["business"]["alias"] == "Warung Bu Sari"
-    assert exported["request"] == {"amountRp": 10_000_000, "tenorMonths": 12}
+    assert exported["request"] == {
+        "amountRp": 10_000_000,
+        "tenorMonths": 12,
+        "otherMonthlyDebtRp": 0,
+    }
     assert exported["policy"]["maxInstallment"] == 900_000
     citation = exported["findings"][0]["citations"][0]
     assert citation == {

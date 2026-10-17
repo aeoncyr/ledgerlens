@@ -6,6 +6,8 @@ import Landing from './pages/Landing.tsx'
 const Status = lazy(() => import('./pages/Status.tsx'))
 const SampleFile = lazy(() => import('./pages/SampleFile.tsx'))
 const HowItWorks = lazy(() => import('./pages/HowItWorks.tsx'))
+// The demo story: one browser plays the owner, the officer and the supervisor.
+const DemoStory = lazy(() => import('./pages/DemoStory.tsx'))
 // The officer's workspace uses Firebase, so it loads only when opened.
 const Applications = lazy(() => import('./pages/officer/Applications.tsx'))
 const NewApplication = lazy(() => import('./pages/officer/NewApplication.tsx'))
@@ -28,6 +30,7 @@ export default function App() {
         <Route path="/status" element={<Status />} />
         <Route path="/samples/:slug" element={<SampleFile />} />
         <Route path="/ai" element={<HowItWorks />} />
+        <Route path="/demo/:slug" element={<DemoStory />} />
         <Route path="/app" element={<Applications />} />
         <Route path="/app/new" element={<NewApplication />} />
         <Route path="/app/integrations" element={<Integrations />} />

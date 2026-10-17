@@ -1,0 +1,279 @@
+{
+ "id": "LSU3OkawqtumWrJyTE4k",
+ "recordedAt": "2026-10-16",
+ "latencyMs": 105044,
+ "models": [
+  "gemini-3-flash-preview",
+  "gemini-3.1-flash-lite",
+  "gemini-3.5-flash-lite",
+  "gemini-3.6-flash"
+ ],
+ "outcome": "inconsistent",
+ "ownerLed": true,
+ "steps": [
+  {
+   "agent": "intake",
+   "message": "Reading 17 pieces of evidence in parallel",
+   "state": "running",
+   "t": 0.0
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 1",
+   "state": "running",
+   "t": 0.0
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 2",
+   "state": "running",
+   "t": 0.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 3",
+   "state": "running",
+   "t": 0.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 4",
+   "state": "running",
+   "t": 0.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 16 lines from Notebook page 1",
+   "state": "done",
+   "t": 8.5
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 5",
+   "state": "running",
+   "t": 8.5
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 17 lines from Notebook page 4",
+   "state": "done",
+   "t": 9.0
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 6",
+   "state": "running",
+   "t": 9.0
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 15 lines from Notebook page 2",
+   "state": "done",
+   "t": 10.1
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 1",
+   "state": "running",
+   "t": 10.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 14 lines from Notebook page 5",
+   "state": "done",
+   "t": 16.6
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 2",
+   "state": "running",
+   "t": 16.6
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 14 lines from Notebook page 6",
+   "state": "done",
+   "t": 17.5
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 3",
+   "state": "running",
+   "t": 17.6
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 15 lines from Notebook page 3",
+   "state": "done",
+   "t": 21.4
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 4",
+   "state": "running",
+   "t": 21.4
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 2: 3 items, total Rp 2.000.000",
+   "state": "done",
+   "t": 21.4
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 5",
+   "state": "running",
+   "t": 21.4
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 3: 3 items, total Rp 2.000.000",
+   "state": "done",
+   "t": 24.1
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 6",
+   "state": "running",
+   "t": 24.1
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 1: 3 items, total Rp 2.300.000",
+   "state": "done",
+   "t": 61.7
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 7",
+   "state": "running",
+   "t": 61.7
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 6: 3 items, total Rp 1.900.000",
+   "state": "done",
+   "t": 64.4
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 8",
+   "state": "running",
+   "t": 64.4
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 5: 3 items, total Rp 2.000.000",
+   "state": "done",
+   "t": 66.8
+  },
+  {
+   "agent": "qris_reader",
+   "message": "Reading QRIS history 1",
+   "state": "running",
+   "t": 66.9
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 7: 3 items, total Rp 2.300.000",
+   "state": "done",
+   "t": 67.3
+  },
+  {
+   "agent": "qris_reader",
+   "message": "Reading QRIS history 2",
+   "state": "running",
+   "t": 67.4
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 8: 3 items, total Rp 1.900.000",
+   "state": "done",
+   "t": 70.1
+  },
+  {
+   "agent": "interview_listener",
+   "message": "Reading Interview",
+   "state": "running",
+   "t": 70.1
+  },
+  {
+   "agent": "qris_reader",
+   "message": "Read QRIS history 1: 10 transactions, 1 totals",
+   "state": "done",
+   "t": 73.8
+  },
+  {
+   "agent": "qris_reader",
+   "message": "Read QRIS history 2: 10 transactions, 1 totals",
+   "state": "done",
+   "t": 74.5
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 4: 3 items, total Rp 2.100.000",
+   "state": "done",
+   "t": 74.7
+  },
+  {
+   "agent": "interview_listener",
+   "message": "Listened to the interview: 5 claims",
+   "state": "done",
+   "t": 78.4
+  },
+  {
+   "agent": "intake",
+   "message": "Read 17 of 17 pieces of evidence",
+   "state": "done",
+   "t": 78.5
+  },
+  {
+   "agent": "calculator",
+   "message": "Computing monthly cash flow",
+   "state": "running",
+   "t": 78.5
+  },
+  {
+   "agent": "calculator",
+   "message": "Cash flow over 2 month(s) from 95 amounts",
+   "state": "done",
+   "t": 78.5
+  },
+  {
+   "agent": "verifier",
+   "message": "Cross-checking the sources against each other",
+   "state": "running",
+   "t": 78.5
+  },
+  {
+   "agent": "verifier",
+   "message": "4 finding(s), 2 point(s) where the sources agree",
+   "state": "done",
+   "t": 93.0
+  },
+  {
+   "agent": "policy",
+   "message": "Applying the lender's policy",
+   "state": "running",
+   "t": 93.1
+  },
+  {
+   "agent": "policy",
+   "message": "Outcome: inconsistent",
+   "state": "done",
+   "t": 93.1
+  },
+  {
+   "agent": "memo_writer",
+   "message": "Writing the credit memo",
+   "state": "running",
+   "t": 93.1
+  },
+  {
+   "agent": "memo_writer",
+   "message": "Credit memo ready",
+   "state": "done",
+   "t": 104.6
+  }
+ ]
+}

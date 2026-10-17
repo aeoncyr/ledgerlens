@@ -85,6 +85,8 @@ class Application:
     years_operating: int
     amount: int
     tenor_months: int
+    # Other loan instalments a month the application declares, including online loans (pinjol).
+    existing_monthly_debt: int = 0
 
 
 @dataclass
@@ -389,12 +391,11 @@ async def _read_qris(
     if not qris.legible:
         raise ValueError("the screenshot is not legible")
     reference = item.captured_at.date()
-    covered: set[str] = set()
+    by_total: list[Entry] = []
     for total in qris.totals:
         month = month_of(total.period_text, reference)
-        if total.amount_rp is not None and month and month not in covered:
-            covered.add(month)
-            result.entries.append(
+        if total.amount_rp is not None and month and month not in {e.month for e in by_total}:
+            by_total.append(
                 Entry(
                     month=month,
                     kind="sale",
@@ -404,31 +405,40 @@ async def _read_qris(
                     locator=f"total for {total.period_text}",
                 )
             )
-    for row in qris.rows:
-        month = month_of(row.date_text, reference) or _month(item)
-        if row.direction == "in" and row.amount_rp is not None and month not in covered:
-            result.entries.append(
-                Entry(
-                    month=month,
-                    kind="sale",
-                    amount_rp=row.amount_rp,
-                    evidence_type=item.type,
-                    evidence_id=item.id,
-                    locator=f"row {row.row}",
-                )
-            )
+    by_row = [
+        Entry(
+            month=month_of(row.date_text, reference) or _month(item),
+            kind="sale",
+            amount_rp=row.amount_rp,
+            evidence_type=item.type,
+            evidence_id=item.id,
+            locator=f"row {row.row}",
+        )
+        for row in qris.rows
+        if row.direction == "in" and row.amount_rp is not None
+    ]
+    covered = {e.month for e in by_total}
+    result.entries += by_total + [e for e in by_row if e.month not in covered]
+    # A screenshot that can't add up to its own total proves no more than the lower of the two:
+    # if the printed total is the larger, only the rows that are actually listed count.
+    rows_only = bool(qris.arithmetic_problems) and qris.rows_in_sum_rp < sum(
+        e.amount_rp for e in by_total
+    )
+    if rows_only:
+        result.entries = by_row
     inflows = sum(entry.amount_rp for entry in result.entries)
     facts.add(
         f"{item.key}_inflows", f"Money received in {item.label}", "rupiah", inflows, [item.id]
     )
 
     for problem in qris.arithmetic_problems:
+        trusted = f" Only its listed rows, {_rp(inflows)}, count as money received." * rows_only
         result.checks.append(
             Finding(
                 kind="fraud_signal",
                 severity="high",
                 source="code",
-                text=f"{item.label}: {problem} The screenshot may have been edited.",
+                text=f"{item.label}: {problem} The screenshot may have been edited.{trusted}",
                 citations=[_cite(item, "rows"), _cite(item, "total")],
             )
         )
@@ -692,6 +702,12 @@ def add_summary_facts(facts: FactTable, summary: CashFlowSummary, application: A
     facts.add("requested_amount", "Loan amount requested", "rupiah", application.amount)
     facts.add("tenor_months", "Loan term in months", "count", application.tenor_months)
     facts.add(
+        "existing_monthly_debt",
+        "Other loan instalments a month, including online loans, as the application declares",
+        "rupiah",
+        application.existing_monthly_debt,
+    )
+    facts.add(
         "kur_collateral_free_limit",
         "KUR loans up to this amount need no extra collateral",
         "rupiah",
@@ -839,7 +855,12 @@ async def run_pipeline(
             "city": application.city,
             "years_operating": application.years_operating,
         },
-        "request": {"amount": "[[requested_amount]]", "term_months": application.tenor_months},
+        "request": {
+            "amount": "[[requested_amount]]",
+            "term_months": application.tenor_months,
+            # What the application says; the verifier compares it with what the owner says.
+            "other_monthly_loan_instalments": "[[existing_monthly_debt]]",
+        },
         "facts": facts.for_prompt(),
         "evidence": [
             {
@@ -959,6 +980,7 @@ async def judge(
         evidence_types=present,
         amount=application.amount,
         tenor_months=application.tenor_months,
+        existing_monthly_debt=application.existing_monthly_debt,
         policy=policy,
     )
     facts.add(
@@ -972,6 +994,15 @@ async def judge(
         "Largest monthly instalment the policy allows",
         "rupiah",
         result.max_installment,
+    )
+    # Only a request within the policy has room to stress; above it, the figure would say nothing.
+    stress_tested = result.within_policy and result.stress_drop_pct is not None
+    facts.add(
+        "stress_drop_pct",
+        "Fall in sales the requested instalment can take and stay within policy (code's stress "
+        "test: costs move with sales)",
+        "percent",
+        result.stress_drop_pct / 100 if stress_tested else None,
     )
     facts.add(
         "evidence_strength", "Evidence strength, out of 100", "count", result.evidence_strength
@@ -992,7 +1023,14 @@ async def judge(
             "assessment": result.assessment.value,
             "within_policy": result.within_policy,
             "reasons": result.reasons,
-            "figures": ["capacity_basis", "max_installment", "requested_installment"],
+            "figures": [
+                "capacity_basis",
+                "max_installment",
+                "requested_installment",
+                # Files checked before these figures existed don't have them.
+                *(["existing_monthly_debt"] if "existing_monthly_debt" in facts else []),
+                *(["stress_drop_pct"] if stress_tested else []),
+            ],
         },
         facts,
         quoted,

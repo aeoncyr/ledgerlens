@@ -7,6 +7,8 @@ a pilot lender, not industry standards.
 
 from __future__ import annotations
 
+import math
+
 from pydantic import BaseModel, Field
 
 from app.schemas import TIER_BY_TYPE, Assessment, EvidenceTier, EvidenceType, Finding
@@ -63,6 +65,11 @@ class PolicyResult(BaseModel):
     max_installment: int | None
     requested_installment: int
     within_policy: bool
+    stress_drop_pct: int | None = Field(
+        default=None,
+        description="How far sales could fall, in whole percent, before the requested instalment "
+        "is above the policy's limit (see ``stress_drop_pct``)",
+    )
     reasons: list[str]
 
 
@@ -119,6 +126,34 @@ def monthly_installment(amount: int, months: int, monthly_rate: float) -> int:
     if monthly_rate == 0:
         return round(amount / months)
     return round(amount * monthly_rate / (1 - (1 + monthly_rate) ** -months))
+
+
+def stress_drop_pct(
+    *,
+    capacity_basis: int | None,
+    max_installment: int | None,
+    requested_installment: int,
+    max_installment_ratio: float,
+) -> int | None:
+    """How far monthly sales could fall before the requested instalment breaks the policy.
+
+    The assumption, stated wherever the figure is shown: costs move with sales, so net cash flow
+    (and the capacity after the haircut) falls in proportion, while the haircut, the ratio and the
+    other monthly debts stay as they are. After a fall ``d`` the limit is
+    ``ratio × capacity × (1 − d) − existing debt``; setting that equal to the requested instalment
+    gives ``d = (max_installment − requested) / (ratio × capacity)``.
+
+    Returns whole percent, rounded down so it never overstates the room; 0 when the request is
+    already above the limit or has less than 1% to spare; None when the policy sets no limit.
+    """
+    if capacity_basis is None or max_installment is None:
+        return None
+    base = capacity_basis * max_installment_ratio
+    room = max_installment - requested_installment
+    if base <= 0 or room <= 0:
+        return 0
+    # The small epsilon keeps an exact 18.0% from flooring to 17 through float error.
+    return min(100, math.floor(room / base * 100 + 1e-9))
 
 
 def evidence_strength(evidence_types: set[EvidenceType], months_covered: int) -> int:
@@ -186,5 +221,11 @@ def assess(
         max_installment=max_installment,
         requested_installment=requested,
         within_policy=within_policy,
+        stress_drop_pct=stress_drop_pct(
+            capacity_basis=capacity_basis,
+            max_installment=max_installment,
+            requested_installment=requested,
+            max_installment_ratio=policy.max_installment_ratio,
+        ),
         reasons=reasons,
     )

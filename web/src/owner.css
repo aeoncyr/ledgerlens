@@ -1504,3 +1504,34 @@ fieldset.ow-field > legend {
   align-items: center;
   margin-top: 8px;
 }
+
+/* Remind me to check again: a calendar link under the tips, or with a decline. */
+.ow-remind {
+  margin-top: 14px;
+}
+
+.ow-remind .ow-fine {
+  margin: 0 0 10px;
+}
+
+.ow-remind-button {
+  gap: 10px;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+/* Delete my file: last on the page, quiet until asked. */
+.ow-delete {
+  max-width: 640px;
+  margin-top: 32px;
+}
+
+.ow-delete .ow-h3 {
+  margin-top: 0;
+}
+
+.ow-delete-blocked {
+  padding: 10px 12px;
+  border-left: 3px solid var(--rule);
+  background: var(--paper);
+}

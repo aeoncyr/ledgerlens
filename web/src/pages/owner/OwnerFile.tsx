@@ -36,7 +36,10 @@ import {
   UndoIcon,
 } from './icons.tsx'
 import DecisionCard, { WaitingCard } from './OwnerDecision.tsx'
+import DemoBar from '../../components/DemoBar.tsx'
+import DeleteFile from './DeleteFile.tsx'
 import OwnerShell from './OwnerShell.tsx'
+import RemindMe from './RemindMe.tsx'
 import VoiceRecorder from '../../components/VoiceRecorder.tsx'
 import { answerByVoice, declineQuestion } from '../../officer.ts'
 import { useOwnerDecision } from '../../decision.ts'
@@ -109,6 +112,19 @@ export default function OwnerFile() {
   const locked =
     app.status === 'awaiting_signoff' || (app.status === 'decided' && decision?.action === 'approve')
   const stage = !consented ? 0 : checking ? 2 : summary ? (app.officerUid ? 4 : 3) : 1
+  const tips = summary ? tipsIn(summary, lang) : []
+  const declined = app.status === 'decided' && decision?.action === 'decline'
+  // A file that isn't verified yet gets a reminder to check again; a declined one gets it with the
+  // decision instead, so it appears once.
+  const remind = !!summary && app.assessment !== 'verified' && !declined
+  const deleteBlocked =
+    app.status === 'awaiting_signoff'
+      ? t.deleteBlockedDeciding
+      : decision?.state === 'accepted'
+        ? t.deleteBlockedAccepted
+        : checking
+          ? t.deleteBlockedChecking
+          : null
 
   async function act(kind: Busy, work: () => Promise<void>) {
     setBusy(kind)
@@ -157,6 +173,7 @@ export default function OwnerFile() {
       <p className="ow-back">
         <Link to="/owner">← {t.backHome}</Link>
       </p>
+      {app.demo && <DemoBar app={app} playing="owner" />}
       <FileHeader app={app} t={t} />
       <Stepper stage={stage} t={t} />
 
@@ -184,6 +201,7 @@ export default function OwnerFile() {
             id={id}
             decision={decision}
             evidence={evidence as OwnerEvidence[]}
+            tips={tips}
             lang={lang}
             t={t}
           />
@@ -212,7 +230,13 @@ export default function OwnerFile() {
           )}
           {summary && (
             <>
-              <SummaryCard summary={summary} lang={lang} t={t} />
+              <SummaryCard
+                id={id}
+                summary={summary}
+                remind={remind}
+                lang={lang}
+                t={t}
+              />
               {!locked && (
                 <Questions
                     key={summary.updatedAt?.seconds ?? 0}
@@ -242,6 +266,7 @@ export default function OwnerFile() {
             busy={busy}
             progress={progress}
             locked={locked}
+            demo={!!app.demo}
             onPick={onPick}
             onSample={(slug) => act('upload', () => sendSample(slug))}
             onCheck={() => act('check', () => runCheck(id))}
@@ -256,8 +281,15 @@ export default function OwnerFile() {
           )}
         </div>
       )}
+
+      <DeleteFile id={id} blocked={deleteBlocked} t={t} />
     </OwnerShell>
   )
+}
+
+/** The summary's tips in the owner's language, falling back to the Bahasa ones. */
+function tipsIn(summary: OwnerSummary, lang: 'en' | 'id'): string[] {
+  return (lang === 'en' && summary.tipsEn?.length ? summary.tipsEn : summary.tips) ?? []
 }
 
 function FileHeader({ app, t }: { app: OwnerApplication; t: OwnerStrings }) {
@@ -348,6 +380,7 @@ function Records({
   busy,
   progress,
   locked,
+  demo,
   onPick,
   onSample,
   onCheck,
@@ -359,6 +392,8 @@ function Records({
   busy: Busy
   progress: string | null
   locked: boolean
+  // A demo copy is never checked again, so sample records would do nothing.
+  demo: boolean
   onPick: (type: EvidenceType, event: ChangeEvent<HTMLInputElement>) => void
   onSample: (slug: string) => void
   onCheck: () => void
@@ -508,7 +543,7 @@ function Records({
         </ul>
       )}
 
-      {!(remembered && evidence.length === 0) && samplePicker}
+      {!locked && !demo && !(remembered && evidence.length === 0) && samplePicker}
 
       <div className="ow-sticky">
         {locked && <p className="ow-fine">{t.checkLocked}</p>}
@@ -604,18 +639,23 @@ function Checking({ run, t }: { run: Run | null; t: OwnerStrings }) {
 }
 
 function SummaryCard({
+  id,
   summary,
+  remind,
   lang,
   t,
 }: {
+  id: string
   summary: OwnerSummary
+  // Offer a calendar reminder to check again, for a file that isn't strong enough yet.
+  remind: boolean
   lang: 'en' | 'id'
   t: OwnerStrings
 }) {
   const en = lang === 'en'
   const verified = (en && summary.verifiedEn) || summary.verified
   const missing = (en && summary.missingEn) || summary.missing
-  const tips = (en && summary.tipsEn?.length ? summary.tipsEn : summary.tips) ?? []
+  const tips = tipsIn(summary, lang)
   return (
     <section className="ow-card ow-summary" aria-labelledby="ow-summary-title">
       <h2 id="ow-summary-title" className="ow-h2">
@@ -643,6 +683,7 @@ function SummaryCard({
               <li key={index}>{tip}</li>
             ))}
           </ol>
+          {remind && <RemindMe id={id} tips={tips} lead={t.remindLead} t={t} />}
         </div>
       )}
     </section>

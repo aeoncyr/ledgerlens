@@ -44,6 +44,10 @@ class Settings:
     ledger_double_read: bool
     public_app_url: str
     version: str
+    # Demo stories (routers/demo.py) a day, per visitor and for the whole site. They cost no
+    # Gemini call, but each writes a copy of a sample file to Firestore.
+    demo_stories_per_user_per_day: int = 20
+    demo_stories_per_day: int = 150
 
     @property
     def uses_free_tier(self) -> bool:
@@ -95,6 +99,8 @@ class Settings:
             # Where the web app lives, for links in webhooks and exports.
             public_app_url=env.get("PUBLIC_APP_URL", "https://ledger-lens-511708.web.app"),
             version=env.get("APP_VERSION", "0.1.0"),
+            demo_stories_per_user_per_day=int(env.get("DEMO_STORIES_PER_USER_PER_DAY", "20")),
+            demo_stories_per_day=int(env.get("DEMO_STORIES_PER_DAY", "150")),
         )
 
 

@@ -4,6 +4,7 @@ import SiteNav from '../components/SiteNav.tsx'
 import Specimen from '../components/Specimen.tsx'
 import { SAMPLES } from '../samples.ts'
 import { ASSESSMENT_LABEL, ASSESSMENT_TONE } from '../types.ts'
+import '../demo.css'
 
 type Actor = 'Owner' | 'Officer' | 'Gemini' | 'Code'
 
@@ -60,6 +61,7 @@ const SAMPLE_NOTE: Record<string, string> = {
   'bu-sari': 'Notebook, receipts and QRIS agree, and so does the owner’s interview.',
   'pak-joko': 'Honest books but no QRIS history, so only part of the cash flow is proven.',
   'pak-hendra': 'The notebook claims three times what the owner says out loud.',
+  'bu-wati': 'An edited QRIS screenshot, caught: its payments don’t add up to its total.',
 }
 
 function HeroVisual() {
@@ -233,9 +235,10 @@ export default function Landing() {
           <div className="section-head">
             <h2 id="samples-heading">Open a finished file</h2>
             <p>
-              Three fictional businesses, each with two months of notebook pages, receipts, a short
-              interview with the owner and, where they have it, QRIS history. These are the files
-              LedgerLens produced, unedited. Click any citation to see the evidence behind it.
+              Four fictional businesses, each with two months of notebook pages and receipts, and
+              where they have them, QRIS history and a short interview with the owner. One of them
+              edited a screenshot. These are the files LedgerLens produced, unedited. Click any
+              citation to see the evidence behind it.
             </p>
           </div>
           <div className="sample-cards">
@@ -263,6 +266,20 @@ export default function Landing() {
                 </span>
               </Link>
             ))}
+          </div>
+          <div className="story-callout">
+            <div>
+              <h3>Trying it alone? Play the whole story</h3>
+              <p>
+                A decision passes through three people. In one browser, be the owner who shares a
+                finished file, the officer who recommends a decision and the supervisor who signs
+                it off. It starts with a replay of the real check and uses a demo copy, so it is
+                instant and free.
+              </p>
+            </div>
+            <Link className="button" to={`/demo/${SAMPLES[0].slug}`}>
+              Play the whole story: owner, officer and supervisor in one browser
+            </Link>
           </div>
         </section>
 
@@ -296,7 +313,7 @@ export default function Landing() {
                 <dt>notebook amounts read exactly from photographed pages in eight handwriting fonts</dt>
               </div>
               <div>
-                <dd>3 of 3</dd>
+                <dd>4 of 4</dd>
                 <dt>sample files with every monthly total read exactly and the right outcome</dt>
               </div>
             </dl>

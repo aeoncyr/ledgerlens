@@ -2,6 +2,7 @@
 // the owner was sent and how they answered. The reviewer's sign-off panel lives here too, because
 // it shows the same recommendation.
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import OfferSchedule from '../../components/OfferSchedule.tsx'
 import WhatsAppButton from '../../components/WhatsAppButton.tsx'
 import {
@@ -20,6 +21,7 @@ import {
   type RecordedDecision,
 } from '../../decision.ts'
 import type { Application } from '../../officer.ts'
+import { stressDropPct } from '../../stress.ts'
 import { EVIDENCE_LABEL, type CreditFileData, type EvidenceType } from '../../types.ts'
 import '../../decision.css'
 
@@ -164,6 +166,14 @@ function InstalmentPreview({
   const instalment = previewInstalment(amount, months, rate)
   const limit = policy?.maxInstallment ?? null
   const within = limit !== null && instalment <= limit
+  // The same stress test as on the credit file, for the instalment on offer (see stress.ts).
+  const stress = policy && within ? stressDropPct(policy, instalment) : null
+  const room =
+    stress === null
+      ? ''
+      : stress > 0
+        ? `, and still within it if sales fall by up to ${stress}% (assuming costs move with sales)`
+        : ', with no room for any fall in sales'
   return (
     <div className={`instalment-preview ${limit === null ? '' : within ? 'within' : 'above'}`}>
       <dl aria-live="polite">
@@ -180,7 +190,7 @@ function InstalmentPreview({
         {limit === null
           ? 'The evidence was too thin for the policy to set a limit, so this offer rests on your judgement alone. The second person will see that.'
           : within
-            ? 'Within the policy. '
+            ? `Within the policy${room}. `
             : 'Above what the verified cash flow supports. You can still recommend it; the second person will see it is above the policy. '}
         {limit !== null &&
           'Computed by code with the standard annuity formula; the API recomputes it and the schedule when you send.'}
@@ -488,10 +498,18 @@ function WaitingForSignoff({ app, code }: { app: Application; code: string }) {
         label="Send to a colleague on WhatsApp"
         text={`Mohon sign-off kedua untuk berkas kredit ${app.business.alias} di LedgerLens. Second sign-off needed, please: ${url} (kode/code ${code})`}
       />
-      <p className="fine">
-        Trying LedgerLens alone? Open the link in a private window: it signs in as a different
-        person.
-      </p>
+      {app.demo ? (
+        <p>
+          <Link className="button quiet" to={signoffPath(code)}>
+            Play the supervisor: open the sign-off
+          </Link>
+        </p>
+      ) : (
+        <p className="fine">
+          Trying LedgerLens alone? Open the link in a private window: it signs in as a different
+          person.
+        </p>
+      )}
       {app.decision && <Recommendation decision={app.decision} />}
     </section>
   )

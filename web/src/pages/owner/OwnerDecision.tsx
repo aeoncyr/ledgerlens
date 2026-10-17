@@ -13,6 +13,7 @@ import { rupiah, type Lang, type OwnerStrings } from '../../i18n/owner.ts'
 import { errorText, type OwnerEvidence } from '../../owner.ts'
 import WhatsAppButton from '../../components/WhatsAppButton.tsx'
 import { TickIcon } from './icons.tsx'
+import RemindMe from './RemindMe.tsx'
 import '../../decision.css'
 
 export function WaitingCard({ t }: { t: OwnerStrings }) {
@@ -33,12 +34,15 @@ export default function DecisionCard({
   id,
   decision,
   evidence,
+  tips = [],
   lang,
   t,
 }: {
   id: string
   decision: OwnerDecision
   evidence: OwnerEvidence[]
+  // The tips from the owner's summary, for the reminder to check again after a decline.
+  tips?: string[]
   lang: Lang
   t: OwnerStrings
 }) {
@@ -78,6 +82,10 @@ export default function DecisionCard({
         <figcaption className="ow-fine">{t.letterFrom}</figcaption>
         <blockquote lang={lang}>{decision.letter[lang] || decision.letter.en}</blockquote>
       </figure>
+
+      {decision.action === 'decline' && (
+        <RemindMe id={id} tips={tips} lead={t.remindLeadDeclined} t={t} />
+      )}
 
       {offer && (
         <>

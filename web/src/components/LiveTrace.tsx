@@ -61,9 +61,20 @@ function useNow(ticking: boolean): number {
   return now
 }
 
-export default function LiveTrace({ run }: { run: Run | null }) {
+export default function LiveTrace({
+  run,
+  replayClock,
+  replay,
+}: {
+  run: Run | null
+  // A replay's own clock, in the run's seconds, instead of the wall clock.
+  replayClock?: number
+  // A replay of a recorded run: how many times faster than it happened.
+  replay?: number
+}) {
   const running = run?.state === 'running'
-  const now = useNow(running)
+  const wall = useNow(running && replayClock === undefined)
+  const now = replayClock ?? wall
   if (!run) return <p className="fine">Starting the analysis…</p>
 
   const all = run.steps ?? []
@@ -78,7 +89,7 @@ export default function LiveTrace({ run }: { run: Run | null }) {
         ? run.latencyMs / 1000
         : last - start
   // No new step for a while: say so, so a slow free-tier call doesn't look like a stall.
-  const quiet = running && start > 0 && now - Math.max(last, start) >= QUIET_SECONDS
+  const quiet = !replay && running && start > 0 && now - Math.max(last, start) >= QUIET_SECONDS
 
   return (
     <div className="trace">
@@ -86,6 +97,7 @@ export default function LiveTrace({ run }: { run: Run | null }) {
         <span className="trace-title">
           Agent trace
           {run.id && <span className="trace-run mono">run {run.id.slice(0, 8)}</span>}
+          {replay && <span className="trace-replay">Replay, sped up {replay}×</span>}
         </span>
         <span className="trace-clock mono" role="timer" aria-label="Time elapsed">
           {clock(elapsed)}

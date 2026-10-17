@@ -1,6 +1,7 @@
 """The whole pipeline offline: scripted Gemini answers in, findings, outcome and memo out."""
 
 import asyncio
+import dataclasses
 from datetime import UTC, datetime
 
 from app.agents.ledger_reader import LedgerLine, LedgerReading
@@ -72,10 +73,12 @@ class ScriptedGemini:
         }
         self.calls: list[type] = []
         self.roles: dict[type, str] = {}
+        self.contents: dict[type, list] = {}
 
     async def generate(self, *, contents, schema, system, temperature=0.0, attempts=3, role="read"):
         self.calls.append(schema)
         self.roles[schema] = role
+        self.contents[schema] = contents
         return self.answers[schema], "gemini-test"
 
 
@@ -116,7 +119,7 @@ MEMO = MemoDraft(
 )
 
 
-def run(verification: Verification, memo: MemoDraft = MEMO):
+def run(verification: Verification, memo: MemoDraft = MEMO, application: Application = APPLICATION):
     gemini = ScriptedGemini(verification, memo)
     steps = []
 
@@ -127,12 +130,34 @@ def run(verification: Verification, memo: MemoDraft = MEMO):
         run_pipeline(
             gemini=gemini,
             store=BytesStore(),
-            application=APPLICATION,
+            application=application,
             items=list(ITEMS),
             progress=progress,
         )
     )
     return result, gemini, steps
+
+
+def test_other_monthly_debts_reach_the_policy_and_the_verifier():
+    with_debt = dataclasses.replace(APPLICATION, existing_monthly_debt=450_000)
+    result, gemini, _ = run(Verification(findings=[], confirmations=[]), application=with_debt)
+    without, _, _ = run(Verification(findings=[], confirmations=[]))
+
+    assert result.policy.max_installment == without.policy.max_installment - 450_000
+    case_file = gemini.contents[Verification][0]
+    assert '"other_monthly_loan_instalments": "[[existing_monthly_debt]]"' in case_file
+    assert "Rp 450.000" in case_file
+    debt = next(f for f in result.facts if f["key"] == "existing_monthly_debt")
+    assert debt["value"] == 450_000
+
+
+def test_the_stress_test_is_a_figure_the_memo_can_cite():
+    result, _, _ = run(Verification(findings=[], confirmations=[]))
+
+    assert result.policy.within_policy
+    stress = next(f for f in result.facts if f["key"] == "stress_drop_pct")
+    assert stress["value"] == result.policy.stress_drop_pct / 100
+    assert stress["display"] == f"{result.policy.stress_drop_pct}%"
 
 
 def test_runs_every_agent_and_computes_cash_flow_in_code():
@@ -213,6 +238,49 @@ def test_code_checks_keep_their_severity_even_if_the_verifier_softens_them():
     finding = result.findings[0]
     assert (finding.kind, finding.severity, finding.source) == ("fraud_signal", "high", "code")
     assert finding.follow_up_question == "Boleh kami lihat riwayat di aplikasinya, Bu?"
+    assert result.assessment is Assessment.INCONSISTENT
+
+
+def test_an_edited_qris_total_is_caught_and_only_its_listed_rows_count():
+    def row(n, amount_text):
+        return QrisRow(
+            row=n, date_text="30 Sep 2026", amount_text=amount_text, direction="in", confidence=0.99
+        )
+
+    # Both transactions of the month are listed, but the printed total was raised by Rp 5.000.000.
+    edited = QRIS.model_copy(
+        update={
+            "rows": [row(1, "+Rp250.000"), row(2, "+Rp1.750.000")],
+            "totals": [
+                QrisTotal(
+                    period_text="September 2026",
+                    amount_text="Rp7.000.000",
+                    count_text="2 transaksi",
+                )
+            ],
+        }
+    )
+    gemini = ScriptedGemini(Verification(findings=[], confirmations=[]), MEMO)
+    gemini.answers[QrisReading] = edited
+
+    async def progress(*_, **__):
+        pass
+
+    result = asyncio.run(
+        run_pipeline(
+            gemini=gemini,
+            store=BytesStore(),
+            application=APPLICATION,
+            items=list(ITEMS),
+            progress=progress,
+        )
+    )
+
+    finding = next(f for f in result.findings if f.kind == "fraud_signal")
+    assert finding.severity == "high"
+    assert "add up to Rp 2.000.000, not the printed total of Rp 7.000.000" in finding.text
+    assert "Only its listed rows, Rp 2.000.000, count as money received." in finding.text
+    assert result.cashflow.months[0].proven_inflows == 2_000_000
     assert result.assessment is Assessment.INCONSISTENT
 
 

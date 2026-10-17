@@ -12,6 +12,7 @@ const EMPTY: NewOwnerFile = {
   yearsOperating: 1,
   amount: 10_000_000,
   tenorMonths: 12,
+  existingMonthlyDebt: 0,
 }
 
 const AMOUNTS = [5_000_000, 10_000_000, 25_000_000, 50_000_000]
@@ -27,6 +28,7 @@ function fromSample(slug: string | null): NewOwnerFile | null {
     yearsOperating: s.yearsOperating,
     amount: s.amount,
     tenorMonths: s.tenorMonths,
+    existingMonthlyDebt: 0,
   }
 }
 
@@ -182,6 +184,25 @@ export default function OwnerNew() {
             ))}
           </div>
         </fieldset>
+
+        <label className="ow-field">
+          <span className="ow-label">{t.otherDebtsLabel}</span>
+          <div className="ow-money">
+            <span aria-hidden="true">Rp</span>
+            <input
+              type="number"
+              inputMode="numeric"
+              min={0}
+              step={10_000}
+              value={form.existingMonthlyDebt ?? 0}
+              onChange={(e) => set('existingMonthlyDebt', Math.max(0, Number(e.target.value) || 0))}
+              aria-describedby="ow-debts-hint"
+            />
+          </div>
+          <span id="ow-debts-hint" className="ow-hint">
+            {t.otherDebtsHint}
+          </span>
+        </label>
 
         {error && (
           <p className="ow-error" role="alert">

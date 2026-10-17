@@ -106,6 +106,9 @@ const EN = {
   amountHint: 'In rupiah.',
   tenorLabel: 'Over how many months?',
   monthsUnit: 'months',
+  otherDebtsLabel: 'Other loan instalments you pay each month (optional)',
+  otherDebtsHint:
+    'Include online loans (pinjol), koperasi, leasing and family loans. Leave 0 if none. Being honest here helps: the lender sees what you can safely repay.',
   createButton: 'Continue',
   creating: 'Starting your file…',
 
@@ -340,6 +343,38 @@ const EN = {
   checkLocked:
     'Your lender is deciding on the file as it is now, so it can’t be checked again. You can still send the records your lender asks for.',
 
+  // Remind me to check again
+  remindButton: 'Remind me to check again',
+  remindLead:
+    'Collect a few more weeks of records, then check again. Add a reminder to your Google Calendar for 30 days from now, with these tips in it.',
+  remindLeadDeclined:
+    'This decision is about your file as it is today. With a few more weeks of records it can be stronger: add a reminder to your Google Calendar for 30 days from now, with the tips from your summary.',
+  remindEventTitle: 'Check my LedgerLens file again',
+  remindDetails: (tips: string[], url: string) =>
+    [
+      'Time to look at your LedgerLens file again: add the records you have collected since your last check, then check again.',
+      '',
+      ...(tips.length ? ['Tips from your last check:', ...tips.map((tip) => `• ${tip}`), ''] : []),
+      `Your file (open it in the same browser as before): ${url}`,
+    ].join('\n'),
+  opensCalendar: ' (opens Google Calendar in a new tab)',
+
+  // Delete my file
+  deleteTitle: 'Delete my file',
+  deleteLead:
+    'You can delete this file and everything in it at any time: photos, recordings, answers, your summary and any share link. Indonesia’s personal data protection law (UU PDP) gives you that right.',
+  deleteButton: 'Delete my file',
+  deleteConfirm:
+    'Delete this file for good? Every photo, recording and answer is removed, and a lender you shared it with loses it too. This can’t be undone.',
+  deleteYes: 'Yes, delete everything',
+  deleteNo: 'Keep my file',
+  deleting: 'Deleting…',
+  deleteBlockedDeciding:
+    'Your lender is deciding on this file right now, so it can’t be deleted yet. You can delete it once they have decided.',
+  deleteBlockedAccepted:
+    'You accepted a loan offer on this file, so your lender needs to keep it while the loan is arranged. Ask your lender if you want it removed.',
+  deleteBlockedChecking: 'Your records are being checked. Wait for the check to finish, then you can delete the file.',
+
   status: {
     draft: 'Needs your agreement',
     collecting: 'Sending records',
@@ -420,6 +455,9 @@ const ID: OwnerStrings = {
   amountHint: 'Dalam rupiah.',
   tenorLabel: 'Untuk berapa bulan?',
   monthsUnit: 'bulan',
+  otherDebtsLabel: 'Cicilan pinjaman lain yang Anda bayar setiap bulan (boleh dikosongkan)',
+  otherDebtsHint:
+    'Termasuk pinjaman online (pinjol), koperasi, leasing dan pinjaman keluarga. Isi 0 jika tidak ada. Jujur di sini membantu: pemberi pinjaman melihat cicilan yang aman untuk Anda.',
   createButton: 'Lanjut',
   creating: 'Memulai berkas Anda…',
 
@@ -649,6 +687,36 @@ const ID: OwnerStrings = {
     `Terkirim. Pemberi pinjaman tahu Anda menambah ${n} catatan baru.`,
   checkLocked:
     'Pemberi pinjaman sedang memutuskan berdasarkan berkas saat ini, jadi berkas tidak bisa diperiksa ulang. Anda tetap bisa mengirim catatan yang diminta.',
+
+  remindButton: 'Ingatkan saya untuk memeriksa lagi',
+  remindLead:
+    'Kumpulkan catatan beberapa minggu lagi, lalu periksa ulang. Tambahkan pengingat di Google Calendar untuk 30 hari lagi, berisi saran-saran ini.',
+  remindLeadDeclined:
+    'Keputusan ini tentang berkas Anda saat ini. Dengan catatan beberapa minggu lagi, berkas Anda bisa lebih kuat: tambahkan pengingat di Google Calendar untuk 30 hari lagi, berisi saran dari ringkasan Anda.',
+  remindEventTitle: 'Periksa lagi berkas LedgerLens saya',
+  remindDetails: (tips: string[], url: string) =>
+    [
+      'Saatnya melihat lagi berkas LedgerLens Anda: tambahkan catatan yang terkumpul sejak pemeriksaan terakhir, lalu periksa ulang.',
+      '',
+      ...(tips.length ? ['Saran dari pemeriksaan terakhir:', ...tips.map((tip) => `• ${tip}`), ''] : []),
+      `Berkas Anda (buka di peramban yang sama seperti sebelumnya): ${url}`,
+    ].join('\n'),
+  opensCalendar: ' (membuka Google Calendar di tab baru)',
+
+  deleteTitle: 'Hapus berkas saya',
+  deleteLead:
+    'Anda boleh menghapus berkas ini beserta seluruh isinya kapan saja: foto, rekaman, jawaban, ringkasan dan tautan berbagi. Undang-Undang Pelindungan Data Pribadi (UU PDP) menjamin hak Anda ini.',
+  deleteButton: 'Hapus berkas saya',
+  deleteConfirm:
+    'Hapus berkas ini untuk selamanya? Semua foto, rekaman dan jawaban dihapus, dan pemberi pinjaman yang Anda beri akses juga kehilangan berkas ini. Ini tidak bisa dibatalkan.',
+  deleteYes: 'Ya, hapus semuanya',
+  deleteNo: 'Simpan berkas saya',
+  deleting: 'Menghapus…',
+  deleteBlockedDeciding:
+    'Pemberi pinjaman sedang memutuskan berkas ini, jadi berkas belum bisa dihapus. Anda bisa menghapusnya setelah ada keputusan.',
+  deleteBlockedAccepted:
+    'Anda sudah menerima tawaran pinjaman untuk berkas ini, jadi pemberi pinjaman perlu menyimpannya selama pinjaman diurus. Tanyakan kepada pemberi pinjaman jika Anda ingin berkas ini dihapus.',
+  deleteBlockedChecking: 'Catatan Anda sedang diperiksa. Tunggu sampai selesai, lalu berkas bisa dihapus.',
 
   status: {
     draft: 'Menunggu persetujuan Anda',

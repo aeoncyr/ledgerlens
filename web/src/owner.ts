@@ -74,6 +74,8 @@ export type NewOwnerFile = {
   yearsOperating: number
   amount: number
   tenorMonths: number
+  // Other loan instalments a month, including online loans (pinjol). Optional; 0 when none.
+  existingMonthlyDebt?: number
 }
 
 const json = { 'Content-Type': 'application/json' }
@@ -105,6 +107,11 @@ export async function withdrawShare(id: string): Promise<void> {
 }
 
 export const sharePath = (code: string) => `/app/shared/${code}`
+
+/** Delete the file for good: records, summary, decision, share link and stored photos. */
+export async function deleteFile(id: string): Promise<void> {
+  await apiFetch(`/api/applications/${id}`, { method: 'DELETE' })
+}
 
 // --- Live reads -----------------------------------------------------------------------------------
 

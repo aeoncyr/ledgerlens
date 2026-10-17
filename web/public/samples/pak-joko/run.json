@@ -1,0 +1,438 @@
+{
+ "id": "47YiCDcbBqHOiUSFvdZS",
+ "recordedAt": "2026-10-16",
+ "latencyMs": 269496,
+ "models": [
+  "gemini-3.1-flash-lite",
+  "gemini-3.5-flash-lite",
+  "gemini-3.7-flash",
+  "gemini-3.8-flash"
+ ],
+ "outcome": "partially_verified",
+ "ownerLed": false,
+ "steps": [
+  {
+   "agent": "intake",
+   "message": "Reading 15 pieces of evidence in parallel",
+   "state": "running",
+   "t": 0.0
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 1",
+   "state": "running",
+   "t": 0.0
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 2",
+   "state": "running",
+   "t": 0.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 3",
+   "state": "running",
+   "t": 0.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 4",
+   "state": "running",
+   "t": 0.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 17 lines from Notebook page 1",
+   "state": "done",
+   "t": 19.3,
+   "detail": {
+    "model": "gemini-3.5-flash-lite",
+    "sample": [
+     {
+      "description": "jahit seragam",
+      "dateText": "1/8",
+      "amountText": "Rp 200.000",
+      "amountRp": 200000,
+      "confidence": 1.0,
+      "kind": "sale"
+     },
+     {
+      "description": "jahit kebaya",
+      "dateText": "2/8",
+      "amountText": "Rp 270.000",
+      "amountRp": 270000,
+      "confidence": 1.0,
+      "kind": "sale"
+     },
+     {
+      "description": "kasbon Bu Lurah",
+      "dateText": null,
+      "amountText": "15rb",
+      "amountRp": 15000,
+      "confidence": 1.0,
+      "kind": "receivable"
+     }
+    ],
+    "sampleLabel": "Notebook page 1 · first lines"
+   }
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 5",
+   "state": "running",
+   "t": 19.3
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 16 lines from Notebook page 4",
+   "state": "done",
+   "t": 20.0,
+   "detail": {
+    "model": "gemini-3.5-flash-lite",
+    "sample": [
+     {
+      "description": "1/9 jahit kebaya",
+      "dateText": "1/9",
+      "amountText": "190rb",
+      "amountRp": 190000,
+      "confidence": 1.0,
+      "kind": "sale"
+     },
+     {
+      "description": "kasbon Bu Ratmi",
+      "dateText": null,
+      "amountText": "50 rb",
+      "amountRp": 50000,
+      "confidence": 1.0,
+      "kind": "receivable"
+     },
+     {
+      "description": "2/9 jahit seragam",
+      "dateText": "2/9",
+      "amountText": "255.000",
+      "amountRp": 255000,
+      "confidence": 1.0,
+      "kind": "sale"
+     }
+    ],
+    "sampleLabel": "Notebook page 4 · first lines"
+   }
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Reading Notebook page 6",
+   "state": "running",
+   "t": 20.1
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 15 lines from Notebook page 2",
+   "state": "done",
+   "t": 20.6,
+   "detail": {
+    "model": "gemini-3.5-flash-lite",
+    "sample": [
+     {
+      "description": "ongkos jahit",
+      "dateText": "11/8",
+      "amountText": "260rb",
+      "amountRp": 260000,
+      "confidence": 0.98,
+      "kind": "sale"
+     },
+     {
+      "description": "kasbon Bu Lurah",
+      "dateText": null,
+      "amountText": "25 rb",
+      "amountRp": 25000,
+      "confidence": 0.98,
+      "kind": "receivable"
+     },
+     {
+      "description": "jahit seragam",
+      "dateText": "12/8",
+      "amountText": "305 rb",
+      "amountRp": 305000,
+      "confidence": 0.98,
+      "kind": "sale"
+     }
+    ],
+    "sampleLabel": "Notebook page 2 · first lines"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 1",
+   "state": "running",
+   "t": 20.7
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 14 lines from Notebook page 6",
+   "state": "done",
+   "t": 29.0,
+   "detail": {
+    "model": "gemini-3.5-flash-lite",
+    "sample": [
+     {
+      "description": "21/9 permak celana",
+      "dateText": "21/9",
+      "amountText": "315 rb",
+      "amountRp": 315000,
+      "confidence": 1.0,
+      "kind": "sale"
+     },
+     {
+      "description": "22/9 permak celana",
+      "dateText": "22/9",
+      "amountText": "Rp 300.000",
+      "amountRp": 300000,
+      "confidence": 1.0,
+      "kind": "sale"
+     },
+     {
+      "description": "kasbon Mas Dimas",
+      "dateText": null,
+      "amountText": "15.000",
+      "amountRp": 15000,
+      "confidence": 1.0,
+      "kind": "receivable"
+     }
+    ],
+    "sampleLabel": "Notebook page 6 · first lines"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 2",
+   "state": "running",
+   "t": 29.1
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 1: 3 items, total Rp 660.000",
+   "state": "done",
+   "t": 31.7,
+   "detail": {
+    "model": "gemini-3.5-flash-lite"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 3",
+   "state": "running",
+   "t": 31.7
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Read 14 lines from Notebook page 5",
+   "state": "done",
+   "t": 33.7,
+   "detail": {
+    "model": "gemini-3.5-flash-lite",
+    "sample": [
+     {
+      "description": "11/9 jahit kebaya",
+      "dateText": "11/9",
+      "amountText": "290.000",
+      "amountRp": 290000,
+      "confidence": 0.98,
+      "kind": "sale"
+     },
+     {
+      "description": "12/9 jahit seragam",
+      "dateText": "12/9",
+      "amountText": "Rp 320.000",
+      "amountRp": 320000,
+      "confidence": 0.98,
+      "kind": "sale"
+     },
+     {
+      "description": "beli kain",
+      "dateText": null,
+      "amountText": "845 rb",
+      "amountRp": 845000,
+      "confidence": 0.98,
+      "kind": "purchase"
+     }
+    ],
+    "sampleLabel": "Notebook page 5 · first lines"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 4",
+   "state": "running",
+   "t": 33.7
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 2: 3 items, total Rp 695.000",
+   "state": "done",
+   "t": 36.2,
+   "detail": {
+    "model": "gemini-3.5-flash-lite"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 5",
+   "state": "running",
+   "t": 36.2
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 3: 3 items, total Rp 710.000",
+   "state": "done",
+   "t": 38.6,
+   "detail": {
+    "model": "gemini-3.5-flash-lite"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 6",
+   "state": "running",
+   "t": 38.6
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 6: 3 items, total Rp 845.000",
+   "state": "done",
+   "t": 56.9,
+   "detail": {
+    "model": "gemini-3.1-flash-lite"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 7",
+   "state": "running",
+   "t": 57.0
+  },
+  {
+   "agent": "ledger_reader",
+   "message": "Could not read Notebook page 3",
+   "state": "failed",
+   "t": 60.4
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Reading Receipt 8",
+   "state": "running",
+   "t": 60.4
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 7: 3 items, total Rp 790.000",
+   "state": "done",
+   "t": 71.2,
+   "detail": {
+    "model": "gemini-3.5-flash-lite"
+   }
+  },
+  {
+   "agent": "interview_listener",
+   "message": "Reading Interview",
+   "state": "running",
+   "t": 71.2
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 4: 3 items, total Rp 810.000",
+   "state": "done",
+   "t": 75.4,
+   "detail": {
+    "model": "gemini-3.5-flash-lite"
+   }
+  },
+  {
+   "agent": "interview_listener",
+   "message": "Listened to the interview: 4 claims",
+   "state": "done",
+   "t": 85.0,
+   "detail": {
+    "model": "gemini-3.5-flash-lite"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 5: 3 items, total Rp 730.000",
+   "state": "done",
+   "t": 97.8,
+   "detail": {
+    "model": "gemini-3.1-flash-lite"
+   }
+  },
+  {
+   "agent": "receipt_reader",
+   "message": "Read Receipt 8: 3 items, total Rp 815.000",
+   "state": "done",
+   "t": 158.1,
+   "detail": {
+    "model": "gemini-3.5-flash-lite"
+   }
+  },
+  {
+   "agent": "intake",
+   "message": "Read 14 of 15 pieces of evidence",
+   "state": "done",
+   "t": 158.2
+  },
+  {
+   "agent": "calculator",
+   "message": "Computing monthly cash flow",
+   "state": "running",
+   "t": 158.2
+  },
+  {
+   "agent": "calculator",
+   "message": "Cash flow over 2 month(s) from 79 amounts",
+   "state": "done",
+   "t": 158.2
+  },
+  {
+   "agent": "verifier",
+   "message": "Cross-checking the sources against each other",
+   "state": "running",
+   "t": 158.3
+  },
+  {
+   "agent": "verifier",
+   "message": "3 finding(s), 2 point(s) where the sources agree",
+   "state": "done",
+   "t": 241.0,
+   "detail": {
+    "model": "gemini-3.8-flash"
+   }
+  },
+  {
+   "agent": "policy",
+   "message": "Applying the lender's policy",
+   "state": "running",
+   "t": 241.1
+  },
+  {
+   "agent": "policy",
+   "message": "Outcome: partially verified",
+   "state": "done",
+   "t": 241.1
+  },
+  {
+   "agent": "memo_writer",
+   "message": "Writing the credit memo",
+   "state": "running",
+   "t": 241.2
+  },
+  {
+   "agent": "memo_writer",
+   "message": "Credit memo ready",
+   "state": "done",
+   "t": 268.9,
+   "detail": {
+    "model": "gemini-3.7-flash"
+   }
+  }
+ ]
+}

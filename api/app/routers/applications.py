@@ -36,10 +36,18 @@ CurrentUser = Annotated[User, Depends(current_user)]
 
 OFFICER, OWNER, REVIEWER = "officer", "owner", "reviewer"
 EITHER = (OFFICER, OWNER)
+ROLE_FIELDS = {OFFICER: "officerUid", OWNER: "ownerUid", REVIEWER: "reviewerUid"}
 
 
 def role_of(data: dict[str, Any], user: User) -> str | None:
-    """Whether the user is this file's officer, its owner or its reviewer (in that order)."""
+    """Whether the user is this file's officer, its owner or its reviewer (in that order).
+
+    On a demo file (``routers/demo.py``) one person holds every role, so the role the calling app
+    names is used instead, if the user holds it. On every other file that claim is ignored.
+    """
+    acting = user.acting if data.get("demo") is True else None
+    if acting in ROLE_FIELDS and data.get(ROLE_FIELDS[acting]) == user.uid:
+        return acting
     if data.get("officerUid") == user.uid:
         return OFFICER
     if data.get("ownerUid") == user.uid:
@@ -101,7 +109,11 @@ async def create_application(
                 "city": body.city,
                 "yearsOperating": body.years_operating,
             },
-            "request": {"amount": body.amount, "tenorMonths": body.tenor_months},
+            "request": {
+                "amount": body.amount,
+                "tenorMonths": body.tenor_months,
+                "existingMonthlyDebt": body.existing_monthly_debt,
+            },
             "status": ApplicationStatus.DRAFT.value,
             "assessment": None,
             "consent": None,

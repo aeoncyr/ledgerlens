@@ -12,7 +12,9 @@ export default function OpenSignoff() {
 
   useEffect(() => {
     claimSignoff(code)
-      .then((applicationId) => navigate(`/app/${applicationId}`, { replace: true }))
+      // ?as=reviewer: on a demo file, where the same person is also the officer, it says that
+      // they are now looking as the supervisor. Elsewhere the file knows who the reviewer is.
+      .then((applicationId) => navigate(`/app/${applicationId}?as=reviewer`, { replace: true }))
       .catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)))
   }, [code, navigate])
 
