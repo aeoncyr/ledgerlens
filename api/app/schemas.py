@@ -190,11 +190,25 @@ class DecisionRequest(CamelModel):
         description="To approve: what must happen before the money is paid out. To ask for more "
         "evidence: the records asked for.",
     )
+    assessment_agreed: bool | None = Field(
+        default=None,
+        description="Whether the officer agrees with LedgerLens's assessment of the file. The "
+        "pilot dashboard counts how often they do.",
+    )
+    disagreement_reason: str | None = Field(
+        default=None, max_length=500, description="Why the officer disagrees, when they do"
+    )
 
     @model_validator(mode="after")
     def _offer_only_to_approve(self) -> DecisionRequest:
         if self.action is DecisionAction.APPROVE and self.offer is None:
             raise ValueError("Approving needs an offer: the amount, the months and the rate")
+        if self.assessment_agreed is False:
+            if len((self.disagreement_reason or "").strip()) < 5:
+                raise ValueError("Say why you disagree with LedgerLens's assessment")
+            self.disagreement_reason = self.disagreement_reason.strip()
+        else:
+            self.disagreement_reason = None
         if self.action is DecisionAction.DECLINE:
             self.conditions = []
         if self.action is not DecisionAction.APPROVE:
@@ -254,7 +268,11 @@ class Citation(CamelModel):
 
 
 class Finding(CamelModel):
-    kind: Literal["discrepancy", "low_confidence", "missing_evidence", "fraud_signal"]
+    # credit_history comes only from the SLIK check a lender records (``tools.slik``), never from
+    # the evidence or the verifier.
+    kind: Literal[
+        "discrepancy", "low_confidence", "missing_evidence", "fraud_signal", "credit_history"
+    ]
     severity: Literal["low", "medium", "high"]
     text: str
     citations: list[Citation] = Field(default_factory=list)

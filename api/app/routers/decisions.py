@@ -173,6 +173,21 @@ async def _finalise(
 # --- The officer recommends -----------------------------------------------------------------------
 
 
+async def _audit_agreement(
+    ref: Any, user: User, body: DecisionRequest, data: dict[str, Any]
+) -> None:
+    """Log whether the officer agrees with LedgerLens's assessment, when they said."""
+    if body.assessment_agreed is None:
+        return
+    await _audit(
+        ref,
+        user,
+        "assessment_agreed" if body.assessment_agreed else "assessment_disagreed",
+        reason=body.disagreement_reason,
+        assessment=data.get("assessment"),
+    )
+
+
 @router.post("/applications/{application_id}/decision", response_model=DecisionResponse)
 async def record_decision(
     application_id: str, body: DecisionRequest, user: CurrentUser, db: Db, gemini: Writer
@@ -204,6 +219,10 @@ async def record_decision(
         "conditions": conditions,
         "by": user.uid,
         "at": datetime.now(UTC),
+        # Whether the officer agrees with LedgerLens's outcome, kept with the outcome they judged.
+        "assessmentAgreed": body.assessment_agreed,
+        "disagreementReason": body.disagreement_reason,
+        "assessmentAtDecision": data.get("assessment"),
     }
 
     if body.action is DecisionAction.REQUEST_MORE:
@@ -211,6 +230,7 @@ async def record_decision(
         decision["state"] = "final"
         await ref.update({"status": ApplicationStatus.COLLECTING.value, "decision": decision})
         await _audit(ref, user, "decision_request_more", reason=body.reason, asked=len(conditions))
+        await _audit_agreement(ref, user, body, data)
         await _finalise(ref, application_id, data, decision, gemini, user, signed_off_by=None)
         return DecisionResponse(state="final")
 
@@ -243,6 +263,7 @@ async def record_decision(
         reason=body.reason,
         withinPolicy=offer["withinPolicy"] if offer else None,
     )
+    await _audit_agreement(ref, user, body, data)
     await events.emit(
         "decision.recommended",
         _payload(

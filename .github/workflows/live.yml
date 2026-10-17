@@ -23,7 +23,7 @@ jobs:
           echo "$body" | grep -q '"ok":true'
       - name: App routes
         run: |
-          for path in /owner /app /ai /samples/pak-hendra; do
+          for path in /owner /app /ai /trust /lenders /samples/pak-hendra; do
             curl --fail --silent --show-error --max-time 20 -o /dev/null "$SITE$path"
           done
       - name: Sample files open without the API

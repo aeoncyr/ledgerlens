@@ -8,6 +8,7 @@ a pilot lender, not industry standards.
 from __future__ import annotations
 
 import math
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -16,6 +17,11 @@ from app.tools.cashflow import CashFlowSummary
 
 
 class LenderPolicy(BaseModel):
+    lender_name: str | None = Field(
+        default=None,
+        description="Whose policy this is; None for LedgerLens's starting values, which a lender "
+        "replaces in Settings (``app.lender``)",
+    )
     max_installment_ratio: float = Field(
         default=0.30, description="Share of net monthly cash flow that may go to repayments"
     )
@@ -38,6 +44,9 @@ class LenderPolicy(BaseModel):
         default=4.0,
         description="The same limit for service trades (tailors, repair, laundry), whose costs "
         "are mostly labour rather than goods bought for resale",
+    )
+    max_tenor_months: int = Field(
+        default=60, description="The longest term the lender offers; a longer request is outside"
     )
 
 
@@ -71,6 +80,21 @@ class PolicyResult(BaseModel):
         "is above the policy's limit (see ``stress_drop_pct``)",
     )
     reasons: list[str]
+    # What was applied, so the credit file can say whose policy it is and show its terms. Files
+    # checked before these were stored, and the bundled samples, don't have them.
+    lender_name: str | None = None
+    max_installment_ratio: float | None = None
+    haircut: float | None = Field(default=None, description="The haircut used for this outcome")
+    annual_rate_pct: float | None = None
+    max_tenor_months: int | None = None
+    existing_monthly_debt: int | None = Field(
+        default=None, description="The other monthly instalments the limit subtracts"
+    )
+    debt_source: Literal["declared", "slik"] | None = Field(
+        default=None,
+        description="Whether those instalments are the application's own figure or the SLIK check "
+        "the lender recorded",
+    )
 
 
 def consistency_findings(
@@ -171,10 +195,15 @@ def assess(
     amount: int,
     tenor_months: int,
     existing_monthly_debt: int = 0,
+    debt_source: Literal["declared", "slik"] = "declared",
     policy: LenderPolicy | None = None,
 ) -> PolicyResult:
     policy = policy or LenderPolicy()
     tiers = {TIER_BY_TYPE[t] for t in evidence_types}
+    # A SLIK finding is about the owner's other loans, not about the evidence, so it never changes
+    # how well the evidence is verified; it is listed for the officer to weigh (``tools.slik``).
+    credit_history = [f for f in findings if f.kind == "credit_history" and not f.resolved]
+    findings = [f for f in findings if f.kind != "credit_history"]
     open_issues = [f for f in findings if not f.resolved and f.severity in ("medium", "high")]
     blocking = [f for f in open_issues if f.severity == "high" or f.kind == "fraud_signal"]
     has_figures = summary.revenue_high > 0
@@ -206,13 +235,24 @@ def assess(
         else None
     )
     requested = monthly_installment(amount, tenor_months, policy.monthly_rate)
-    within_policy = max_installment is not None and requested <= max_installment
+    term_ok = tenor_months <= policy.max_tenor_months
+    within_policy = max_installment is not None and requested <= max_installment and term_ok
     if max_installment is None:
         reasons.append("No instalment is suggested; the lender's normal process applies.")
-    elif within_policy:
-        reasons.append("The requested instalment fits within the lender's policy.")
-    else:
+    elif requested > max_installment:
         reasons.append("The requested instalment is above what the verified cash flow supports.")
+    elif term_ok:
+        reasons.append("The requested instalment fits within the lender's policy.")
+    if not term_ok:
+        reasons.append(
+            f"The requested term of {tenor_months} months is longer than the lender's maximum of "
+            f"{policy.max_tenor_months} months."
+        )
+    if credit_history:
+        reasons.append(
+            "The SLIK check the lender recorded needs the officer's attention; it does not change "
+            "how well the evidence is verified."
+        )
 
     return PolicyResult(
         assessment=assessment,
@@ -228,4 +268,11 @@ def assess(
             max_installment_ratio=policy.max_installment_ratio,
         ),
         reasons=reasons,
+        lender_name=policy.lender_name,
+        max_installment_ratio=policy.max_installment_ratio,
+        haircut=haircut,
+        annual_rate_pct=round(policy.monthly_rate * 12 * 100, 4),
+        max_tenor_months=policy.max_tenor_months,
+        existing_monthly_debt=existing_monthly_debt,
+        debt_source=debt_source,
     )

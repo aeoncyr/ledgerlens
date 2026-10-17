@@ -40,7 +40,7 @@ Db = Annotated[firestore.AsyncClient, Depends(get_firestore)]
 CurrentUser = Annotated[User, Depends(current_user)]
 
 SAMPLES = Path(__file__).resolve().parent.parent / "demo_samples"
-SUBCOLLECTIONS = ("evidence", "memo", "owner", "audit", "runs")
+SUBCOLLECTIONS = ("evidence", "memo", "owner", "audit", "runs", "lender")
 
 
 class DemoStoryRequest(CamelModel):

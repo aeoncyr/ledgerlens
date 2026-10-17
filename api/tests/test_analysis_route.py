@@ -212,7 +212,7 @@ def answered_file(client, ready_application, monkeypatch):
     client.post(f"/api/applications/{app_id}/analyze")
     asked = []
 
-    async def fake_judge(*, gemini, context, progress, answers=None, policy=None):
+    async def fake_judge(*, gemini, context, progress, answers=None, policy=None, slik=None):
         asked.append((context.round, answers))
         await progress("verifier", "1 finding(s), 1 explained by the owner", "done")
         explained = QUESTION.model_copy(update={"resolved": True, "answer": answers[0]["answer"]})
@@ -349,7 +349,7 @@ def test_rechecking_after_a_confirmation_does_not_use_a_question_round(
     app_id, evidence_id = disputed_file
     rounds = []
 
-    async def fake_judge(*, gemini, context, progress, answers=None, policy=None):
+    async def fake_judge(*, gemini, context, progress, answers=None, policy=None, slik=None):
         rounds.append(context.round)
         result = canned_result([], round_=context.round)
         result.extractions = {}

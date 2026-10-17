@@ -44,13 +44,36 @@
 }
 
 .decision-offer,
-.decision-conditions {
+.decision-conditions,
+.decision-agree {
   display: grid;
   gap: 12px;
 }
 
+/* Agree or disagree with LedgerLens's assessment, asked with every decision. */
+.decision .decision-agree {
+  padding: 14px 16px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.decision-agree .choice-row {
+  margin-top: 0;
+}
+
+.decision-agree .hint {
+  margin: 0;
+}
+
+.decision-agreement {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
 .decision-offer label,
-.decision-conditions label {
+.decision-conditions label,
+.decision-agree label:not(.choice) {
   display: grid;
   align-content: start;
   gap: 6px;

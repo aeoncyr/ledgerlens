@@ -384,7 +384,8 @@ export default function Landing() {
         <div className="container">
           <span>Built with Gemini, Firebase, Firestore and Cloud Run</span>
           <span>
-            Google Cloud AI Builder Cup 2026 · <Link to="/status">System status</Link>
+            Google Cloud AI Builder Cup 2026 · <Link to="/trust">Trust and data</Link> ·{' '}
+            <Link to="/status">System status</Link>
           </span>
         </div>
       </footer>

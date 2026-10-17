@@ -38,6 +38,7 @@ import {
 import DecisionCard, { WaitingCard } from './OwnerDecision.tsx'
 import DemoBar from '../../components/DemoBar.tsx'
 import DeleteFile from './DeleteFile.tsx'
+import FileActivity from './FileActivity.tsx'
 import OwnerShell from './OwnerShell.tsx'
 import RemindMe from './RemindMe.tsx'
 import VoiceRecorder from '../../components/VoiceRecorder.tsx'
@@ -181,7 +182,7 @@ export default function OwnerFile() {
         <div className="ow-banner" role="status">
           <TickIcon size={22} />
           <div>
-            <strong>{t.sharedBanner}</strong>
+            <strong>{app.lenderName ? `${t.sharedBanner}: ${app.lenderName}` : t.sharedBanner}</strong>
             <p>{t.sharedBannerText}</p>
           </div>
         </div>
@@ -282,6 +283,14 @@ export default function OwnerFile() {
         </div>
       )}
 
+      <FileActivity
+        id={id}
+        version={[app.status, app.officerUid, app.shareCode, app.consent?.given, decision?.state]
+          .map(String)
+          .join('|')}
+        lang={lang}
+        t={t}
+      />
       <DeleteFile id={id} blocked={deleteBlocked} t={t} />
     </OwnerShell>
   )
@@ -356,6 +365,11 @@ function ConsentCard({
           </li>
         ))}
       </ul>
+      <p className="ow-fine ow-consent-more">
+        <Link to="/trust" target="_blank" rel="noopener">
+          {t.consentMore}
+        </Link>
+      </p>
       <button className="ow-button ow-button-wide" onClick={onAgree} disabled={busy}>
         {busy ? t.consentSaving : t.consentButton}
       </button>

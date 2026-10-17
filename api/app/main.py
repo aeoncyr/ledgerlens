@@ -5,7 +5,22 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import integrations
 from app.config import get_settings
-from app.routers import analysis, applications, decisions, demo, exports, health, owner, readings
+from app.routers import (
+    activity,
+    analysis,
+    applications,
+    decisions,
+    demo,
+    exports,
+    health,
+    invites,
+    lender,
+    owner,
+    pilot,
+    pilot_requests,
+    policy,
+    readings,
+)
 
 
 def create_app() -> FastAPI:
@@ -30,7 +45,13 @@ def create_app() -> FastAPI:
     app.include_router(readings.router)
     app.include_router(exports.router)
     app.include_router(demo.router)
+    app.include_router(pilot_requests.router)
+    app.include_router(pilot.router)
+    app.include_router(activity.router)
     app.include_router(integrations.router)
+    app.include_router(lender.router)
+    app.include_router(policy.router)
+    app.include_router(invites.router)
     integrations.register(app)
     return app
 

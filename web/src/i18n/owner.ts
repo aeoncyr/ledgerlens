@@ -1,17 +1,27 @@
-// Words for the business owner's pages, in English (the default) and Bahasa Indonesia. The choice
-// is remembered in this browser and shared by every owner page through a tiny store.
+// Words for the business owner's pages, in English and Bahasa Indonesia. The choice is remembered in
+// this browser and shared by every owner page through a tiny store; until one is made, the
+// browser's language decides (see readStored).
 import { useSyncExternalStore } from 'react'
 
 export type Lang = 'en' | 'id'
 
 const STORAGE_KEY = 'ledgerlens-owner-lang'
 
+// A choice made in this browser wins. Before one is made, a phone or browser set to Indonesian
+// opens the owner pages in Bahasa Indonesia, and every other one in English.
 function readStored(): Lang {
   try {
-    return localStorage.getItem(STORAGE_KEY) === 'id' ? 'id' : 'en'
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored === 'id' || stored === 'en') return stored
   } catch {
-    return 'en'
+    // Storage can be blocked (private windows); fall back to the browser's language.
   }
+  return prefersBahasa(typeof navigator === 'undefined' ? '' : navigator.language) ? 'id' : 'en'
+}
+
+/** True for "id" and "id-ID", the languages an Indonesian phone reports. */
+export function prefersBahasa(language: string | undefined): boolean {
+  return /^id(-|$)/i.test(language ?? '')
 }
 
 let current: Lang = readStored()
@@ -135,6 +145,7 @@ const EN = {
   consentDecide:
     'The check helps a lender understand your business; it does not decide. A person at the lender always makes the decision.',
   consentWithdraw: 'You can stop sharing or withdraw your agreement at any time.',
+  consentMore: 'How LedgerLens protects your data',
   consentButton: 'I agree, let’s start',
   consentNotNow: 'Not now',
   consentSaving: 'Saving…',
@@ -289,6 +300,36 @@ const EN = {
   stopYes: 'Yes, stop sharing',
   stopNo: 'Keep sharing',
   stopping: 'Stopping…',
+
+  // Who has seen my file: the owner's timeline (api/app/routers/activity.py)
+  activityTitle: 'Who has seen your file',
+  activityLead:
+    'Each time a lender opens your file or decides on it, it shows here. The lender’s staff names and their notes are not shown here.',
+  activityEmpty: 'Nothing has happened to your file yet.',
+  activityFailed: 'We couldn’t load this list just now. It will try again when the page reloads.',
+  activityTimes: (n: number) => `${n} times`,
+  activityEvents: {
+    started: 'You started this file',
+    started_by_lender: 'A loan officer started this file',
+    invited: 'A lender invited you to send your records',
+    invite_opened: 'You opened the lender’s invitation',
+    consent_given: 'You agreed to the check',
+    consent_withdrawn: 'You withdrew your agreement',
+    checked: 'Your records were checked',
+    checked_again: 'Your file was checked again with your answers',
+    shared: 'You made a share link',
+    opened_by_lender: 'A lender opened your file',
+    share_stopped: 'You stopped sharing; the lender can no longer open your file',
+    decision_recommended: 'A loan officer recommended a decision',
+    signoff_opened: 'A second person at the lender began checking the decision',
+    decision_reconsidered: 'The lender is looking at the decision again',
+    signed_off: 'A second person at the lender signed off the decision',
+    sent_to_you: 'The lender’s decision was sent to you',
+    offer_accepted: 'You accepted the offer',
+    offer_declined: 'You declined the offer',
+    condition_met: 'A condition was marked as met',
+    records_sent: 'You sent the records the lender asked for',
+  } as Record<string, string>,
   shareNeedsCheck: 'Check your records first, then you can share the file.',
 
   // The lender's decision
@@ -483,6 +524,7 @@ const ID: OwnerStrings = {
   consentDecide:
     'Pemeriksaan ini membantu pemberi pinjaman memahami usaha Anda; bukan yang memutuskan. Keputusan selalu diambil oleh petugas di lembaga pemberi pinjaman.',
   consentWithdraw: 'Anda boleh berhenti berbagi atau menarik persetujuan kapan saja.',
+  consentMore: 'Cara LedgerLens melindungi data Anda (dalam bahasa Inggris)',
   consentButton: 'Saya setuju, mulai',
   consentNotNow: 'Nanti saja',
   consentSaving: 'Menyimpan…',
@@ -633,6 +675,35 @@ const ID: OwnerStrings = {
   stopYes: 'Ya, berhenti berbagi',
   stopNo: 'Tetap bagikan',
   stopping: 'Menghentikan…',
+
+  activityTitle: 'Siapa yang sudah melihat berkas Anda',
+  activityLead:
+    'Setiap kali pemberi pinjaman membuka atau memutuskan berkas Anda, hal itu tampil di sini. Nama petugas dan catatan mereka tidak ditampilkan di sini.',
+  activityEmpty: 'Belum ada yang terjadi pada berkas Anda.',
+  activityFailed: 'Daftar ini belum bisa dimuat. Akan dicoba lagi saat halaman dimuat ulang.',
+  activityTimes: (n: number) => `${n} kali`,
+  activityEvents: {
+    started: 'Anda memulai berkas ini',
+    started_by_lender: 'Petugas kredit memulai berkas ini',
+    invited: 'Pemberi pinjaman mengundang Anda mengirim catatan',
+    invite_opened: 'Anda membuka undangan pemberi pinjaman',
+    consent_given: 'Anda menyetujui pemeriksaan',
+    consent_withdrawn: 'Anda menarik persetujuan',
+    checked: 'Catatan Anda sudah diperiksa',
+    checked_again: 'Berkas Anda diperiksa ulang dengan jawaban Anda',
+    shared: 'Anda membuat tautan berbagi',
+    opened_by_lender: 'Pemberi pinjaman membuka berkas Anda',
+    share_stopped: 'Anda berhenti berbagi; pemberi pinjaman tidak bisa lagi membuka berkas Anda',
+    decision_recommended: 'Petugas kredit mengusulkan keputusan',
+    signoff_opened: 'Orang kedua di pemberi pinjaman mulai memeriksa keputusan',
+    decision_reconsidered: 'Pemberi pinjaman meninjau ulang keputusan',
+    signed_off: 'Orang kedua di pemberi pinjaman mengesahkan keputusan',
+    sent_to_you: 'Keputusan pemberi pinjaman dikirim kepada Anda',
+    offer_accepted: 'Anda menerima tawaran',
+    offer_declined: 'Anda menolak tawaran',
+    condition_met: 'Satu syarat ditandai sudah dipenuhi',
+    records_sent: 'Anda mengirim catatan yang diminta',
+  },
   shareNeedsCheck: 'Periksa catatan Anda dulu, lalu berkas bisa dibagikan.',
 
   waitingTitle: 'Pemberi pinjaman sedang memutuskan',

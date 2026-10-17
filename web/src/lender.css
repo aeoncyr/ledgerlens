@@ -1,0 +1,142 @@
+/* The lender's settings, invites and checks on a file (Settings, LenderChecks). */
+
+.settings-form {
+  margin-bottom: 36px;
+}
+
+.settings-form label,
+.slik-form label {
+  align-content: start;
+  min-width: 0;
+}
+
+.settings-form select,
+.slik-form select {
+  width: 100%;
+  min-width: 0;
+}
+
+.settings-form h2 + .fine {
+  margin: -8px 0 0;
+}
+
+.settings-product {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.settings-product legend {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.unit-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+}
+
+.unit-input input {
+  width: 100%;
+  min-width: 0;
+}
+
+.policy-example {
+  padding: 12px 14px;
+  border-left: 4px solid var(--brand);
+  background: var(--paper);
+}
+
+.policy-example p {
+  margin: 0;
+  max-width: 75ch;
+}
+
+.lender-checks {
+  max-width: 900px;
+  margin-bottom: 28px;
+  padding: 18px 22px;
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--brand);
+  background: var(--paper-raised);
+}
+
+.lender-checks h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.lender-checks h3 {
+  margin: 18px 0 6px;
+  font-size: 18px;
+}
+
+.lender-checks p {
+  max-width: 75ch;
+  margin: 0 0 10px;
+}
+
+.slik-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px 16px;
+  margin: 0 0 12px;
+}
+
+.slik-figures div {
+  display: grid;
+  gap: 2px;
+}
+
+.slik-figures dt {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.slik-figures dd {
+  margin: 0;
+}
+
+.slik-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.slik-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.memo-note {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px solid #e3d3a6;
+  background: #fbf5e4;
+}
+
+.policy-applied {
+  margin: 8px 0 0;
+}
+
+/* The owner's invite page: what agreeing means, ticked. */
+.ow-invite-list {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.ow-invite-list li {
+  position: relative;
+  padding-left: 24px;
+}
+
+.ow-invite-list li::before {
+  color: var(--brand);
+}

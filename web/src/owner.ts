@@ -39,6 +39,8 @@ export type OwnerApplication = Omit<Application, 'officerUid' | 'consent'> & {
   consent: { given: boolean; version?: string; by?: 'owner' | 'officer' } | null
   shareCode?: string | null
   sharedAt?: Timestamp | null
+  // The name of the lender holding the file, once one does (set by the API).
+  lenderName?: string | null
 }
 
 export type OwnerEvidence = StoredEvidence & {
@@ -107,6 +109,15 @@ export async function withdrawShare(id: string): Promise<void> {
 }
 
 export const sharePath = (code: string) => `/app/shared/${code}`
+
+// What happened to the owner's file, from the lender's audit log through the API's allowlist
+// (api/app/routers/activity.py): fixed event keys the owner pages word, never names or notes.
+export type ActivityEvent = { event: string; at: string | null; count: number }
+
+export async function getActivity(id: string): Promise<ActivityEvent[]> {
+  const result = await apiFetch<{ events: ActivityEvent[] }>(`/api/applications/${id}/activity`)
+  return result.events
+}
 
 /** Delete the file for good: records, summary, decision, share link and stored photos. */
 export async function deleteFile(id: string): Promise<void> {

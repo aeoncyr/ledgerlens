@@ -191,6 +191,8 @@ def to_csv(f: dict[str, Any]) -> str:
         "Findings": len(f["findings"]),
         "Decision": (decision.get("action") or "").replace("_", " "),
         "Decision reason": decision.get("reason"),
+        "Officer agrees with LedgerLens": decision.get("assessmentAgreed"),
+        "Why the officer disagrees": decision.get("disagreementReason"),
         "Offer amount (Rp)": offer.get("amountRp"),
         "Offer tenor (months)": offer.get("tenorMonths"),
         "Offer instalment (Rp)": offer.get("instalmentRp"),
