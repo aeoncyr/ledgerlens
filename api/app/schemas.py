@@ -268,7 +268,11 @@ class Citation(CamelModel):
 
 
 class Finding(CamelModel):
-    kind: Literal["discrepancy", "low_confidence", "missing_evidence", "fraud_signal"]
+    # credit_history comes only from the SLIK check a lender records (``tools.slik``), never from
+    # the evidence or the verifier.
+    kind: Literal[
+        "discrepancy", "low_confidence", "missing_evidence", "fraud_signal", "credit_history"
+    ]
     severity: Literal["low", "medium", "high"]
     text: str
     citations: list[Citation] = Field(default_factory=list)

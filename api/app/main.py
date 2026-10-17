@@ -13,9 +13,12 @@ from app.routers import (
     demo,
     exports,
     health,
+    invites,
+    lender,
     owner,
     pilot,
     pilot_requests,
+    policy,
     readings,
 )
 
@@ -46,6 +49,9 @@ def create_app() -> FastAPI:
     app.include_router(pilot.router)
     app.include_router(activity.router)
     app.include_router(integrations.router)
+    app.include_router(lender.router)
+    app.include_router(policy.router)
+    app.include_router(invites.router)
     integrations.register(app)
     return app
 

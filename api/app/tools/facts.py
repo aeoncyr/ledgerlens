@@ -63,6 +63,10 @@ class FactTable:
                 key=key, label=label, kind=kind, value=value, sources=sources or []
             )
 
+    def discard(self, key: str) -> None:
+        """Forget a figure that no longer has a value, e.g. when a policy is applied again."""
+        self._facts.pop(key, None)
+
     def __contains__(self, key: str) -> bool:
         return key in self._facts
 

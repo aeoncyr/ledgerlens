@@ -33,6 +33,7 @@ from app.auth import User, current_user
 from app.config import get_settings
 from app.gemini import Gemini, GeminiQuotaExhausted, get_gemini
 from app.routers.applications import EITHER, OFFICER, _audit, _owned_application, role_of
+from app.routers.lender import lender_policy, slik_of
 from app.schemas import (
     AnalyzeResponse,
     ApplicationStatus,
@@ -146,6 +147,10 @@ async def analyze(
 
     settings = get_settings()
     await claim_run(db, user.uid, settings)
+    # The policy of the lender holding the file, whoever runs the check; the starting values on a
+    # file no lender holds yet.
+    policy = await lender_policy(db, data.get("officerUid"))
+    slik = await slik_of(ref)
     return await _run(
         ref,
         user,
@@ -155,6 +160,8 @@ async def analyze(
             application=_application(data),
             items=items,
             progress=progress,
+            policy=policy,
+            slik=slik,
             max_parallel=settings.max_parallel_calls,
             double_read=settings.ledger_double_read,
         ),
@@ -341,10 +348,19 @@ async def reverify(
             "pending_confirmations": False,
         }
     )
+    policy = await lender_policy(db, data.get("officerUid"))
+    slik = await slik_of(ref)
     return await _run(
         ref,
         user,
-        lambda progress: judge(gemini=gemini, context=context, progress=progress, answers=answers),
+        lambda progress: judge(
+            gemini=gemini,
+            context=context,
+            progress=progress,
+            answers=answers,
+            policy=policy,
+            slik=slik,
+        ),
         failed_status=ApplicationStatus(data.get("status", "needs_follow_up")),
         action="reverified_with_answers",
     )

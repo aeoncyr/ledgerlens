@@ -46,6 +46,7 @@ from app.tools.dates import month_of
 from app.tools.facts import Fact, FactTable
 from app.tools.policy import LenderPolicy, PolicyResult, assess, consistency_findings
 from app.tools.policy import monthly_installment as installment_for
+from app.tools.slik import SlikCheck, slik_findings
 
 log = logging.getLogger(__name__)
 
@@ -785,6 +786,7 @@ async def run_pipeline(
     items: list[EvidenceItem],
     progress: Progress,
     policy: LenderPolicy | None = None,
+    slik: SlikCheck | None = None,
     max_parallel: int = MAX_PARALLEL_READS,
     double_read: bool = True,
 ) -> AnalysisResult:
@@ -907,7 +909,7 @@ async def run_pipeline(
         disputes=disputes,
         consistency_ids=consistency_ids,
     )
-    return await judge(gemini=gemini, context=context, progress=progress, policy=policy)
+    return await judge(gemini=gemini, context=context, progress=progress, policy=policy, slik=slik)
 
 
 async def judge(
@@ -917,11 +919,13 @@ async def judge(
     progress: Progress,
     policy: LenderPolicy | None = None,
     answers: list[dict[str, str]] | None = None,
+    slik: SlikCheck | None = None,
 ) -> AnalysisResult:
     """Cross-check, apply the policy and write the memo, from readings already made.
 
     ``answers`` are the owner's replies to earlier follow-up questions; the verifier weighs them,
-    and code decides which findings an answer may resolve.
+    and code decides which findings an answer may resolve. ``slik`` is the SLIK check the lender
+    recorded, if any: its instalments replace the declared ones in the policy.
     """
     policy = policy or LenderPolicy()
     application = Application(**context.application)
@@ -973,40 +977,32 @@ async def judge(
         detail={"model": verifier_model},
     )
 
-    await progress("policy", "Applying the lender's policy", "running")
+    await progress("policy", f"Applying {_whose(policy)} policy", "running")
+    if slik:
+        # Listed last, so re-applying a new check later leaves the earlier findings' places alone.
+        found = slik_findings(slik, application.existing_monthly_debt, facts)
+        findings += found
+        quoted |= number_tokens([f.text for f in found])
+        case_file["slik_check"] = {
+            "recorded_by": "the lender (LedgerLens does not query SLIK)",
+            "checked_on": slik.checked_on.isoformat(),
+            "active_facilities": "[[slik_active_facilities]]",
+            "monthly_instalments": "[[slik_monthly_instalments]]",
+            "worst_collectibility": slik.worst_collectibility,
+        }
     result = assess(
         summary=summary,
         findings=findings,
         evidence_types=present,
         amount=application.amount,
         tenor_months=application.tenor_months,
-        existing_monthly_debt=application.existing_monthly_debt,
+        existing_monthly_debt=slik.monthly_instalments
+        if slik
+        else application.existing_monthly_debt,
+        debt_source="slik" if slik else "declared",
         policy=policy,
     )
-    facts.add(
-        "capacity_basis",
-        "Net monthly cash flow after the policy's haircut",
-        "rupiah",
-        result.capacity_basis,
-    )
-    facts.add(
-        "max_installment",
-        "Largest monthly instalment the policy allows",
-        "rupiah",
-        result.max_installment,
-    )
-    # Only a request within the policy has room to stress; above it, the figure would say nothing.
-    stress_tested = result.within_policy and result.stress_drop_pct is not None
-    facts.add(
-        "stress_drop_pct",
-        "Fall in sales the requested instalment can take and stay within policy (code's stress "
-        "test: costs move with sales)",
-        "percent",
-        result.stress_drop_pct / 100 if stress_tested else None,
-    )
-    facts.add(
-        "evidence_strength", "Evidence strength, out of 100", "count", result.evidence_strength
-    )
+    stress_tested = add_policy_facts(facts, result)
     outcome_label = result.assessment.value.replace("_", " ")
     await progress("policy", f"Outcome: {outcome_label}", "done")
 
@@ -1029,6 +1025,7 @@ async def judge(
                 "requested_installment",
                 # Files checked before these figures existed don't have them.
                 *(["existing_monthly_debt"] if "existing_monthly_debt" in facts else []),
+                *(["slik_monthly_instalments"] if slik else []),
                 *(["stress_drop_pct"] if stress_tested else []),
             ],
         },
@@ -1056,6 +1053,40 @@ async def judge(
         round=context.round,
         context=context,
     )
+
+
+def _whose(policy: LenderPolicy) -> str:
+    return f"{policy.lender_name}'s" if policy.lender_name else "the lender's"
+
+
+def add_policy_facts(facts: FactTable, result: PolicyResult) -> bool:
+    """Name the policy's figures for the writers; returns whether the request was stress-tested."""
+    for key, label, value in (
+        (
+            "capacity_basis",
+            "Net monthly cash flow after the policy's haircut",
+            result.capacity_basis,
+        ),
+        ("max_installment", "Largest monthly instalment the policy allows", result.max_installment),
+    ):
+        facts.add(key, label, "rupiah", value)
+        if value is None:
+            facts.discard(key)
+    # Only a request within the policy has room to stress; above it, the figure would say nothing.
+    stress_tested = result.within_policy and result.stress_drop_pct is not None
+    facts.add(
+        "stress_drop_pct",
+        "Fall in sales the requested instalment can take and stay within policy (code's stress "
+        "test: costs move with sales)",
+        "percent",
+        result.stress_drop_pct / 100 if stress_tested else None,
+    )
+    if not stress_tested:
+        facts.discard("stress_drop_pct")
+    facts.add(
+        "evidence_strength", "Evidence strength, out of 100", "count", result.evidence_strength
+    )
+    return stress_tested
 
 
 def _fact_out(fact: Fact) -> dict[str, Any]:

@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import logging
 import secrets
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from google.cloud import firestore
@@ -29,6 +29,8 @@ from app.routers.applications import (
     _owned_application,
     role_of,
 )
+from app.routers.lender import lender_profile
+from app.routers.policy import apply_if_open
 from app.schemas import (
     ApplicationStatus,
     ClaimResponse,
@@ -64,13 +66,10 @@ def new_share_code() -> str:
     return "".join(secrets.choice(CODE_ALPHABET) for _ in range(CODE_LENGTH))
 
 
-@router.post(
-    "/owner/files", response_model=CreateApplicationResponse, status_code=status.HTTP_201_CREATED
-)
-async def create_owner_file(
-    body: CreateApplicationRequest, user: CurrentUser, db: Db
-) -> CreateApplicationResponse:
-    """An owner starts their own file. No lender sees it until the owner shares it."""
+async def new_owner_file(
+    db: firestore.AsyncClient, body: CreateApplicationRequest, user: User, **extra: Any
+):
+    """Write a new file the owner holds, and return its reference."""
     ref = db.collection("applications").document()
     await ref.set(
         {
@@ -94,9 +93,32 @@ async def create_owner_file(
             "assessment": None,
             "consent": None,
             "createdAt": firestore.SERVER_TIMESTAMP,
+            **extra,
         }
     )
     await _audit(ref, user, "created_by_owner")
+    return ref
+
+
+async def create_share_code(db: firestore.AsyncClient, ref: Any, owner_uid: str) -> str:
+    code = new_share_code()
+    await (
+        db.collection("shares")
+        .document(code)
+        .set({"applicationId": ref.id, "ownerUid": owner_uid, "at": firestore.SERVER_TIMESTAMP})
+    )
+    await ref.update({"shareCode": code})
+    return code
+
+
+@router.post(
+    "/owner/files", response_model=CreateApplicationResponse, status_code=status.HTTP_201_CREATED
+)
+async def create_owner_file(
+    body: CreateApplicationRequest, user: CurrentUser, db: Db
+) -> CreateApplicationResponse:
+    """An owner starts their own file. No lender sees it until the owner shares it."""
+    ref = await new_owner_file(db, body, user)
     return CreateApplicationResponse(application_id=ref.id)
 
 
@@ -106,19 +128,7 @@ async def share(application_id: str, user: CurrentUser, db: Db) -> ShareResponse
     ref, data = await _owned_application(db, application_id, user, (OWNER,))
     code = data.get("shareCode")
     if not code:
-        code = new_share_code()
-        await (
-            db.collection("shares")
-            .document(code)
-            .set(
-                {
-                    "applicationId": application_id,
-                    "ownerUid": user.uid,
-                    "at": firestore.SERVER_TIMESTAMP,
-                }
-            )
-        )
-        await ref.update({"shareCode": code})
+        code = await create_share_code(db, ref, user.uid)
         await _audit(ref, user, "share_link_created")
     return ShareResponse(share_code=code, path=f"/app/shared/{code}")
 
@@ -131,7 +141,15 @@ async def withdraw_share(application_id: str, user: CurrentUser, db: Db) -> None
     if code:
         await db.collection("shares").document(code).delete()
     had_lender = data.get("officerUid")
-    await ref.update({"shareCode": None, "officerUid": None, "lenderId": None, "sharedAt": None})
+    await ref.update(
+        {
+            "shareCode": None,
+            "officerUid": None,
+            "lenderId": None,
+            "lenderName": None,
+            "sharedAt": None,
+        }
+    )
     await _audit(ref, user, "share_withdrawn", hadLender=bool(had_lender))
 
 
@@ -161,14 +179,20 @@ async def open_shared_file(code: str, user: CurrentUser, db: Db) -> ClaimRespons
             "at a time.",
         )
     if not holder:
+        profile = await lender_profile(db, user.uid)
         await ref.update(
             {
                 "officerUid": user.uid,
                 "lenderId": DEMO_LENDER_ID,
+                # Shown to the owner, so they know who holds their file.
+                "lenderName": (profile or {}).get("name") or None,
                 "sharedAt": firestore.SERVER_TIMESTAMP,
             }
         )
         await _audit(ref, user, "opened_by_lender", role=OFFICER)
+        # The file was checked with the starting policy, or another lender's: apply this lender's
+        # (Python only), unless a decision already rests on it.
+        await apply_if_open(db, ref, {**data, "officerUid": user.uid}, user, trigger="opened")
     return ClaimResponse(application_id=application_id)
 
 
