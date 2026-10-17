@@ -353,7 +353,7 @@ function DecisionForm({
                 aria-describedby="decision-disagree-hint"
               />
               <span className="hint" id="decision-disagree-hint">
-                It stays on your lender’s side and is not in the owner’s letter. The pilot
+                It is not shown in the owner’s app or letter. The pilot
                 dashboard collects these reasons, so your team can see where officers and the
                 checks part ways.
               </span>
