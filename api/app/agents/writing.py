@@ -14,7 +14,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from app.gemini import Gemini
+from app.gemini import Gemini, Role
 from app.tools.facts import FactTable, amount_phrases, stray_amounts
 
 log = logging.getLogger(__name__)
@@ -89,10 +89,11 @@ async def generate_checked[T: BaseModel](
     system: str,
     facts: FactTable,
     quoted: set[str],
+    role: Role = "write",
 ) -> tuple[T, str, list[str]]:
     """Generate, check the figures, retry once with feedback. Returns output, model, problems."""
     output, model = await gemini.generate(
-        contents=contents, schema=schema, system=system, role="write"
+        contents=contents, schema=schema, system=system, role=role
     )
     issues = problems(output, facts, quoted)
     if not issues:
@@ -104,9 +105,7 @@ async def generate_checked[T: BaseModel](
         + "\n- ".join(issues)
         + "\nAnswer again, using [[key]] for every figure.",
     ]
-    output, model = await gemini.generate(
-        contents=retry, schema=schema, system=system, role="write"
-    )
+    output, model = await gemini.generate(contents=retry, schema=schema, system=system, role=role)
     issues = problems(output, facts, quoted)
     if issues:
         log.warning("%s still broke the figure rules; scrubbing: %s", schema.__name__, issues)

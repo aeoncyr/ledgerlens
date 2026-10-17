@@ -54,6 +54,7 @@ class ApplicationStatus(StrEnum):
     NEEDS_FOLLOW_UP = "needs_follow_up"
     READY = "ready"
     IN_REVIEW = "in_review"
+    AWAITING_SIGNOFF = "awaiting_signoff"
     DECIDED = "decided"
 
 
@@ -157,9 +158,64 @@ class ConfirmReadingResponse(CamelModel):
     pending: int = Field(description="Disputed lines on this file still to confirm")
 
 
+class OfferIn(CamelModel):
+    """The loan the officer offers. Code computes the instalment and the schedule from it."""
+
+    amount_rp: int = Field(gt=0, le=10_000_000_000)
+    tenor_months: int = Field(ge=1, le=60)
+    annual_rate_pct: float = Field(ge=0, le=60, description="Annual interest rate, in percent")
+
+
+class ConditionIn(CamelModel):
+    text: str = Field(min_length=5, max_length=200)
+    evidence_type: EvidenceType | None = Field(
+        default=None, description="The kind of record that meets it, if a record does"
+    )
+
+
 class DecisionRequest(CamelModel):
     action: DecisionAction
     reason: str = Field(min_length=5, description="Every decision needs a written reason")
+    offer: OfferIn | None = Field(default=None, description="Required to approve")
+    conditions: list[ConditionIn] = Field(
+        default_factory=list,
+        max_length=10,
+        description="To approve: what must happen before the money is paid out. To ask for more "
+        "evidence: the records asked for.",
+    )
+
+    @model_validator(mode="after")
+    def _offer_only_to_approve(self) -> DecisionRequest:
+        if self.action is DecisionAction.APPROVE and self.offer is None:
+            raise ValueError("Approving needs an offer: the amount, the months and the rate")
+        if self.action is DecisionAction.DECLINE:
+            self.conditions = []
+        if self.action is not DecisionAction.APPROVE:
+            self.offer = None
+        return self
+
+
+class DecisionResponse(CamelModel):
+    state: Literal["recommended", "final"]
+    signoff_code: str | None = Field(
+        default=None, description="Given to a second person, who signs off the recommendation"
+    )
+    path: str | None = Field(default=None, description="Where they open it: /app/signoff/CODE")
+
+
+class SignoffRequest(CamelModel):
+    approve: bool
+    note: str = Field(default="", max_length=500)
+
+    @model_validator(mode="after")
+    def _a_return_says_why(self) -> SignoffRequest:
+        if not self.approve and len(self.note.strip()) < 5:
+            raise ValueError("Say why you are sending it back, so the officer knows what to change")
+        return self
+
+
+class OfferAnswerRequest(CamelModel):
+    accept: bool
 
 
 class ShareRequest(CamelModel):

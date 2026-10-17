@@ -73,6 +73,21 @@ def _application(data: dict[str, Any]) -> Application:
     )
 
 
+def _check_not_settled(data: dict[str, Any]) -> None:
+    """A file waiting for sign-off, or one with a loan on offer, is not checked again: the
+    decision rests on the file as it was. After a decline the owner may build the file up again."""
+    status_now = data.get("status")
+    offered = (
+        status_now == ApplicationStatus.DECIDED.value
+        and (data.get("decision") or {}).get("action") == "approve"
+    )
+    if status_now == ApplicationStatus.AWAITING_SIGNOFF.value or offered:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "The lender's decision rests on the file as it is, so it can't be checked again now.",
+        )
+
+
 def _is_running(data: dict[str, Any]) -> bool:
     started = data.get("analysisStartedAt")
     return (
@@ -93,6 +108,7 @@ async def analyze(
     ref, data = await _owned_application(db, application_id, user, EITHER)
     if not (data.get("consent") or {}).get("given"):
         raise HTTPException(status.HTTP_409_CONFLICT, "Record the owner's consent first")
+    _check_not_settled(data)
     if _is_running(data):
         raise HTTPException(
             status.HTTP_409_CONFLICT,
@@ -268,6 +284,7 @@ async def reverify(
 ) -> AnalyzeResponse:
     """Check the file again with the owner's answers, without reading the evidence again."""
     ref, data = await _owned_application(db, application_id, user, EITHER)
+    _check_not_settled(data)
     if _is_running(data):
         raise HTTPException(
             status.HTTP_409_CONFLICT,

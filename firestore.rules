@@ -22,25 +22,32 @@ service cloud.firestore {
       return signedIn() && application(appId).get('ownerUid', null) == request.auth.uid;
     }
 
+    // The second person at the lender who signs off a recommendation; reads like the officer.
+    function isReviewer(appId) {
+      return signedIn() && application(appId).get('reviewerUid', null) == request.auth.uid;
+    }
+
     match /applications/{appId} {
       allow read: if signedIn()
         && (resource.data.get('officerUid', null) == request.auth.uid
-          || resource.data.get('ownerUid', null) == request.auth.uid);
+          || resource.data.get('ownerUid', null) == request.auth.uid
+          || resource.data.get('reviewerUid', null) == request.auth.uid);
 
-      // The owner sees their evidence, the progress of a check, and the summary written for them.
+      // The owner sees their evidence, the progress of a check, the summary written for them and
+      // the lender's final decision (owner/decision).
       match /evidence/{doc} {
-        allow read: if isOfficer(appId) || isOwner(appId);
+        allow read: if isOfficer(appId) || isOwner(appId) || isReviewer(appId);
       }
       match /runs/{doc} {
-        allow read: if isOfficer(appId) || isOwner(appId);
+        allow read: if isOfficer(appId) || isOwner(appId) || isReviewer(appId);
       }
       match /owner/{doc} {
-        allow read: if isOfficer(appId) || isOwner(appId);
+        allow read: if isOfficer(appId) || isOwner(appId) || isReviewer(appId);
       }
 
       // The credit memo, findings and audit log are the lender's.
       match /{child=**} {
-        allow read: if isOfficer(appId);
+        allow read: if isOfficer(appId) || isReviewer(appId);
       }
     }
 

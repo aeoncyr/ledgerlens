@@ -3938,3 +3938,304 @@ textarea:focus {
     justify-content: center;
   }
 }
+
+/* Hand-offs: the integrations page and the credit file's export bar */
+.handoff {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  align-items: center;
+  margin: -8px 0 24px;
+}
+
+.handoff .error {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.handoff-link {
+  font-size: 14px;
+}
+
+.integration {
+  max-width: 900px;
+  margin-bottom: 36px;
+}
+
+.integration h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.integration > p,
+.setup-generic p {
+  max-width: 75ch;
+}
+
+.integration .choice-row {
+  margin-bottom: 20px;
+}
+
+.setup-steps {
+  display: grid;
+  gap: 18px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+  counter-reset: setup;
+}
+
+.setup-steps li {
+  position: relative;
+  padding: 16px 20px 16px 64px;
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+  counter-increment: setup;
+}
+
+.setup-steps li::before {
+  content: counter(setup);
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-weight: 600;
+}
+
+.setup-steps h3 {
+  margin: 2px 0 6px;
+  font-size: 19px;
+}
+
+.setup-steps p {
+  max-width: 75ch;
+  margin: 0;
+}
+
+.code-block {
+  position: relative;
+  margin-top: 12px;
+}
+
+.code-block .button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--paper-raised);
+}
+
+.code-block pre,
+.code-sample {
+  max-height: 340px;
+  margin: 0;
+  padding: 14px 16px;
+  overflow: auto;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.code-block pre {
+  padding-top: 52px;
+}
+
+.webhook-form {
+  display: grid;
+  gap: 12px;
+  padding: 20px 22px;
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--brand);
+  background: var(--paper-raised);
+}
+
+.webhook-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.webhook-form .fine {
+  margin: 0;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.notice {
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid #b7d3c2;
+  background: #edf6f0;
+  color: var(--verified);
+}
+
+.deliveries {
+  min-width: 480px;
+  font-size: 14px;
+}
+
+@media (max-width: 560px) {
+  .setup-steps li {
+    padding: 56px 16px 16px;
+  }
+}
+
+.print-only {
+  display: none;
+}
+
+/* Printing the credit file gives a clean memo: no navigation, buttons or open questions. */
+@media print {
+  @page {
+    margin: 16mm 14mm;
+  }
+
+  body {
+    background: #ffffff;
+    color: #000000;
+    font-size: 10.5pt;
+  }
+
+  .masthead,
+  .appbar,
+  .officer-steps,
+  .prototype-note,
+  .crumbs,
+  .page-title,
+  .page-actions,
+  .handoff,
+  .follow-up,
+  .answer-box,
+  form,
+  dialog,
+  .evidence-list img,
+  .evidence-list .audio-tile,
+  [data-handoff],
+  button:not(.cite) {
+    display: none !important;
+  }
+
+  /* The evidence list prints as plain labels, and citations as plain references. */
+  .evidence-list button {
+    display: inline !important;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  .evidence-list {
+    display: block;
+  }
+
+  .evidence-list li {
+    display: inline;
+  }
+
+  .evidence-list li + li::before {
+    content: '; ';
+  }
+
+  .evidence-list span {
+    display: inline;
+    padding: 0;
+  }
+
+  .cite {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #333333;
+    font-size: 8.5pt;
+  }
+
+  .cite::before {
+    content: '[';
+  }
+
+  .cite::after {
+    content: ']';
+  }
+
+  .print-only {
+    display: block;
+  }
+
+  .print-meta {
+    margin: 0 0 10px;
+    font-size: 8.5pt;
+    color: #444444;
+  }
+
+  .officer-page,
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .file-sheet,
+  .decision {
+    border-color: #999999;
+    box-shadow: none;
+  }
+
+  .stamp,
+  .within,
+  .outside,
+  .severity {
+    print-color-adjust: exact;
+  }
+
+  .file-columns {
+    display: block;
+  }
+
+  .file-aside {
+    position: static;
+    margin-top: 16px;
+  }
+
+  .table-scroll {
+    overflow: visible;
+  }
+
+  .figures-table {
+    min-width: 0;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  .finding,
+  .memo-section,
+  .decision,
+  tr {
+    break-inside: avoid;
+  }
+}
+
+/* WhatsApp hand-offs: the message is written; the person only picks who gets it. */
+.button.whatsapp {
+  gap: 8px;
+  margin: 12px 0 4px;
+  border-color: #1f7a4a;
+  background: #1f7a4a;
+  color: #ffffff;
+}
+
+.button.whatsapp:hover {
+  background: #17623b;
+}

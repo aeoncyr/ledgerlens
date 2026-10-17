@@ -1,13 +1,22 @@
 rules_version = '2';
 
 // Evidence photos and recordings live under evidence/{applicationId}/{uid}/. Each signed-in user may
-// upload into and read only their own folder; the API registers a file only if the application is
-// theirs and the path is under their folder. Uploads must be images or audio under 15 MB, and
-// nothing can be overwritten or deleted from the browser.
+// upload into only their own folder; the API registers a file only if the application is theirs
+// and the path is under their folder. Uploads must be images or audio under 15 MB, and nothing can
+// be overwritten or deleted from the browser. Everyone on the file (its officer, its owner and the
+// reviewer signing off a decision) may read every folder of it, so an officer sees the photos an
+// owner sent. That check reads the application from Firestore (a cross-service rule).
 service firebase.storage {
   match /b/{bucket}/o {
+    function onFile(appId) {
+      let app = firestore.get(/databases/(default)/documents/applications/$(appId)).data;
+      return request.auth.uid == app.get('officerUid', null)
+        || request.auth.uid == app.get('ownerUid', null)
+        || request.auth.uid == app.get('reviewerUid', null);
+    }
+
     match /evidence/{appId}/{uid}/{fileName} {
-      allow read: if request.auth != null && request.auth.uid == uid;
+      allow read: if request.auth != null && (request.auth.uid == uid || onFile(appId));
       allow create: if request.auth != null
         && request.auth.uid == uid
         && request.resource.size < 15 * 1024 * 1024

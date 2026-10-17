@@ -12,7 +12,6 @@ import {
   confirmReading,
   declineQuestion,
   recheck,
-  recordDecision,
   useApplication,
   useAudit,
   useCreditFileDoc,
@@ -30,6 +29,8 @@ import {
   type EvidenceType,
   type Finding,
 } from '../../types.ts'
+import Decision, { SignoffPanel } from './Decision.tsx'
+import HandOff from './HandOff.tsx'
 import OfficerShell, { type OfficerStep } from './OfficerShell.tsx'
 
 function useImageUrls(evidence: StoredEvidence[]): Map<string, string> {
@@ -299,82 +300,6 @@ function FollowUp({ id, findings, round }: { id: string; findings: Finding[]; ro
   )
 }
 
-const ACTIONS = [
-  ['approve', 'Approve'],
-  ['request_more', 'Ask for more evidence'],
-  ['decline', 'Decline'],
-] as const
-
-function Decision({ app }: { app: Application }) {
-  const [action, setAction] = useState<string>('approve')
-  const [reason, setReason] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  if (app.decision) {
-    const label = ACTIONS.find(([key]) => key === app.decision?.action)?.[1] ?? app.decision.action
-    return (
-      <section className="decision done" aria-labelledby="decision-heading">
-        <h2 id="decision-heading">Decision</h2>
-        <p>
-          <strong>{label}.</strong> {app.decision.reason}
-        </p>
-        <p className="fine">Recorded in the audit log with the officer and the time.</p>
-      </section>
-    )
-  }
-
-  async function submit(event: FormEvent) {
-    event.preventDefault()
-    setBusy(true)
-    setError(null)
-    try {
-      await recordDecision(app.id, action, reason)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : String(e))
-    }
-    setBusy(false)
-  }
-
-  return (
-    <form className="decision" onSubmit={submit} aria-labelledby="decision-heading">
-      <h2 id="decision-heading">Your decision</h2>
-      <p className="fine">
-        LedgerLens recommends; you decide. Every decision needs a written reason, which goes into
-        the audit log.
-      </p>
-      <div className="choice-row">
-        {ACTIONS.map(([key, label]) => (
-          <label key={key} className={`choice ${action === key ? 'chosen' : ''}`}>
-            <input
-              type="radio"
-              name="action"
-              value={key}
-              checked={action === key}
-              onChange={() => setAction(key)}
-            />
-            {label}
-          </label>
-        ))}
-      </div>
-      <label>
-        Reason
-        <textarea
-          required
-          minLength={5}
-          rows={3}
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-        />
-      </label>
-      {error && <p className="error">{error}</p>}
-      <button className="button" disabled={busy || reason.trim().length < 5}>
-        Record the decision
-      </button>
-    </form>
-  )
-}
-
 const AUDIT_LABEL: Record<string, string> = {
   created: 'Application opened',
   created_by_owner: 'File started by the business owner',
@@ -385,9 +310,19 @@ const AUDIT_LABEL: Record<string, string> = {
   reverified_with_answers: 'Re-checked with the owner’s answers',
   follow_up_answered: 'Answer to a question recorded',
   reading_confirmed: 'A reading confirmed on the photo',
-  decision_approve: 'Decision: approve',
-  decision_decline: 'Decision: decline',
+  decision_approve: 'Decision signed off: approve',
+  decision_decline: 'Decision signed off: decline',
   decision_request_more: 'Decision: ask for more evidence',
+  recommended_approve: 'Recommended: approve',
+  recommended_decline: 'Recommended: decline',
+  signoff_opened: 'Opened for a second sign-off',
+  signoff_returned: 'Sent back to the officer',
+  decision_sent_to_owner: 'Decision and letter sent to the owner',
+  offer_accepted: 'Offer accepted',
+  offer_declined: 'Offer declined',
+  condition_met: 'Condition marked as met',
+  requested_records_sent: 'Records asked for were sent',
+  follow_up_declined: 'The owner preferred not to answer a question',
   share_link_created: 'Share link created',
   opened_by_lender: 'Opened from the owner’s share link',
   share_withdrawn: 'Share withdrawn',
@@ -433,11 +368,22 @@ function auditRows(entries: AuditEntry[]): AuditRow[] {
     const details = entry.details ?? {}
     const assessment = details.assessment as Assessment | undefined
     const question = typeof details.question === 'string' ? details.question : null
+    const text = typeof details.text === 'string' ? details.text : null
+    const count = typeof details.count === 'number' ? details.count : null
+    const letter =
+      details.letter === 'gemini'
+        ? `Letter by ${typeof details.model === 'string' ? details.model : 'Gemini'}`
+        : details.letter === 'template'
+          ? 'Letter from the fixed template'
+          : null
     const detail = entry.reason
       ? `“${entry.reason}”`
       : assessment && ASSESSMENT_LABEL[assessment]
         ? `Outcome: ${ASSESSMENT_LABEL[assessment]}`
-        : question
+        : (question ??
+          text ??
+          letter ??
+          (count !== null ? `${count} new record${count > 1 ? 's' : ''}` : null))
     rows.push({ entry, label: AUDIT_LABEL[entry.action] ?? entry.action, detail })
     i++
   }
@@ -452,6 +398,8 @@ function AuditLog({ app }: { app: Application }) {
   function who(actor: string): string {
     if (actor === me) return 'you'
     if (app.ownerUid && actor === app.ownerUid) return 'owner'
+    if (actor === app.officerUid) return 'the officer'
+    if (app.reviewerUid && actor === app.reviewerUid) return 'the second person'
     return 'another officer'
   }
 
@@ -464,7 +412,10 @@ function AuditLog({ app }: { app: Application }) {
         {auditRows(entries).map(({ entry, label, detail }) => {
           const actor = who(entry.actor)
           return (
-            <li key={entry.id} className={`audit-row by-${actor.replace(' ', '-')}`}>
+            <li
+              key={entry.id}
+              className={`audit-row by-${actor.replace(/^the /, '').replace(' ', '-')}`}
+            >
               <time className="audit-time mono" dateTime={entry.at?.toDate().toISOString()}>
                 {entry.at ? auditTime.format(entry.at.toDate()) : 'just now'}
               </time>
@@ -515,24 +466,39 @@ export default function ApplicationFile() {
     )
   }
 
+  // A second person at the lender, signing off the officer's recommendation: they read the file
+  // and cannot change it.
+  const me = auth.currentUser?.uid
+  const reviewing = !!app.reviewerUid && app.reviewerUid === me && app.officerUid !== me
+  const asked = app.decision?.action === 'request_more' && app.decision.state === 'final'
+
   if (app.status === 'draft' || app.status === 'collecting' || !stored) {
     const next =
       app.status === 'draft'
         ? { to: `/app/${id}/consent`, label: 'Record the owner’s consent' }
-        : { to: `/app/${id}/evidence`, label: 'Collect the evidence' }
+        : {
+            to: `/app/${id}/evidence`,
+            label: asked ? 'Add evidence and check again' : 'Collect the evidence',
+          }
     return (
       <OfficerShell title={title} crumbs={crumbs} step={stepOf(app)}>
         <p className="lead-text">{STATUS_LABEL[app.status]}.</p>
         {app.status === 'analyzing' ? (
           <LiveTrace run={run} />
         ) : (
-          <Link className="button" to={next.to}>
-            {next.label}
-          </Link>
+          !reviewing && (
+            <Link className="button" to={next.to}>
+              {next.label}
+            </Link>
+          )
         )}
+        {asked && app.status === 'collecting' && <Decision app={app} policy={stored?.policy} />}
       </OfficerShell>
     )
   }
+
+  // Once a decision is recommended or made, the file stays as it was decided on.
+  const editable = !reviewing && app.status !== 'decided' && app.status !== 'awaiting_signoff'
 
   const file: CreditFileData = {
     slug: id,
@@ -576,29 +542,31 @@ export default function ApplicationFile() {
     >
       <div className="page-actions">
         <span className="status-label">{STATUS_LABEL[app.status]}</span>
-        {app.status !== 'decided' && (
+        {reviewing && <span className="fine">You are the second person: read-only.</span>}
+        {editable && (
           <Link className="button quiet" to={`/app/${id}/evidence`}>
             Add evidence and run again
           </Link>
         )}
       </div>
+      <HandOff id={id} file={file} />
       {app.status === 'analyzing' && <LiveTrace run={run} />}
-      {app.status !== 'analyzing' && app.status !== 'decided' && (
+      {editable && app.status !== 'analyzing' && (
         <FollowUp id={id} findings={file.findings} round={file.round ?? 0} />
       )}
-      {app.status !== 'analyzing' && app.status !== 'decided' && (
+      {editable && app.status !== 'analyzing' && (
         <ConfirmReadings id={id} evidence={evidence} urls={urls} />
       )}
       <CreditFile
         file={file}
         titleLevel={2}
         findingExtra={
-          app.status === 'decided' || app.status === 'analyzing' || (file.round ?? 0) >= 2
+          !editable || app.status === 'analyzing' || (file.round ?? 0) >= 2
             ? undefined
             : (finding, index) => <AnswerBox id={id} index={index} finding={finding} />
         }
       />
-      <Decision app={app} />
+      {reviewing ? <SignoffPanel app={app} /> : <Decision app={app} policy={stored.policy} />}
       <AuditLog app={app} />
     </OfficerShell>
   )
