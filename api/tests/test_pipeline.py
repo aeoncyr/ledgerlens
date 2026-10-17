@@ -216,6 +216,49 @@ def test_code_checks_keep_their_severity_even_if_the_verifier_softens_them():
     assert result.assessment is Assessment.INCONSISTENT
 
 
+def test_an_edited_qris_total_is_caught_and_only_its_listed_rows_count():
+    def row(n, amount_text):
+        return QrisRow(
+            row=n, date_text="30 Sep 2026", amount_text=amount_text, direction="in", confidence=0.99
+        )
+
+    # Both transactions of the month are listed, but the printed total was raised by Rp 5.000.000.
+    edited = QRIS.model_copy(
+        update={
+            "rows": [row(1, "+Rp250.000"), row(2, "+Rp1.750.000")],
+            "totals": [
+                QrisTotal(
+                    period_text="September 2026",
+                    amount_text="Rp7.000.000",
+                    count_text="2 transaksi",
+                )
+            ],
+        }
+    )
+    gemini = ScriptedGemini(Verification(findings=[], confirmations=[]), MEMO)
+    gemini.answers[QrisReading] = edited
+
+    async def progress(*_, **__):
+        pass
+
+    result = asyncio.run(
+        run_pipeline(
+            gemini=gemini,
+            store=BytesStore(),
+            application=APPLICATION,
+            items=list(ITEMS),
+            progress=progress,
+        )
+    )
+
+    finding = next(f for f in result.findings if f.kind == "fraud_signal")
+    assert finding.severity == "high"
+    assert "add up to Rp 2.000.000, not the printed total of Rp 7.000.000" in finding.text
+    assert "Only its listed rows, Rp 2.000.000, count as money received." in finding.text
+    assert result.cashflow.months[0].proven_inflows == 2_000_000
+    assert result.assessment is Assessment.INCONSISTENT
+
+
 def test_numbers_the_verifier_invents_are_removed():
     made_up = Verification(
         findings=[
