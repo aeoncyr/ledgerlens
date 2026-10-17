@@ -1543,9 +1543,10 @@ textarea:focus {
   animation: pulse 1.4s ease-in-out infinite;
 }
 
+/* A gentle pulse: the text stays readable (WCAG contrast) at its faintest. */
 @keyframes pulse {
   50% {
-    opacity: 0.4;
+    opacity: 0.7;
   }
 }
 
@@ -2954,7 +2955,8 @@ textarea:focus {
   display: block;
   font-size: 12px;
   font-weight: 700;
-  color: var(--owner);
+  /* Darker than the owner brass so it reads on the light brass panel. */
+  color: #74500c;
 }
 
 /* Agent trace: a clock, the run id, the engine of each agent, and samples of the output. */
