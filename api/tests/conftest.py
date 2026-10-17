@@ -110,6 +110,37 @@ class FakeCollection:
             doc_id = f"doc-{self._db.counter}"
         return FakeDocument(self._db, (*self._path, doc_id))
 
+    def where(self, *, filter) -> FakeQuery:
+        return FakeQuery(self, [filter])
+
+
+class FakeQuery:
+    """Equality filters and a limit, which is all the API asks of a query."""
+
+    def __init__(self, collection: FakeCollection, filters: list, limit: int | None = None) -> None:
+        self._collection = collection
+        self._filters = filters
+        self._limit = limit
+
+    def where(self, *, filter) -> FakeQuery:
+        return FakeQuery(self._collection, [*self._filters, filter], self._limit)
+
+    def limit(self, count: int) -> FakeQuery:
+        return FakeQuery(self._collection, self._filters, count)
+
+    async def stream(self):
+        yielded = 0
+        async for snapshot in self._collection.stream():
+            data = snapshot.to_dict() or {}
+            if not all(
+                f.op_string == "==" and data.get(f.field_path) == f.value for f in self._filters
+            ):
+                continue
+            if self._limit is not None and yielded >= self._limit:
+                return
+            yielded += 1
+            yield snapshot
+
 
 class FakeFirestore:
     """An in-memory stand-in for Firestore, keyed by document path."""

@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app import integrations
 from app.config import get_settings
 from app.routers import (
+    activity,
     analysis,
     applications,
     decisions,
@@ -13,6 +14,7 @@ from app.routers import (
     exports,
     health,
     owner,
+    pilot,
     pilot_requests,
     readings,
 )
@@ -41,6 +43,8 @@ def create_app() -> FastAPI:
     app.include_router(exports.router)
     app.include_router(demo.router)
     app.include_router(pilot_requests.router)
+    app.include_router(pilot.router)
+    app.include_router(activity.router)
     app.include_router(integrations.router)
     integrations.register(app)
     return app
