@@ -72,7 +72,10 @@ export default function OfficerShell({
             Applications
           </NavLink>
           <NavLink to="/app/new" end>
-            New<span className="appbar-long"> application</span>
+            {/* One inline span, so the flex link keeps the space before "application". */}
+            <span>
+              New<span className="appbar-long"> application</span>
+            </span>
           </NavLink>
           <NavLink to="/app/pilot" end>
             Pilot
