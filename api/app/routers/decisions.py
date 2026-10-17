@@ -278,13 +278,16 @@ async def claim_signoff(code: str, user: CurrentUser, db: Db) -> ClaimResponse:
         or (data.get("decision") or {}).get("signoffCode") != code
     ):
         raise HTTPException(status.HTTP_404_NOT_FOUND, SIGNOFF_GONE)
-    if data.get("officerUid") == user.uid:
+    # Four eyes: the officer can't sign off their own recommendation, nor the owner their own file.
+    # Only on a demo file, where one person plays every role on purpose, may they do both.
+    demo = data.get("demo") is True
+    if data.get("officerUid") == user.uid and not demo:
         raise HTTPException(
             status.HTTP_409_CONFLICT,
             "You recommended this decision, so someone else has to sign it off. Send them the "
             "link, or open it in another browser to try both roles.",
         )
-    if data.get("ownerUid") == user.uid:
+    if data.get("ownerUid") == user.uid and not demo:
         raise HTTPException(
             status.HTTP_403_FORBIDDEN,
             "This link is for the lender's staff. The decision will reach you in your file.",
