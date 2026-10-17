@@ -94,6 +94,13 @@ same point twice. Most files have between one and six findings.
 
 Also list confirmations: the main points where the sources agree, with citations.
 
+Other debts: the request gives the other loan instalments a month that the application declares,
+including online loans (pinjol); zero means none were declared. Compare it with what the owner
+says about existing debt in the interview (claims with topic existing_debt) and with any loan or
+instalment payments in the notebook or the QRIS history. A clear mismatch, such as an instalment
+the owner mentions that the application leaves out, is a medium discrepancy with a polite
+question; agreement is a confirmation.
+
 The case file may include owner_answers: the owner's replies to earlier follow-up questions. For
 each finding an answer addresses, set answered_by to the answer's number. Set resolved to true only
 if the answer is a plausible, specific explanation that fits the rest of the evidence, and say in

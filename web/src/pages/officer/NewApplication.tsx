@@ -11,6 +11,7 @@ const EMPTY: Form = {
   yearsOperating: 1,
   amount: 10_000_000,
   tenorMonths: 12,
+  existingMonthlyDebt: 0,
 }
 
 export default function NewApplication() {
@@ -31,6 +32,7 @@ export default function NewApplication() {
       yearsOperating: s.yearsOperating,
       amount: s.amount,
       tenorMonths: s.tenorMonths,
+      existingMonthlyDebt: 0,
     })
   }
 
@@ -149,6 +151,22 @@ export default function NewApplication() {
             />
           </label>
         </div>
+        <label>
+          Other loan instalments a month (Rp)
+          <input
+            type="number"
+            inputMode="numeric"
+            min={0}
+            step={10_000}
+            value={form.existingMonthlyDebt ?? 0}
+            onChange={(e) => field('existingMonthlyDebt', e.target.value)}
+            aria-describedby="other-debts-hint"
+          />
+          <span id="other-debts-hint" className="hint">
+            Optional. Including online loans (pinjol); 0 if none. The policy takes it off the
+            instalment it allows, and the check compares it with what the owner says.
+          </span>
+        </label>
         {error && <p className="error">{error}</p>}
         <button className="button" type="submit" disabled={busy}>
           {busy ? 'Creating…' : 'Create and continue to consent'}

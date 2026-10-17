@@ -36,7 +36,9 @@ import {
   UndoIcon,
 } from './icons.tsx'
 import DecisionCard, { WaitingCard } from './OwnerDecision.tsx'
+import DeleteFile from './DeleteFile.tsx'
 import OwnerShell from './OwnerShell.tsx'
+import RemindMe from './RemindMe.tsx'
 import VoiceRecorder from '../../components/VoiceRecorder.tsx'
 import { answerByVoice, declineQuestion } from '../../officer.ts'
 import { useOwnerDecision } from '../../decision.ts'
@@ -109,6 +111,19 @@ export default function OwnerFile() {
   const locked =
     app.status === 'awaiting_signoff' || (app.status === 'decided' && decision?.action === 'approve')
   const stage = !consented ? 0 : checking ? 2 : summary ? (app.officerUid ? 4 : 3) : 1
+  const tips = summary ? tipsIn(summary, lang) : []
+  const declined = app.status === 'decided' && decision?.action === 'decline'
+  // A file that isn't verified yet gets a reminder to check again; a declined one gets it with the
+  // decision instead, so it appears once.
+  const remind = !!summary && app.assessment !== 'verified' && !declined
+  const deleteBlocked =
+    app.status === 'awaiting_signoff'
+      ? t.deleteBlockedDeciding
+      : decision?.state === 'accepted'
+        ? t.deleteBlockedAccepted
+        : checking
+          ? t.deleteBlockedChecking
+          : null
 
   async function act(kind: Busy, work: () => Promise<void>) {
     setBusy(kind)
@@ -184,6 +199,7 @@ export default function OwnerFile() {
             id={id}
             decision={decision}
             evidence={evidence as OwnerEvidence[]}
+            tips={tips}
             lang={lang}
             t={t}
           />
@@ -212,7 +228,13 @@ export default function OwnerFile() {
           )}
           {summary && (
             <>
-              <SummaryCard summary={summary} lang={lang} t={t} />
+              <SummaryCard
+                id={id}
+                summary={summary}
+                remind={remind}
+                lang={lang}
+                t={t}
+              />
               {!locked && (
                 <Questions
                     key={summary.updatedAt?.seconds ?? 0}
@@ -256,8 +278,15 @@ export default function OwnerFile() {
           )}
         </div>
       )}
+
+      <DeleteFile id={id} blocked={deleteBlocked} t={t} />
     </OwnerShell>
   )
+}
+
+/** The summary's tips in the owner's language, falling back to the Bahasa ones. */
+function tipsIn(summary: OwnerSummary, lang: 'en' | 'id'): string[] {
+  return (lang === 'en' && summary.tipsEn?.length ? summary.tipsEn : summary.tips) ?? []
 }
 
 function FileHeader({ app, t }: { app: OwnerApplication; t: OwnerStrings }) {
@@ -604,18 +633,23 @@ function Checking({ run, t }: { run: Run | null; t: OwnerStrings }) {
 }
 
 function SummaryCard({
+  id,
   summary,
+  remind,
   lang,
   t,
 }: {
+  id: string
   summary: OwnerSummary
+  // Offer a calendar reminder to check again, for a file that isn't strong enough yet.
+  remind: boolean
   lang: 'en' | 'id'
   t: OwnerStrings
 }) {
   const en = lang === 'en'
   const verified = (en && summary.verifiedEn) || summary.verified
   const missing = (en && summary.missingEn) || summary.missing
-  const tips = (en && summary.tipsEn?.length ? summary.tipsEn : summary.tips) ?? []
+  const tips = tipsIn(summary, lang)
   return (
     <section className="ow-card ow-summary" aria-labelledby="ow-summary-title">
       <h2 id="ow-summary-title" className="ow-h2">
@@ -643,6 +677,7 @@ function SummaryCard({
               <li key={index}>{tip}</li>
             ))}
           </ol>
+          {remind && <RemindMe id={id} tips={tips} lead={t.remindLead} t={t} />}
         </div>
       )}
     </section>

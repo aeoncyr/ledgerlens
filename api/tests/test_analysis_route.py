@@ -122,6 +122,44 @@ def test_analyze_stores_the_credit_file_and_progress(client, fake_db, ready_appl
     assert run["steps"][0]["message"] == "Read 14 lines from Notebook page 1"
 
 
+def test_declared_monthly_debts_reach_the_pipeline(client, monkeypatch):
+    seen = []
+
+    async def fake_pipeline(*, application, **_options):
+        seen.append(application)
+        result = canned_result([])
+        result.extractions = {}
+        return result
+
+    monkeypatch.setattr(analysis, "run_pipeline", fake_pipeline)
+    client.app.dependency_overrides[analysis.get_evidence_store] = lambda: object()
+    created = client.post(
+        "/api/applications",
+        json={
+            "alias": "Warung Uji",
+            "businessType": "Grocery stall",
+            "city": "Bekasi",
+            "yearsOperating": 5,
+            "amount": 10_000_000,
+            "tenorMonths": 12,
+            "existingMonthlyDebt": 350_000,
+        },
+    )
+    app_id = created.json()["applicationId"]
+    client.post(f"/api/applications/{app_id}/consent", json={"consentVersion": "v1", "given": True})
+    client.post(
+        f"/api/applications/{app_id}/evidence",
+        json={
+            "type": "ledger_page",
+            "storagePath": f"evidence/{app_id}/judge-1/p1.jpg",
+            "capturedAt": CAPTURED.isoformat(),
+        },
+    )
+
+    assert client.post(f"/api/applications/{app_id}/analyze").status_code == 200
+    assert seen[0].existing_monthly_debt == 350_000
+
+
 def test_material_questions_put_the_file_into_follow_up(client, ready_application):
     app_id, _, patch = ready_application
     patch.findings = [

@@ -93,6 +93,13 @@ class CreateApplicationRequest(CamelModel):
     years_operating: int = Field(ge=0, le=80)
     amount: int = Field(gt=0, description="Requested loan amount in rupiah")
     tenor_months: int = Field(ge=1, le=60)
+    existing_monthly_debt: int = Field(
+        default=0,
+        ge=0,
+        le=1_000_000_000,
+        description="Other loan instalments the business pays a month, in rupiah, including "
+        "online loans (pinjol). Optional; the policy subtracts it from the instalment allowed.",
+    )
 
 
 class CreateApplicationResponse(CamelModel):

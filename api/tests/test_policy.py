@@ -7,6 +7,7 @@ from app.tools.policy import (
     consistency_findings,
     evidence_strength,
     monthly_installment,
+    stress_drop_pct,
 )
 
 ALL_EVIDENCE = {ET.QRIS_HISTORY, ET.RECEIPT, ET.LEDGER_PAGE, ET.INTERVIEW_AUDIO, ET.SHOP_PHOTO}
@@ -163,3 +164,84 @@ def test_no_qris_at_all_is_not_also_reported_as_zero_coverage():
     found = consistency_findings(summary, LenderPolicy(), "Tailor (penjahit)")
 
     assert not [f for f in found if "QRIS" in f.text]
+
+
+# --- Stress test ---------------------------------------------------------------------------------
+
+
+def stress(capacity, requested, debt=0, ratio=0.30):
+    max_installment = max(0, round(capacity * ratio) - debt)
+    return stress_drop_pct(
+        capacity_basis=capacity,
+        max_installment=max_installment,
+        requested_installment=requested,
+        max_installment_ratio=ratio,
+    )
+
+
+def test_stress_test_is_the_fall_in_sales_that_uses_up_the_room():
+    # Capacity 10 million: the policy allows 3 million. A 2.4 million request has 600 thousand of
+    # room, which is 20% of the 3 million: sales can fall by up to 20%.
+    assert stress(10_000_000, 2_400_000) == 20
+    # Check the stated assumption directly: after a 20% fall the limit is exactly the request.
+    assert round(0.30 * 10_000_000 * (1 - 0.20)) == 2_400_000
+
+
+def test_other_debts_shrink_the_room_before_any_fall():
+    # Same request, with 300 thousand a month already going to another loan (a pinjol, say).
+    # Limit after a fall d: 3m x (1 - d) - 300k = 2.4m, so d = 10%.
+    assert stress(10_000_000, 2_400_000, debt=300_000) == 10
+
+
+def test_stress_test_rounds_down_so_it_never_overstates_the_room():
+    # 18.9% of room is reported as 18%.
+    assert stress(10_000_000, 2_433_000) == 18
+
+
+def test_a_request_above_the_limit_has_no_room():
+    assert stress(10_000_000, 3_100_000) == 0
+    assert stress(10_000_000, 2_900_000, debt=200_000) == 0
+    # Debts larger than the whole allowance: the limit is zero, so there is no room either.
+    assert stress(1_000_000, 50_000, debt=400_000) == 0
+
+
+def test_no_limit_means_no_stress_test():
+    assert (
+        stress_drop_pct(
+            capacity_basis=None,
+            max_installment=None,
+            requested_installment=500_000,
+            max_installment_ratio=0.30,
+        )
+        is None
+    )
+
+
+def test_assess_stores_the_stress_test_with_the_policy_result():
+    summary = grocery_stall()
+    result = assess(
+        summary=summary,
+        findings=consistency_findings(summary, LenderPolicy()),
+        evidence_types=ALL_EVIDENCE,
+        amount=10_000_000,
+        tenor_months=12,
+        existing_monthly_debt=200_000,
+    )
+
+    room = result.max_installment - result.requested_installment
+    expected = int(room / (result.capacity_basis * 0.30) * 100)
+    assert result.within_policy
+    assert result.stress_drop_pct == expected > 0
+
+
+def test_an_inconsistent_file_has_no_stress_test():
+    summary = summarise(month("2026-09", qris=14_000_000, claimed=45_000_000, receipts=9_000_000))
+    result = assess(
+        summary=summary,
+        findings=consistency_findings(summary, LenderPolicy()),
+        evidence_types=ALL_EVIDENCE,
+        amount=25_000_000,
+        tenor_months=18,
+    )
+
+    assert result.stress_drop_pct is None

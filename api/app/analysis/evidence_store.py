@@ -16,6 +16,12 @@ class EvidenceStore(Protocol):
         ...
 
 
+class EvidenceRemover(Protocol):
+    async def delete_prefix(self, prefix: str) -> int:
+        """Delete every file whose path starts with ``prefix``; return how many there were."""
+        ...
+
+
 def _guess_type(path: str) -> str:
     return mimetypes.guess_type(path)[0] or "application/octet-stream"
 
@@ -31,6 +37,15 @@ class CloudStorageStore:
             return data, blob.content_type or _guess_type(path)
 
         return await asyncio.to_thread(download)
+
+    async def delete_prefix(self, prefix: str) -> int:
+        def delete() -> int:
+            blobs = list(self._bucket.list_blobs(prefix=prefix))
+            # A file that is already gone is not an error: the aim is that none is left.
+            self._bucket.delete_blobs(blobs, on_error=lambda _blob: None)
+            return len(blobs)
+
+        return await asyncio.to_thread(delete)
 
 
 class FolderStore:

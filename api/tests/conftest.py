@@ -121,6 +121,14 @@ class FakeFirestore:
     def collection(self, name: str) -> FakeCollection:
         return FakeCollection(self, (name,))
 
+    async def recursive_delete(self, reference: FakeDocument) -> int:
+        """Delete a document and everything under it, as the real client does."""
+        prefix = reference._path
+        doomed = [path for path in self.docs if path[: len(prefix)] == prefix]
+        for path in doomed:
+            del self.docs[path]
+        return len(doomed)
+
     def docs_in(self, *collection_path: str) -> dict[str, dict]:
         return {p[-1]: d for p, d in self.docs.items() if p[:-1] == collection_path}
 

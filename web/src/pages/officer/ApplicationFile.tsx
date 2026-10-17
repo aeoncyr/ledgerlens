@@ -510,6 +510,7 @@ export default function ApplicationFile() {
       yearsOperating: app.business.yearsOperating,
       amount: app.request.amount,
       tenorMonths: app.request.tenorMonths,
+      existingMonthlyDebt: app.request.existingMonthlyDebt,
     },
     evidence: evidence.map((e) => ({
       id: e.id,

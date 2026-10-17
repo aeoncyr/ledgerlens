@@ -152,3 +152,10 @@ def test_an_owner_check_writes_a_summary_for_the_owner(owner, fake_db, file_id, 
     owner.post(f"/api/applications/{file_id}/findings/0/answer", json={"text": "Belum, Pak."})
     summary = fake_db.docs[("applications", file_id, "owner", "summary")]
     assert summary["questions"][0]["answer"] == "Belum, Pak."
+
+
+def test_an_owner_can_declare_other_monthly_debts(owner, fake_db):
+    created = owner.post("/api/owner/files", json={**FILE, "existingMonthlyDebt": 300_000})
+
+    stored = fake_db.docs[("applications", created.json()["applicationId"])]
+    assert stored["request"]["existingMonthlyDebt"] == 300_000

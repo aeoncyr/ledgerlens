@@ -85,6 +85,8 @@ class Application:
     years_operating: int
     amount: int
     tenor_months: int
+    # Other loan instalments a month the application declares, including online loans (pinjol).
+    existing_monthly_debt: int = 0
 
 
 @dataclass
@@ -700,6 +702,12 @@ def add_summary_facts(facts: FactTable, summary: CashFlowSummary, application: A
     facts.add("requested_amount", "Loan amount requested", "rupiah", application.amount)
     facts.add("tenor_months", "Loan term in months", "count", application.tenor_months)
     facts.add(
+        "existing_monthly_debt",
+        "Other loan instalments a month, including online loans, as the application declares",
+        "rupiah",
+        application.existing_monthly_debt,
+    )
+    facts.add(
         "kur_collateral_free_limit",
         "KUR loans up to this amount need no extra collateral",
         "rupiah",
@@ -847,7 +855,12 @@ async def run_pipeline(
             "city": application.city,
             "years_operating": application.years_operating,
         },
-        "request": {"amount": "[[requested_amount]]", "term_months": application.tenor_months},
+        "request": {
+            "amount": "[[requested_amount]]",
+            "term_months": application.tenor_months,
+            # What the application says; the verifier compares it with what the owner says.
+            "other_monthly_loan_instalments": "[[existing_monthly_debt]]",
+        },
         "facts": facts.for_prompt(),
         "evidence": [
             {
@@ -967,6 +980,7 @@ async def judge(
         evidence_types=present,
         amount=application.amount,
         tenor_months=application.tenor_months,
+        existing_monthly_debt=application.existing_monthly_debt,
         policy=policy,
     )
     facts.add(
@@ -980,6 +994,15 @@ async def judge(
         "Largest monthly instalment the policy allows",
         "rupiah",
         result.max_installment,
+    )
+    # Only a request within the policy has room to stress; above it, the figure would say nothing.
+    stress_tested = result.within_policy and result.stress_drop_pct is not None
+    facts.add(
+        "stress_drop_pct",
+        "Fall in sales the requested instalment can take and stay within policy (code's stress "
+        "test: costs move with sales)",
+        "percent",
+        result.stress_drop_pct / 100 if stress_tested else None,
     )
     facts.add(
         "evidence_strength", "Evidence strength, out of 100", "count", result.evidence_strength
@@ -1000,7 +1023,14 @@ async def judge(
             "assessment": result.assessment.value,
             "within_policy": result.within_policy,
             "reasons": result.reasons,
-            "figures": ["capacity_basis", "max_installment", "requested_installment"],
+            "figures": [
+                "capacity_basis",
+                "max_installment",
+                "requested_installment",
+                # Files checked before these figures existed don't have them.
+                *(["existing_monthly_debt"] if "existing_monthly_debt" in facts else []),
+                *(["stress_drop_pct"] if stress_tested else []),
+            ],
         },
         facts,
         quoted,

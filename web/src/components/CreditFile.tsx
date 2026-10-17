@@ -10,6 +10,7 @@ import {
 import CashflowChart from './CashflowChart.tsx'
 import CiteChip from './CiteChip.tsx'
 import EvidenceViewer from './EvidenceViewer.tsx'
+import { STRESS_ASSUMPTION, stressOf, stressSentence } from '../stress.ts'
 
 const rupiah = new Intl.NumberFormat('id-ID')
 const monthName = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' })
@@ -30,9 +31,11 @@ function rp(value: number | null): string {
 
 // Where a figure without a piece of evidence behind it comes from.
 function origin(key: string): string {
-  if (key.startsWith('requested') || key === 'tenor_months') return 'the application'
+  if (key.startsWith('requested') || key === 'tenor_months' || key === 'existing_monthly_debt') {
+    return 'the application'
+  }
   if (key.startsWith('kur_')) return 'KUR programme rules'
-  if (['capacity_basis', 'max_installment', 'evidence_strength'].includes(key)) {
+  if (['capacity_basis', 'max_installment', 'evidence_strength', 'stress_drop_pct'].includes(key)) {
     return 'the lender’s policy, applied by code'
   }
   return 'the monthly cash flow above'
@@ -106,6 +109,28 @@ function RevenueRange({ low, high }: { low: number; high: number }) {
           <dd className="fine">With the notebook</dd>
         </div>
       </dl>
+    </div>
+  )
+}
+
+// How far sales could fall before the requested instalment is above the policy's limit. The API
+// stores it for new files; for older ones and the samples it is the same formula, run here.
+function StressTest({ policy }: { policy: CreditFileData['policy'] }) {
+  const { pct, computedHere } = stressOf(policy)
+  const sentence = stressSentence(pct, policy.withinPolicy)
+  if (sentence === null) return null
+  const roomy = policy.withinPolicy && (pct ?? 0) > 0
+  return (
+    <div className="stress-test">
+      <p>
+        <strong>Stress test.</strong> <span className={roomy ? 'within' : 'outside'}>{sentence}</span>
+      </p>
+      <p className="fine">
+        {STRESS_ASSUMPTION}{' '}
+        {computedHere
+          ? 'Computed by code in this page from the stored figures, as this file was checked before the stress test was stored.'
+          : 'Computed by the policy code.'}
+      </p>
     </div>
   )
 }
@@ -198,7 +223,7 @@ export default function CreditFile({
                   {file.policy.capacityBasis !== null && (
                     <> ({rp(file.policy.capacityBasis)} a month after the haircut)</>
                   )}
-                  .
+                  {!!app.existingMonthlyDebt && <>, less the other loan instalments below</>}.
                 </p>
               </>
             )}
@@ -208,6 +233,20 @@ export default function CreditFile({
                 {file.policy.withinPolicy ? 'within policy' : 'not supported'}
               </span>
             </p>
+            {app.existingMonthlyDebt !== undefined && (
+              <p className="other-debts">
+                Other loan instalments, including online loans:{' '}
+                {app.existingMonthlyDebt > 0 ? (
+                  <>
+                    <span className="mono">{rp(app.existingMonthlyDebt)}</span> a month, as the
+                    application declares
+                  </>
+                ) : (
+                  'none declared'
+                )}
+              </p>
+            )}
+            <StressTest policy={file.policy} />
           </div>
         </div>
         <ul className="reasons">

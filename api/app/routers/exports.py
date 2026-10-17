@@ -100,6 +100,7 @@ async def credit_file(db: firestore.AsyncClient, application_id: str, user: User
             "request": {
                 "amountRp": request.get("amount"),
                 "tenorMonths": request.get("tenorMonths"),
+                "otherMonthlyDebtRp": request.get("existingMonthlyDebt") or 0,
             },
             "status": data.get("status"),
             "assessment": memo.get("assessment"),
@@ -178,6 +179,7 @@ def to_csv(f: dict[str, Any]) -> str:
         "Years trading": f["business"]["yearsOperating"],
         "Amount requested (Rp)": f["request"]["amountRp"],
         "Tenor requested (months)": f["request"]["tenorMonths"],
+        "Other loan instalments a month (Rp)": f["request"].get("otherMonthlyDebtRp"),
         "Outcome": (f.get("assessment") or "").replace("_", " "),
         "Evidence strength (of 100)": policy.get("evidenceStrength"),
         "Monthly revenue proven by QRIS (Rp)": cashflow.get("revenueLow"),
@@ -185,6 +187,7 @@ def to_csv(f: dict[str, Any]) -> str:
         "Largest instalment the policy allows (Rp)": policy.get("maxInstallment"),
         "Instalment requested (Rp)": policy.get("requestedInstallment"),
         "Within policy": policy.get("withinPolicy"),
+        "Sales fall still within policy (%)": policy.get("stressDropPct"),
         "Findings": len(f["findings"]),
         "Decision": (decision.get("action") or "").replace("_", " "),
         "Decision reason": decision.get("reason"),

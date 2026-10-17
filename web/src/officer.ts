@@ -42,7 +42,7 @@ export type Application = {
   id: string
   officerUid: string
   business: { alias: string; type: string; city: string; yearsOperating: number }
-  request: { amount: number; tenorMonths: number }
+  request: { amount: number; tenorMonths: number; existingMonthlyDebt?: number }
   status: ApplicationStatus
   assessment: Assessment | null
   evidenceStrength?: number
@@ -101,6 +101,8 @@ export type NewApplication = {
   yearsOperating: number
   amount: number
   tenorMonths: number
+  // Other loan instalments a month, including online loans (pinjol). Optional; 0 when none.
+  existingMonthlyDebt?: number
 }
 
 export async function createApplication(body: NewApplication): Promise<string> {
