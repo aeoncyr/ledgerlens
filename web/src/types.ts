@@ -117,6 +117,9 @@ export type CreditFileData = {
     yearsOperating: number
     amount: number
     tenorMonths: number
+    // Other loan instalments a month the application declares, including online loans. Files
+    // started before the field existed don't have it.
+    existingMonthlyDebt?: number
   }
   evidence: EvidenceItem[]
   assessment: Assessment
@@ -126,6 +129,9 @@ export type CreditFileData = {
     maxInstallment: number | null
     requestedInstallment: number
     withinPolicy: boolean
+    // How far sales could fall before the request is above the limit (see stress.ts). Older files
+    // and the samples don't store it.
+    stressDropPct?: number | null
     reasons: string[]
   }
   cashflow: {

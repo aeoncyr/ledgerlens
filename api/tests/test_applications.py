@@ -40,9 +40,25 @@ def test_creates_a_draft_owned_by_the_officer(client, fake_db, application_id):
     assert stored["status"] == "draft"
     assert stored["officerUid"] == "judge-1"
     assert stored["business"]["alias"] == "Warung Bu Sari"
-    assert stored["request"] == {"amount": 10_000_000, "tenorMonths": 12}
+    # Other monthly debts are optional and default to none.
+    assert stored["request"] == {"amount": 10_000_000, "tenorMonths": 12, "existingMonthlyDebt": 0}
     audit = fake_db.docs_in("applications", application_id, "audit")
     assert [entry["action"] for entry in audit.values()] == ["created"]
+
+
+def test_stores_other_monthly_debts_including_online_loans(client, fake_db):
+    response = client.post(
+        "/api/applications", json={**NEW_APPLICATION, "existingMonthlyDebt": 450_000}
+    )
+    stored = fake_db.docs_in("applications")[response.json()["applicationId"]]
+
+    assert stored["request"]["existingMonthlyDebt"] == 450_000
+
+
+def test_other_monthly_debts_cannot_be_negative(client):
+    response = client.post("/api/applications", json={**NEW_APPLICATION, "existingMonthlyDebt": -1})
+
+    assert response.status_code == 422
 
 
 def test_consent_moves_the_application_to_collecting(client, fake_db, application_id):

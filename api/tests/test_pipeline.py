@@ -1,6 +1,7 @@
 """The whole pipeline offline: scripted Gemini answers in, findings, outcome and memo out."""
 
 import asyncio
+import dataclasses
 from datetime import UTC, datetime
 
 from app.agents.ledger_reader import LedgerLine, LedgerReading
@@ -72,10 +73,12 @@ class ScriptedGemini:
         }
         self.calls: list[type] = []
         self.roles: dict[type, str] = {}
+        self.contents: dict[type, list] = {}
 
     async def generate(self, *, contents, schema, system, temperature=0.0, attempts=3, role="read"):
         self.calls.append(schema)
         self.roles[schema] = role
+        self.contents[schema] = contents
         return self.answers[schema], "gemini-test"
 
 
@@ -116,7 +119,7 @@ MEMO = MemoDraft(
 )
 
 
-def run(verification: Verification, memo: MemoDraft = MEMO):
+def run(verification: Verification, memo: MemoDraft = MEMO, application: Application = APPLICATION):
     gemini = ScriptedGemini(verification, memo)
     steps = []
 
@@ -127,12 +130,34 @@ def run(verification: Verification, memo: MemoDraft = MEMO):
         run_pipeline(
             gemini=gemini,
             store=BytesStore(),
-            application=APPLICATION,
+            application=application,
             items=list(ITEMS),
             progress=progress,
         )
     )
     return result, gemini, steps
+
+
+def test_other_monthly_debts_reach_the_policy_and_the_verifier():
+    with_debt = dataclasses.replace(APPLICATION, existing_monthly_debt=450_000)
+    result, gemini, _ = run(Verification(findings=[], confirmations=[]), application=with_debt)
+    without, _, _ = run(Verification(findings=[], confirmations=[]))
+
+    assert result.policy.max_installment == without.policy.max_installment - 450_000
+    case_file = gemini.contents[Verification][0]
+    assert '"other_monthly_loan_instalments": "[[existing_monthly_debt]]"' in case_file
+    assert "Rp 450.000" in case_file
+    debt = next(f for f in result.facts if f["key"] == "existing_monthly_debt")
+    assert debt["value"] == 450_000
+
+
+def test_the_stress_test_is_a_figure_the_memo_can_cite():
+    result, _, _ = run(Verification(findings=[], confirmations=[]))
+
+    assert result.policy.within_policy
+    stress = next(f for f in result.facts if f["key"] == "stress_drop_pct")
+    assert stress["value"] == result.policy.stress_drop_pct / 100
+    assert stress["display"] == f"{result.policy.stress_drop_pct}%"
 
 
 def test_runs_every_agent_and_computes_cash_flow_in_code():

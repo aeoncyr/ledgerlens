@@ -101,7 +101,11 @@ async def create_application(
                 "city": body.city,
                 "yearsOperating": body.years_operating,
             },
-            "request": {"amount": body.amount, "tenorMonths": body.tenor_months},
+            "request": {
+                "amount": body.amount,
+                "tenorMonths": body.tenor_months,
+                "existingMonthlyDebt": body.existing_monthly_debt,
+            },
             "status": ApplicationStatus.DRAFT.value,
             "assessment": None,
             "consent": None,

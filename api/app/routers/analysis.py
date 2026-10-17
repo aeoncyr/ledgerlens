@@ -70,6 +70,7 @@ def _application(data: dict[str, Any]) -> Application:
         years_operating=business["yearsOperating"],
         amount=request["amount"],
         tenor_months=request["tenorMonths"],
+        existing_monthly_debt=request.get("existingMonthlyDebt") or 0,
     )
 
 

@@ -55,7 +55,10 @@ Write the five Cs:
 - character: how long the business has run, how consistent the owner's account is with the
   evidence, and any open questions.
 - capacity: cash flow. The low end rests on hard evidence only; the high end includes the notebook.
-  Explain the suggested maximum instalment and how it compares with the requested one.
+  Explain the suggested maximum instalment and how it compares with the requested one. Mention
+  the other loan instalments a month the application declares. When the facts list
+  stress_drop_pct (code's stress test, which assumes costs move with sales), say how far sales
+  could fall before the request is above the policy's limit.
 - capital: stock and assets visible in the photos, and what the business reinvests in purchases.
 - collateral: for KUR loans up to [[kur_collateral_free_limit]], extra collateral may not be
   required; say what is visible and that the decision rests on cash flow.
