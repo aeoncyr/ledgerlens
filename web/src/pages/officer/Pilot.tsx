@@ -14,6 +14,7 @@ const FINDING_LABEL: Record<FindingKind, string> = {
   discrepancy: 'Records that disagree',
   missing_evidence: 'Evidence missing behind a claim',
   low_confidence: 'Hard-to-read records',
+  credit_history: 'Credit history (SLIK) concerns',
 }
 
 const DECISION_LABEL = { approve: 'Approve', request_more: 'Ask for more', decline: 'Decline' }
