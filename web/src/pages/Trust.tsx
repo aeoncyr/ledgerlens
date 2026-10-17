@@ -15,7 +15,7 @@ const LAYERS: Layer[] = [
     today:
       'Gemini Developer API (Google AI Studio), free tier, on Google’s global endpoint. Google may use free-tier inputs to improve its products, so the prototype processes only synthetic data.',
     production:
-      'The paid Gemini API or Vertex AI, where inputs are not used that way; the code already supports both. Processing in Jakarta once Google serves Gemini there (no Gemini model is offered in Jakarta today).',
+      'The paid Gemini API or Vertex AI, where inputs are not used that way; the code already supports both. Processing in Jakarta, or the nearest region Google offers for the chosen model, agreed with each lender.',
   },
   {
     part: 'API',
