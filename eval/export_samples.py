@@ -20,8 +20,13 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
-SLUGS = ("bu-sari", "pak-joko", "pak-hendra")
-FILE_NUMBERS = {"bu-sari": "LL-2610-0142", "pak-joko": "LL-2610-0143", "pak-hendra": "LL-2610-0144"}
+SLUGS = ("bu-sari", "pak-joko", "pak-hendra", "bu-wati")
+FILE_NUMBERS = {
+    "bu-sari": "LL-2610-0142",
+    "pak-joko": "LL-2610-0143",
+    "pak-hendra": "LL-2610-0144",
+    "bu-wati": "LL-2610-0145",
+}
 
 
 def _camel_key(key: str) -> str:
@@ -54,7 +59,9 @@ def export(slug: str, data: Path) -> dict:
         else:
             name = Path(item["path"]).with_suffix(".webp").name
             image = Image.open(source).convert("RGB")
-            image.thumbnail((900, 1400))
+            # A scrolling screenshot keeps its width, so its rows stay as legible as the app's.
+            scrolling = image.height > 3 * image.width
+            image.thumbnail((900, 3600) if scrolling else (900, 1400))
             image.save(out / name, quality=74, method=6)
         evidence_id = Path(item["path"]).stem
         evidence.append(

@@ -131,13 +131,13 @@ def to_output(reading: QrisReading) -> QrisOut:
             continue
         if rows_sum > total.amount_rp:
             problems.append(
-                f"The visible incoming rows add up to more than the printed total for "
-                f"{total.period_text}."
+                f"The visible incoming rows add up to {_rp(rows_sum)}, more than the printed "
+                f"total of {_rp(total.amount_rp)} for {total.period_text}."
             )
         elif total.count == len(incoming) and rows_sum != total.amount_rp:
             problems.append(
                 f"All {total.count} transactions for {total.period_text} are visible, but they "
-                "don't add up to the printed total."
+                f"add up to {_rp(rows_sum)}, not the printed total of {_rp(total.amount_rp)}."
             )
     return QrisOut(
         legible=reading.legible,
@@ -150,6 +150,10 @@ def to_output(reading: QrisReading) -> QrisOut:
         rows_in_sum_rp=rows_sum,
         arithmetic_problems=problems,
     )
+
+
+def _rp(value: int) -> str:
+    return "Rp " + f"{value:,}".replace(",", ".")
 
 
 def _unsigned(value: int | None) -> int | None:

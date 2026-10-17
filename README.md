@@ -46,7 +46,7 @@ There are three ways in. The first needs no waiting at all; the other two run th
    finish by recording a decision with a written reason.
 
 The demo runs on Gemini's free tier, so it has daily limits for the judging period: 35 analyses or re-checks
-a day across the site and 6 per visitor. Beyond that, the three sample files always open.
+a day across the site and 6 per visitor. Beyond that, the four sample files always open.
 
 ---
 
@@ -325,16 +325,17 @@ keeps each agent a small, testable function with one prompt and one output schem
 | --- | --- | --- |
 | Receipt reader | First 30 receipts of the CORD test split: real photos from Indonesian shops and restaurants | Total paid read exactly on 28 of 29 labelled receipts (97%); 69 of 69 item amounts found |
 | Notebook reader | 9 synthetic pages from 3 fictional businesses in 8 handwriting fonts, photographed with tilt, blur and uneven light | 162 of 162 amounts read exactly with the better prompt variant (the other read 160; both misses were crossed-out corrections, since fixed) |
-| Whole pipeline | 3 sample credit files, two months each: 6 notebook pages, 8 receipts, a 30-second owner interview in Bahasa Indonesia and, where the business has QRIS, 2 QRIS screenshots | Every monthly notebook, QRIS and receipt total read exactly, and each file got the outcome its evidence supports (below) |
+| Whole pipeline | 4 sample credit files, two months each: 6 notebook pages, 8 receipts and, where the business has them, 2 QRIS screenshots and a 30-second owner interview in Bahasa Indonesia | Every monthly notebook, QRIS and receipt total read exactly, and each file got the outcome its evidence supports (below) |
 | Real handwriting | Pages written and photographed by our team | In progress |
 
-The three sample files:
+The four sample files:
 
 | Business | Outcome | Why |
 | --- | --- | --- |
 | Warung Bu Sari, a grocery stall in Bekasi | **Verified** | Evidence strength 90/100; the requested instalment of Rp 1.290.996 is within the policy maximum of Rp 1.414.800 |
 | Penjahit Pak Joko, a tailor in Yogyakarta | **Partially verified** | No QRIS history, so the low end rests on receipts alone; evidence strength 55/100 |
 | Warung Makan Hendra, a food stall in Bandung | **Inconsistent** | The notebook claims 5.6 times what supplier purchases support, QRIS shows 13% of claimed sales, and in the interview the owner himself puts daily sales at Rp 500.000, a third of what the notebook says; no instalment is suggested |
+| Toko Baju Bu Wati, a clothing reseller in Surabaya | **Inconsistent** | Its September QRIS screenshot was edited: all 22 payments are listed and add up to Rp 4.400.000, but the printed total says Rp 9.400.000. Only the listed payments count as money received, so the low end of cash flow stays at what was really paid; no instalment is suggested |
 
 On the free tier a full analysis of 14 to 16 items takes 30 to 220 seconds, depending on Gemini's load, and a
 re-check with the owner's answers needs only about 7 seconds of verifier time. The prototype runs on Gemini's

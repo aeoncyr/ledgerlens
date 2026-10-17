@@ -54,6 +54,13 @@ ITEMS = {
         ("ikat sayur", 8_000),
         ("kg bawang", 40_000),
     ],
+    "clothing": [
+        ("kodi kaos", 600_000),
+        ("lusin gamis", 1_080_000),
+        ("lusin daster", 420_000),
+        ("kodi celana kulot", 900_000),
+        ("lusin jilbab", 300_000),
+    ],
 }
 
 
@@ -62,6 +69,8 @@ def catalogue(persona: Persona) -> list[tuple[str, int]]:
         return ITEMS["tailor"]
     if "Food" in persona.business_type:
         return ITEMS["food"]
+    if "Clothing" in persona.business_type:
+        return ITEMS["clothing"]
     return ITEMS["sembako"]
 
 
@@ -132,15 +141,29 @@ def notebook_pages(rng: random.Random, book: dict, year: int, month: int) -> lis
     return pages
 
 
-def qris_payments(rng: random.Random, book: dict, share: float) -> list[dict]:
-    """Individual QRIS payments whose daily sum is the QRIS share of that day's true sales."""
+WARUNG_TICKETS = (5_000, 7_500, 10_000, 12_000, 15_000, 20_000, 25_000, 32_000, 45_000, 60_000)
+
+
+def qris_payments(rng: random.Random, book: dict, persona: Persona) -> list[dict]:
+    """Individual QRIS payments that add up to about the QRIS share of true sales.
+
+    A warung takes small QRIS payments every day. A shop with bigger tickets, such as a clothing
+    reseller, sees one only on some days, so its month fits on one scrolling screenshot.
+    """
+    tickets = list(persona.qris_tickets or WARUNG_TICKETS)
+    step = 5_000 if persona.qris_tickets else 500
+    chance = persona.qris_day_chance
     payments = []
     for day in book["days"]:
-        target = round(day["true"] * share * rng.uniform(0.8, 1.2) / 500) * 500
-        moment = datetime.combine(day["date"], datetime.min.time()) + timedelta(hours=7)
+        if chance < 1 and rng.random() > chance:
+            continue
+        share = persona.qris_share / chance
+        target = round(day["true"] * share * rng.uniform(0.8, 1.2) / step) * step
+        opens = timedelta(hours=9 if persona.qris_tickets else 7)
+        moment = datetime.combine(day["date"], datetime.min.time()) + opens
         while target > 0:
-            amount = min(target, rng.choice([5_000, 7_500, 10_000, 12_000, 15_000, 20_000, 25_000,
-                                             32_000, 45_000, 60_000]))
+            # Small daily payments are split to the rupiah; a garment is paid for at its price.
+            amount = rng.choice(tickets) if persona.qris_tickets else min(target, rng.choice(tickets))
             moment += timedelta(minutes=rng.randint(8, 70))
             payments.append({"at": moment, "amount": amount})
             target -= amount
@@ -200,9 +223,20 @@ def render_receipt(rng: random.Random, persona: Persona, purchase: dict, supplie
     return photograph(rng, page.crop((0, 0, size[0], min(size[1], y + 160))))
 
 
-def render_qris(persona: Persona, payments: list[dict], year: int, month: int) -> Image.Image:
-    """A screenshot of a fictional merchant app's QRIS history for one month."""
-    width, height = 720, 1560
+FULL_LIST_UP_TO = 32  # a month with this few payments is captured whole, as a scrolling screenshot
+
+
+def render_qris(
+    persona: Persona, payments: list[dict], year: int, month: int, added: int = 0
+) -> Image.Image:
+    """A screenshot of a fictional merchant app's QRIS history for one month.
+
+    ``added`` is what a dishonest owner added to the printed total with a photo editor: the
+    original figure is painted over and retyped, a little smaller and lower, in a slightly
+    different shade, while the payments listed below it are left as they were.
+    """
+    shown = payments if len(payments) <= FULL_LIST_UP_TO else payments[-10:]
+    width, height = 720, max(1560, 600 + 96 * len(shown))
     shot = Image.new("RGB", (width, height), (246, 247, 249))
     draw = ImageDraw.Draw(shot)
     regular = lambda s: ImageFont.truetype(str(font_path("Roboto", 400)), s)  # noqa: E731
@@ -221,10 +255,16 @@ def render_qris(persona: Persona, payments: list[dict], year: int, month: int) -
     draw.text((52, 262), f"Total penerimaan {month_name} {year}", font=regular(24),
               fill=(100, 100, 100))
     draw.text((52, 300), rupiah(total), font=bold(56), fill=(18, 92, 80))
+    if added:
+        # Paint over the real total with a colour picked from the card, then type the new one.
+        draw.rectangle([48, 298, 52 + draw.textlength(rupiah(total), font=bold(56)) + 6, 364],
+                       fill=(252, 252, 251))
+        draw.text((53, 305), rupiah(total + added), font=bold(53), fill=(22, 98, 86))
     draw.text((52, 372), f"{len(payments)} transaksi", font=regular(24), fill=(100, 100, 100))
-    draw.text((36, 448), "Transaksi terakhir", font=bold(28), fill=(30, 30, 30))
+    heading = "Semua transaksi" if len(shown) == len(payments) else "Transaksi terakhir"
+    draw.text((36, 448), heading, font=bold(28), fill=(30, 30, 30))
     y = 500
-    for payment in reversed(payments[-10:]):
+    for payment in reversed(shown):
         draw.rounded_rectangle([24, y, width - 24, y + 84], radius=12, fill=(255, 255, 255))
         draw.text((48, y + 12), "Pembayaran QRIS", font=bold(24), fill=(30, 30, 30))
         when = payment["at"]
@@ -267,11 +307,12 @@ def generate(persona: Persona, out: Path, seed: int) -> None:
             render_receipt(rng, persona, purchase, supplier).save(out / name, quality=82)
             add("receipt", name)
         qris_total = None
+        added = (persona.qris_edits or {}).get(key, 0)
         if persona.qris_share:
-            payments = qris_payments(rng, book, persona.qris_share)
+            payments = qris_payments(rng, book, persona)
             qris_total = sum(p["amount"] for p in payments)
             name = f"qris-{key}.png"
-            render_qris(persona, payments, year, month).save(out / name)
+            render_qris(persona, payments, year, month, added).save(out / name)
             add("qris_history", name)
         truth[key] = {
             "claimed_sales": sum(d["claimed"] for d in book["days"]),
@@ -280,6 +321,8 @@ def generate(persona: Persona, out: Path, seed: int) -> None:
             "expenses": sum(e["amount"] for e in book["expenses"]),
             "qris_total": qris_total,
         }
+        if added:
+            truth[key]["qris_printed_total"] = qris_total + added  # the planted edit
 
     manifest = {
         "persona": persona.slug,

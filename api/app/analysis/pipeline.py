@@ -389,12 +389,11 @@ async def _read_qris(
     if not qris.legible:
         raise ValueError("the screenshot is not legible")
     reference = item.captured_at.date()
-    covered: set[str] = set()
+    by_total: list[Entry] = []
     for total in qris.totals:
         month = month_of(total.period_text, reference)
-        if total.amount_rp is not None and month and month not in covered:
-            covered.add(month)
-            result.entries.append(
+        if total.amount_rp is not None and month and month not in {e.month for e in by_total}:
+            by_total.append(
                 Entry(
                     month=month,
                     kind="sale",
@@ -404,31 +403,40 @@ async def _read_qris(
                     locator=f"total for {total.period_text}",
                 )
             )
-    for row in qris.rows:
-        month = month_of(row.date_text, reference) or _month(item)
-        if row.direction == "in" and row.amount_rp is not None and month not in covered:
-            result.entries.append(
-                Entry(
-                    month=month,
-                    kind="sale",
-                    amount_rp=row.amount_rp,
-                    evidence_type=item.type,
-                    evidence_id=item.id,
-                    locator=f"row {row.row}",
-                )
-            )
+    by_row = [
+        Entry(
+            month=month_of(row.date_text, reference) or _month(item),
+            kind="sale",
+            amount_rp=row.amount_rp,
+            evidence_type=item.type,
+            evidence_id=item.id,
+            locator=f"row {row.row}",
+        )
+        for row in qris.rows
+        if row.direction == "in" and row.amount_rp is not None
+    ]
+    covered = {e.month for e in by_total}
+    result.entries += by_total + [e for e in by_row if e.month not in covered]
+    # A screenshot that can't add up to its own total proves no more than the lower of the two:
+    # if the printed total is the larger, only the rows that are actually listed count.
+    rows_only = bool(qris.arithmetic_problems) and qris.rows_in_sum_rp < sum(
+        e.amount_rp for e in by_total
+    )
+    if rows_only:
+        result.entries = by_row
     inflows = sum(entry.amount_rp for entry in result.entries)
     facts.add(
         f"{item.key}_inflows", f"Money received in {item.label}", "rupiah", inflows, [item.id]
     )
 
     for problem in qris.arithmetic_problems:
+        trusted = f" Only its listed rows, {_rp(inflows)}, count as money received." * rows_only
         result.checks.append(
             Finding(
                 kind="fraud_signal",
                 severity="high",
                 source="code",
-                text=f"{item.label}: {problem} The screenshot may have been edited.",
+                text=f"{item.label}: {problem} The screenshot may have been edited.{trusted}",
                 citations=[_cite(item, "rows"), _cite(item, "total")],
             )
         )
