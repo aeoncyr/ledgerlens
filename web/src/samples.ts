@@ -88,5 +88,35 @@ export const SAMPLES: SampleSummary[] = [
     ],
     "headline": "The loan application is marked inconsistent due to major contradictions between interview claims, notebook records, and hard evidence.",
     "preparedAt": "2026-10-16"
+  },
+  {
+    "slug": "bu-wati",
+    "fileNumber": "LL-2610-0145",
+    "alias": "Toko Baju Bu Wati",
+    "businessType": "Clothing reseller (toko baju)",
+    "city": "Surabaya",
+    "yearsOperating": 6,
+    "amount": 25000000,
+    "tenorMonths": 18,
+    "assessment": "inconsistent",
+    "revenueLow": 5350000,
+    "revenueHigh": 16637500,
+    "maxInstallment": null,
+    "requestedInstallment": 1455793,
+    "withinPolicy": false,
+    "evidenceStrength": 80,
+    "evidenceCount": 16,
+    "findings": [
+      {
+        "severity": "high",
+        "text": "All 22 transactions listed in QRIS history 2 sum to Rp 4.400.000, contradicting the printed summary figure of \"Rp9.400.000\". This indicates the document total may have been altered or misstated."
+      },
+      {
+        "severity": "low",
+        "text": "No shop photographs or owner interview audio recordings were gathered during the credit visit."
+      }
+    ],
+    "headline": "The application is marked inconsistent due to an unresolved discrepancy between individual QRIS transaction rows and the displayed monthly summary figure.",
+    "preparedAt": "2026-10-17"
   }
 ]

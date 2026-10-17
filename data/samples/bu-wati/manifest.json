@@ -1,0 +1,110 @@
+{
+  "persona": "bu-wati",
+  "application": {
+    "alias": "Toko Baju Bu Wati",
+    "businessType": "Clothing reseller (toko baju)",
+    "city": "Surabaya",
+    "yearsOperating": 6,
+    "amount": 25000000,
+    "tenorMonths": 18
+  },
+  "evidence": [
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-08-1.jpg",
+      "capturedAt": "2026-10-06T09:32:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-08-2.jpg",
+      "capturedAt": "2026-10-06T09:34:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-08-3.jpg",
+      "capturedAt": "2026-10-06T09:36:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-1.jpg",
+      "capturedAt": "2026-10-06T09:38:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-2.jpg",
+      "capturedAt": "2026-10-06T09:40:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-3.jpg",
+      "capturedAt": "2026-10-06T09:42:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-08-4.jpg",
+      "capturedAt": "2026-10-06T09:44:00+00:00"
+    },
+    {
+      "type": "qris_history",
+      "path": "qris-2026-08.png",
+      "capturedAt": "2026-10-06T09:46:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-09-1.jpg",
+      "capturedAt": "2026-10-06T09:48:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-09-2.jpg",
+      "capturedAt": "2026-10-06T09:50:00+00:00"
+    },
+    {
+      "type": "ledger_page",
+      "path": "notebook-2026-09-3.jpg",
+      "capturedAt": "2026-10-06T09:52:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-1.jpg",
+      "capturedAt": "2026-10-06T09:54:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-2.jpg",
+      "capturedAt": "2026-10-06T09:56:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-3.jpg",
+      "capturedAt": "2026-10-06T09:58:00+00:00"
+    },
+    {
+      "type": "receipt",
+      "path": "receipt-2026-09-4.jpg",
+      "capturedAt": "2026-10-06T10:00:00+00:00"
+    },
+    {
+      "type": "qris_history",
+      "path": "qris-2026-09.png",
+      "capturedAt": "2026-10-06T10:02:00+00:00"
+    }
+  ],
+  "truth": {
+    "2026-08": {
+      "claimed_sales": 17045000,
+      "true_sales": 17045000,
+      "purchases": 11300000,
+      "expenses": 750000,
+      "qris_total": 6300000
+    },
+    "2026-09": {
+      "claimed_sales": 16230000,
+      "true_sales": 16230000,
+      "purchases": 10900000,
+      "expenses": 750000,
+      "qris_total": 4400000,
+      "qris_printed_total": 9400000
+    }
+  }
+}

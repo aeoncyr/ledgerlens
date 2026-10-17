@@ -117,6 +117,7 @@ const sample = SPECIMEN_LINES.filter((line) => line.written).slice(0, 3).map((li
 }))
 
 const hendra = SAMPLES.find((s) => s.slug === 'pak-hendra')
+const wati = SAMPLES.find((s) => s.slug === 'bu-wati')
 
 export default function HowItWorks() {
   return (
@@ -287,9 +288,10 @@ export default function HowItWorks() {
                 handwriting fonts.
               </li>
               <li>
-                <strong>3 of 3</strong> sample files with every monthly total read exactly and the
+                <strong>4 of 4</strong> sample files with every monthly total read exactly and the
                 outcome their evidence supports
-                {hendra ? `, including ${hendra.alias}, whose own words contradict his notebook` : ''}.
+                {hendra ? `, including ${hendra.alias}, whose own words contradict his notebook` : ''}
+                {wati ? `, and ${wati.alias}, whose edited QRIS screenshot doesn’t add up` : ''}.
               </li>
             </ul>
             <ul className="ai-list muted">

@@ -27,6 +27,9 @@ class Persona:
     suppliers: tuple[str, ...] = ("Toko Sumber Rejeki",)
     qris_share: float | None = None  # share of true sales paid by QRIS; None if no QRIS
     inflation: float = 1.0  # how many times the notebook overstates true sales
+    qris_tickets: tuple[int, ...] | None = None  # typical QRIS payment sizes; None: a warung's
+    qris_day_chance: float = 1.0  # share of days with any QRIS payment
+    qris_edits: dict[str, int] | None = None  # month -> rupiah the owner added to its printed total
 
 
 PERSONAS: dict[str, Persona] = {
@@ -84,6 +87,29 @@ PERSONAS: dict[str, Persona] = {
             suppliers=("Pasar Kosambi - Kios Bu Imas", "Agen Beras Cianjur"),
             qris_share=0.4,
             inflation=3.0,
+        ),
+        Persona(
+            slug="bu-wati",
+            name="Toko Baju Bu Wati",
+            city="Surabaya",
+            # The books are honest. The September QRIS screenshot is not: its printed total was
+            # raised with a photo editor, while the list of payments under it was left alone.
+            daily_sales=(380_000, 720_000),
+            market_day_sales=None,
+            weekly_purchases=(2_400_000, 3_100_000),
+            expenses={"sewa lapak": 600_000, "bayar listrik": 150_000},
+            sale_words=("jual gamis", "laku daster", "jual kaos", "jual", "laku"),
+            purchase_words=("kulakan gamis", "belanja grosir", "ambil kaos grosir"),
+            customers=("Bu Ani", "Mbak Lia", "Bu Har"),
+            business_type="Clothing reseller (toko baju)",
+            years_operating=6,
+            loan_amount=25_000_000,
+            tenor_months=18,
+            suppliers=("Grosir Busana Barokah", "Konveksi Mitra Jaya"),
+            qris_share=0.2,
+            qris_tickets=(125_000, 150_000, 175_000, 195_000, 225_000, 250_000, 285_000, 325_000),
+            qris_day_chance=0.5,
+            qris_edits={"2026-09": 5_000_000},
         ),
     ]
 }

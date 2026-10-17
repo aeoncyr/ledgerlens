@@ -2262,7 +2262,7 @@ textarea:focus {
 /* Finished files, as small documents. */
 .sample-cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
 
@@ -2433,8 +2433,7 @@ textarea:focus {
     left: 44%;
   }
 
-  .doors,
-  .sample-cards {
+  .doors {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -2496,6 +2495,10 @@ textarea:focus {
 
   .door {
     padding: 22px 18px;
+  }
+
+  .sample-cards {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
