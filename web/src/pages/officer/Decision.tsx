@@ -22,11 +22,36 @@ import {
 } from '../../decision.ts'
 import type { Application } from '../../officer.ts'
 import { stressDropPct } from '../../stress.ts'
-import { EVIDENCE_LABEL, type CreditFileData, type EvidenceType } from '../../types.ts'
+import {
+  ASSESSMENT_LABEL,
+  EVIDENCE_LABEL,
+  type CreditFileData,
+  type EvidenceType,
+} from '../../types.ts'
 import '../../decision.css'
 
 const number = new Intl.NumberFormat('id-ID')
 const rp = (value: number) => `Rp ${number.format(Math.round(value || 0))}`
+
+// Whether the officer agreed with LedgerLens's assessment, as the decision recorded it.
+function AgreementNote({ decision }: { decision: RecordedDecision }) {
+  if (decision.assessmentAgreed == null) return null
+  const outcome = decision.assessmentAtDecision
+    ? ` (${ASSESSMENT_LABEL[decision.assessmentAtDecision]})`
+    : ''
+  return (
+    <p className="decision-agreement">
+      {decision.assessmentAgreed ? (
+        <>The officer agrees with LedgerLens’s assessment{outcome}.</>
+      ) : (
+        <>
+          The officer disagrees with LedgerLens’s assessment{outcome}: “
+          {decision.disagreementReason}”
+        </>
+      )}
+    </p>
+  )
+}
 
 // KUR micro loans are priced at 6% a year; the officer can change it.
 const DEFAULT_RATE_PCT = 6
@@ -221,6 +246,10 @@ function DecisionForm({
   const [conditions, setConditions] = useState<DraftCondition[]>(
     (returned?.conditions ?? []).map((c) => ({ text: c.text, evidenceType: c.evidenceType ?? '' })),
   )
+  // Asked only when there is an assessment to agree with, which every checked file has.
+  const assessment = app.assessment
+  const [agrees, setAgrees] = useState<boolean | null>(returned?.assessmentAgreed ?? null)
+  const [disagreeWhy, setDisagreeWhy] = useState(returned?.disagreementReason ?? '')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -230,9 +259,12 @@ function DecisionForm({
   const offerValid = amountRp > 0 && tenor >= 1 && tenor <= 60 && ratePct >= 0 && ratePct <= 60
   const filled = conditions.filter((c) => c.text.trim())
   const conditionsValid = filled.every((c) => c.text.trim().length >= 5)
+  const agreementValid =
+    !assessment || agrees === true || (agrees === false && disagreeWhy.trim().length >= 5)
   const ready =
     reason.trim().length >= 5 &&
     conditionsValid &&
+    agreementValid &&
     (action !== 'approve' || offerValid) &&
     (action !== 'request_more' || filled.length > 0)
 
@@ -252,6 +284,12 @@ function DecisionForm({
           action === 'decline'
             ? []
             : filled.map((c) => ({ text: c.text.trim(), evidenceType: c.evidenceType || null })),
+        ...(assessment && agrees !== null
+          ? {
+              assessmentAgreed: agrees,
+              disagreementReason: agrees ? undefined : disagreeWhy.trim(),
+            }
+          : {}),
       })
       onSent(result)
     } catch (e) {
@@ -279,6 +317,53 @@ function DecisionForm({
         LedgerLens recommends; you decide. An approval or a decline is checked by a second person at
         your lender before the owner hears about it.
       </p>
+      {assessment && (
+        <fieldset className="decision-agree">
+          <legend>
+            Do you agree with LedgerLens’s assessment:{' '}
+            <strong>{ASSESSMENT_LABEL[assessment]}</strong>?
+          </legend>
+          <div className="choice-row">
+            {[
+              { value: true, label: 'Agree', note: 'The outcome matches what you see' },
+              { value: false, label: 'Disagree', note: 'Say why, in a sentence' },
+            ].map(({ value, label, note }) => (
+              <label key={label} className={`choice ${agrees === value ? 'chosen' : ''}`}>
+                <input
+                  type="radio"
+                  name="agrees"
+                  checked={agrees === value}
+                  onChange={() => setAgrees(value)}
+                />
+                {label}
+                <span>{note}</span>
+              </label>
+            ))}
+          </div>
+          {agrees === false && (
+            <label>
+              Why do you disagree?
+              <textarea
+                required
+                minLength={5}
+                maxLength={500}
+                rows={2}
+                value={disagreeWhy}
+                onChange={(e) => setDisagreeWhy(e.target.value)}
+                aria-describedby="decision-disagree-hint"
+              />
+              <span className="hint" id="decision-disagree-hint">
+                It stays on your lender’s side and is not in the owner’s letter. The pilot
+                dashboard collects these reasons, so your team can see where officers and the
+                checks part ways.
+              </span>
+            </label>
+          )}
+          <p className="hint">
+            Your answer goes into the audit log and the pilot dashboard, whatever you decide.
+          </p>
+        </fieldset>
+      )}
       <fieldset className="choice-row">
         <legend className="visually-hidden">Decision</legend>
         {ACTIONS.map(({ key, label, note }) => (
@@ -442,6 +527,7 @@ function Recommendation({ decision }: { decision: RecordedDecision }) {
       <p>
         <strong>{ACTION_LABEL[decision.action]}.</strong> “{decision.reason}”
       </p>
+      <AgreementNote decision={decision} />
       {decision.offer && <OfferFigures offer={decision.offer} />}
       <ConditionList
         conditions={decision.conditions ?? []}
@@ -543,6 +629,7 @@ function DecisionOutcome({ app, readOnly }: { app: Application; readOnly?: boole
       <p>
         <strong>{ACTION_LABEL[decision.action]}.</strong> {decision.reason}
       </p>
+      <AgreementNote decision={decision} />
       {decision.signoff?.approved && (
         <p className="fine">
           Signed off by a second person

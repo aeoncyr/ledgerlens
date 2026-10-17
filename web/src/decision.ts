@@ -6,7 +6,7 @@ import { doc, onSnapshot, type Timestamp } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { apiFetch } from './api.ts'
 import { db, ensureSignedIn } from './firebase.ts'
-import type { EvidenceType } from './types.ts'
+import type { Assessment, EvidenceType } from './types.ts'
 
 export type ScheduleRow = {
   month: number
@@ -47,6 +47,10 @@ export type RecordedDecision = {
   signoffCode?: string | null
   by?: string
   signoff?: { approved: boolean; note: string; by: string } | null
+  // Whether the officer agreed with LedgerLens's assessment, and why not when they didn't.
+  assessmentAgreed?: boolean | null
+  disagreementReason?: string | null
+  assessmentAtDecision?: Assessment | null
 }
 
 export type OwnerDecisionState =
@@ -84,6 +88,8 @@ export type DecisionBody = {
   reason: string
   offer?: { amountRp: number; tenorMonths: number; annualRatePct: number }
   conditions?: { text: string; evidenceType: EvidenceType | null }[]
+  assessmentAgreed?: boolean
+  disagreementReason?: string
 }
 
 export type DecisionResult = {

@@ -38,6 +38,7 @@ import {
 import DecisionCard, { WaitingCard } from './OwnerDecision.tsx'
 import DemoBar from '../../components/DemoBar.tsx'
 import DeleteFile from './DeleteFile.tsx'
+import FileActivity from './FileActivity.tsx'
 import OwnerShell from './OwnerShell.tsx'
 import RemindMe from './RemindMe.tsx'
 import VoiceRecorder from '../../components/VoiceRecorder.tsx'
@@ -282,6 +283,14 @@ export default function OwnerFile() {
         </div>
       )}
 
+      <FileActivity
+        id={id}
+        version={[app.status, app.officerUid, app.shareCode, app.consent?.given, decision?.state]
+          .map(String)
+          .join('|')}
+        lang={lang}
+        t={t}
+      />
       <DeleteFile id={id} blocked={deleteBlocked} t={t} />
     </OwnerShell>
   )

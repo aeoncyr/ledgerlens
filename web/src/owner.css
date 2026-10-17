@@ -1546,3 +1546,35 @@ fieldset.ow-field > legend {
   border-left: 3px solid var(--rule);
   background: var(--paper);
 }
+
+/* Who has seen your file: a short ruled timeline, newest first; a lender's visits stand out. */
+.ow-activity-list {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ow-activity-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 0 10px 12px;
+  border-top: 1px solid var(--rule);
+  border-left: 3px solid transparent;
+  font-size: 15px;
+}
+
+.ow-activity-list li.ow-activity-opened_by_lender,
+.ow-activity-list li.ow-activity-sent_to_you {
+  border-left-color: var(--brass);
+  font-weight: 600;
+}
+
+.ow-activity-when {
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

@@ -77,6 +77,7 @@ export default function OfficerShell({
           <NavLink to="/app/integrations" end>
             Integrations
           </NavLink>
+          <NavLink to="/app/pilot" end>Pilot</NavLink>
         </nav>
       </AppBar>
       <main className="container officer-page">

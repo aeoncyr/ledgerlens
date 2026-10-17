@@ -337,6 +337,8 @@ const AUDIT_LABEL: Record<string, string> = {
   opened_by_lender: 'Opened from the owner’s share link',
   share_withdrawn: 'Share withdrawn',
   demo_story_started: 'Demo copy made from a finished sample file',
+  assessment_agreed: 'Agreed with LedgerLens’s assessment',
+  assessment_disagreed: 'Disagreed with LedgerLens’s assessment',
 }
 
 const auditTime = new Intl.DateTimeFormat('en-GB', {
