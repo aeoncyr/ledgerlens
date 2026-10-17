@@ -28,7 +28,7 @@ jobs:
           done
       - name: Sample files open without the API
         run: |
-          for slug in bu-sari pak-joko pak-hendra; do
+          for slug in bu-sari pak-joko pak-hendra bu-wati; do
             curl --fail --silent --show-error --max-time 20 "$SITE/samples/$slug/file.json" \
               | python3 -c "import json, sys; f = json.load(sys.stdin); assert f['evidence'], 'no evidence'"
           done
