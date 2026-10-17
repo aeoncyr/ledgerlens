@@ -21,29 +21,32 @@ wall: the app signs you in anonymously in the background.
 
 ### Try it in two minutes
 
-There are three ways in. The first needs no waiting at all; the other two run the real analysis with Gemini.
+There are four ways in. The first two need no waiting at all; the last two run the real analysis with Gemini.
 
-1. **Open a finished credit file.** Open the [Warung Makan Hendra sample](https://ledger-lens-511708.web.app/samples/pak-hendra),
+1. **Play the whole story in one browser.** A loan decision passes through three people, so on the
+   [Warung Bu Sari sample](https://ledger-lens-511708.web.app/samples/bu-sari) press **Play the whole
+   story**. A replay of the real check plays first; then you are the owner who shares the file, the loan
+   officer who recommends a decision with an offer, the supervisor who signs it off, and the owner again,
+   who reads the decision and its letter and accepts. A bar at the top says what to do next. It runs on a
+   demo copy, so it is instant and costs nothing; on real files nobody can sign off their own decision.
+2. **Open a finished credit file.** Open [Warung Makan Hendra](https://ledger-lens-511708.web.app/samples/pak-hendra),
    a food stall whose notebook claims far more than its purchases can support. Click any citation, such as
-   *Notebook page 1, line 2*, to see the photographed page beside what Gemini read from it, with that line
-   highlighted, or *Interview, 0:04* to hear the owner put his daily sales at a third of what his notebook
-   claims. The other two samples are [Warung Bu Sari](https://ledger-lens-511708.web.app/samples/bu-sari)
-   (verified) and [Penjahit Pak Joko](https://ledger-lens-511708.web.app/samples/pak-joko) (partially
-   verified). These files were analysed in advance, so they open instantly.
-2. **Be the business owner** (on a phone if you have one; about five minutes, most of it waiting on the free
+   *Notebook page 1, line 2*, to see the photographed page beside what Gemini read from it, or
+   *Interview, 0:04* to hear the owner put his daily sales at a third of what his notebook claims. Then open
+   [Toko Baju Bu Wati](https://ledger-lens-511708.web.app/samples/bu-wati), whose QRIS screenshot was edited
+   to show a monthly total of Rp 9.400.000 when its payments add up to Rp 4.400.000: LedgerLens catches it
+   and counts only what the payments prove. Press **Watch how this file was checked** on a sample to replay
+   its real agent trace. The other samples are [Warung Bu Sari](https://ledger-lens-511708.web.app/samples/bu-sari)
+   (verified) and [Penjahit Pak Joko](https://ledger-lens-511708.web.app/samples/pak-joko) (partially verified).
+3. **Be the business owner** (on a phone if you have one; about five minutes, most of it waiting on the free
    tier): go to [/owner](https://ledger-lens-511708.web.app/owner) and pick a business under **Try with a
-   sample business**. Press **Continue**, read who will see your file and agree with **I agree, let's start**,
-   then press **Add these sample records** and **Check my records**. When the check is done, read the summary
-   written for you, answer a question if you like, and press **Create my share link**. You get a link and an
-   8-character code to give a lender.
-3. **Be the loan officer.** Open the owner's share link in another browser or a private window, as a lender
-   would on their own device (or type the code on the [Applications](https://ledger-lens-511708.web.app/app)
-   page). The full credit file joins your list, marked *Shared by owner*. To try the officer-led flow
-   instead, go to [/app/new](https://ledger-lens-511708.web.app/app/new), choose **Start from a sample
-   business**, then **Create and continue to consent** and **Record consent and continue**. On the evidence
-   page, press **Add these records**, then **Run the analysis** and watch the agents work. When the file is
-   ready, type an answer under a question for the owner, press **Re-check with the owner's answers**, and
-   finish by recording a decision with a written reason.
+   sample business**. Agree with **I agree, let's start**, press **Add these sample records** and **Check my
+   records**. Read the summary written for you, answer a question if you like, and press **Create my share
+   link** to get a link and an 8-character code for a lender.
+4. **Be the loan officer.** Open the owner's share link in another browser or a private window, or start your
+   own file at [/app/new](https://ledger-lens-511708.web.app/app/new) with **Start from a sample business**,
+   then **Add these records** and **Run the analysis** to watch the agents work. Recommend a decision with an
+   offer; a second person signs it off through a link, and the owner sees it on their phone.
 
 The demo runs on Gemini's free tier, so it has daily limits for the judging period: 35 analyses or re-checks
 a day across the site and 6 per visitor. Beyond that, the four sample files always open.
@@ -113,9 +116,18 @@ the work:
 5. **Ask.** Where an owner could explain a gap, LedgerLens writes a polite question in Bahasa. The owner can
    answer it on their phone, or the officer types the answer on a visit, and the file is checked again, just
    as a good credit officer would do it.
-6. **Cite and decide.** The file ends in a credit memo in the 5C format lenders already use (Character,
-   Capacity, Capital, Collateral, Conditions) and a summary written for the owner in English and Bahasa.
-   Every figure links to its evidence, and the officer records the decision with a written reason.
+6. **Cite.** The file ends in a credit memo in the 5C format lenders already use (Character, Capacity,
+   Capital, Collateral, Conditions) and a summary written for the owner in English and Bahasa. Every figure
+   links to its evidence. Code also stress-tests the request: how far sales could fall before the instalment
+   breaks the lender's policy, after any other loans the owner declares, including online loans.
+7. **Decide, sign off and act.** The officer recommends approval with an offer (its instalment schedule
+   computed by code), approval with conditions, a request for more records, or a decline, always with a
+   written reason. Approvals and declines need a second person at the lender to sign them off. The decision
+   then reaches the owner's phone with a short letter in English and Bahasa that Gemini writes around figures
+   code fills in; the owner accepts the offer, meets the conditions or sends the records asked for, and the
+   officer sees it. Each step can be handed off on WhatsApp, lands as a row in the lender's own Google Sheet
+   (or any webhook), and the file exports as JSON, CSV or a printed memo, with a Google Calendar field visit
+   listing what to check on site.
 
 The two sides see different things on purpose. The owner sees their records, a plain summary of what could be
 confirmed and what is still missing, three tips to make the file stronger and the questions put to them. The
@@ -269,10 +281,10 @@ flowchart LR
 
 | Service | What it does in LedgerLens |
 | --- | --- |
-| **Gemini** | Reads handwriting, QRIS screenshots, receipts, shop photos and Bahasa audio; cross-checks the sources; writes the follow-up questions, the 5C memo and the owner summary, always as schema-validated JSON. The prototype calls the Gemini Developer API (Google AI Studio) on its free tier, with a chain of models per role |
+| **Gemini** | Reads handwriting, QRIS screenshots, receipts, shop photos and Bahasa audio; cross-checks the sources; writes the follow-up questions, the 5C memo, the owner summary and the owner's decision letter, always as schema-validated JSON, with every figure filled in by code. The prototype calls the Gemini Developer API (Google AI Studio) on its free tier, with a chain of models per role |
 | **Cloud Run** (Jakarta, `asia-southeast2`) | Hosts our FastAPI app and the agent pipeline. An analysis runs inside its request and streams progress through Firestore; request-based billing lets the service scale to zero when idle |
-| **Firestore** (Jakarta) | Stores applications, evidence readings, runs (the live trace), the credit file, the owner's summary, share links and the audit log, and streams live progress to both sides |
-| **Firebase** | Hosting serves the web app and forwards `/api` to Cloud Run; anonymous Auth means judges, owners and officers meet no login wall; Cloud Storage holds the evidence; security rules let browsers only read, let each user upload only into their own folder, and keep the lender's findings, memo and audit log away from the owner |
+| **Firestore** (Jakarta) | Stores applications, evidence readings, runs (the live trace), the credit file, the owner's summary, decisions and sign-offs, share links, the lender's integration settings and the audit log, and streams live progress to both sides |
+| **Firebase** | Hosting serves the web app and forwards `/api` to Cloud Run; anonymous Auth means judges, owners and officers meet no login wall; Cloud Storage holds the evidence; security rules let browsers only read, let each user upload only into their own folder, keep the lender's findings, memo and audit log away from the owner, and let the reviewer who signs off a decision read the file without changing it |
 
 ## Tech stack
 
@@ -372,6 +384,12 @@ shorthand and photo quality, and results on the team's own handwritten pages wil
   summary and questions written for them, and a check of what they send
 - [x] Sharing with one lender by link or code, which the owner can stop at any time, with evidence the owner
   sent marked as weaker and access enforced by Firestore rules
+- [x] The decision loop: offers with an instalment schedule, conditions, requests for records, a second
+  sign-off, the owner's answer, and hand-offs to WhatsApp, Google Sheets or a webhook, exports and a
+  printed memo
+- [x] A stress test, other debts including online loans, "delete my file" for owners, and a sample whose
+  edited QRIS screenshot is caught
+- [x] Judge mode: the whole story in one browser on a demo copy, and replays of real agent traces
 - [ ] Real handwriting test on the team's own pages
 - [ ] Submission: deck, demo video and the live prototype kept up for judging
 
