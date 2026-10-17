@@ -36,6 +36,7 @@ import {
   UndoIcon,
 } from './icons.tsx'
 import DecisionCard, { WaitingCard } from './OwnerDecision.tsx'
+import DemoBar from '../../components/DemoBar.tsx'
 import OwnerShell from './OwnerShell.tsx'
 import VoiceRecorder from '../../components/VoiceRecorder.tsx'
 import { answerByVoice, declineQuestion } from '../../officer.ts'
@@ -157,6 +158,7 @@ export default function OwnerFile() {
       <p className="ow-back">
         <Link to="/owner">← {t.backHome}</Link>
       </p>
+      {app.demo && <DemoBar app={app} playing="owner" />}
       <FileHeader app={app} t={t} />
       <Stepper stage={stage} t={t} />
 

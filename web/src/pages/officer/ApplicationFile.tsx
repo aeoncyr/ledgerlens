@@ -1,7 +1,8 @@
 import { getDownloadURL, ref } from 'firebase/storage'
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import CreditFile from '../../components/CreditFile.tsx'
+import DemoBar from '../../components/DemoBar.tsx'
 import LiveTrace from '../../components/LiveTrace.tsx'
 import VoiceRecorder from '../../components/VoiceRecorder.tsx'
 import { auth, storage } from '../../firebase.ts'
@@ -39,7 +40,16 @@ function useImageUrls(evidence: StoredEvidence[]): Map<string, string> {
   useEffect(() => {
     let cancelled = false
     Promise.all(
-      evidence.map(async (e) => [e.id, await getDownloadURL(ref(storage, e.storagePath))] as const),
+      evidence.map(
+        async (e) =>
+          [
+            e.id,
+            // A demo copy of a sample points at the public photos the web app serves.
+            e.storagePath.startsWith('/samples/')
+              ? e.storagePath
+              : await getDownloadURL(ref(storage, e.storagePath)),
+          ] as const,
+      ),
     )
       .then((pairs) => !cancelled && setUrls(new Map(pairs)))
       .catch(() => undefined)
@@ -326,6 +336,7 @@ const AUDIT_LABEL: Record<string, string> = {
   share_link_created: 'Share link created',
   opened_by_lender: 'Opened from the owner’s share link',
   share_withdrawn: 'Share withdrawn',
+  demo_story_started: 'Demo copy made from a finished sample file',
 }
 
 const auditTime = new Intl.DateTimeFormat('en-GB', {
@@ -454,6 +465,7 @@ export default function ApplicationFile() {
   const { data: run } = useRun(id, app?.currentRunId)
   const { data: stored } = useCreditFileDoc(id, app?.currentRunId)
   const urls = useImageUrls(evidence)
+  const [search] = useSearchParams()
 
   const title = app?.business.alias ?? (loading ? 'Loading…' : 'Application not found')
   const crumbs = <> / {app?.business.alias ?? '…'}</>
@@ -469,7 +481,14 @@ export default function ApplicationFile() {
   // A second person at the lender, signing off the officer's recommendation: they read the file
   // and cannot change it.
   const me = auth.currentUser?.uid
-  const reviewing = !!app.reviewerUid && app.reviewerUid === me && app.officerUid !== me
+  // On a demo file the same person is the officer and the supervisor; ?as=reviewer says which
+  // one is looking (and api.ts tells the API the same).
+  const actingReviewer = !!app.demo && search.get('as') === 'reviewer' && app.reviewerUid === me
+  const reviewing =
+    actingReviewer || (!!app.reviewerUid && app.reviewerUid === me && app.officerUid !== me)
+  const demoBar = app.demo ? (
+    <DemoBar app={app} playing={reviewing ? 'reviewer' : 'officer'} />
+  ) : null
   const asked = app.decision?.action === 'request_more' && app.decision.state === 'final'
 
   if (app.status === 'draft' || app.status === 'collecting' || !stored) {
@@ -482,6 +501,7 @@ export default function ApplicationFile() {
           }
     return (
       <OfficerShell title={title} crumbs={crumbs} step={stepOf(app)}>
+        {demoBar}
         <p className="lead-text">{STATUS_LABEL[app.status]}.</p>
         {app.status === 'analyzing' ? (
           <LiveTrace run={run} />
@@ -540,10 +560,11 @@ export default function ApplicationFile() {
       done={app.status === 'decided'}
       titleHidden
     >
+      {demoBar}
       <div className="page-actions">
         <span className="status-label">{STATUS_LABEL[app.status]}</span>
         {reviewing && <span className="fine">You are the second person: read-only.</span>}
-        {editable && (
+        {editable && !app.demo && (
           <Link className="button quiet" to={`/app/${id}/evidence`}>
             Add evidence and run again
           </Link>
@@ -551,7 +572,7 @@ export default function ApplicationFile() {
       </div>
       <HandOff id={id} file={file} />
       {app.status === 'analyzing' && <LiveTrace run={run} />}
-      {editable && app.status !== 'analyzing' && (
+      {editable && !app.demo && app.status !== 'analyzing' && (
         <FollowUp id={id} findings={file.findings} round={file.round ?? 0} />
       )}
       {editable && app.status !== 'analyzing' && (

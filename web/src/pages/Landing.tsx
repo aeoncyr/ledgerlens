@@ -4,6 +4,7 @@ import SiteNav from '../components/SiteNav.tsx'
 import Specimen from '../components/Specimen.tsx'
 import { SAMPLES } from '../samples.ts'
 import { ASSESSMENT_LABEL, ASSESSMENT_TONE } from '../types.ts'
+import '../demo.css'
 
 type Actor = 'Owner' | 'Officer' | 'Gemini' | 'Code'
 
@@ -263,6 +264,20 @@ export default function Landing() {
                 </span>
               </Link>
             ))}
+          </div>
+          <div className="story-callout">
+            <div>
+              <h3>Trying it alone? Play the whole story</h3>
+              <p>
+                A decision passes through three people. In one browser, be the owner who shares a
+                finished file, the officer who recommends a decision and the supervisor who signs
+                it off. It starts with a replay of the real check and uses a demo copy, so it is
+                instant and free.
+              </p>
+            </div>
+            <Link className="button" to={`/demo/${SAMPLES[0].slug}`}>
+              Play the whole story: owner, officer and supervisor in one browser
+            </Link>
           </div>
         </section>
 
