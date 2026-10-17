@@ -266,6 +266,7 @@ export default function OwnerFile() {
             busy={busy}
             progress={progress}
             locked={locked}
+            demo={!!app.demo}
             onPick={onPick}
             onSample={(slug) => act('upload', () => sendSample(slug))}
             onCheck={() => act('check', () => runCheck(id))}
@@ -379,6 +380,7 @@ function Records({
   busy,
   progress,
   locked,
+  demo,
   onPick,
   onSample,
   onCheck,
@@ -390,6 +392,8 @@ function Records({
   busy: Busy
   progress: string | null
   locked: boolean
+  // A demo copy is never checked again, so sample records would do nothing.
+  demo: boolean
   onPick: (type: EvidenceType, event: ChangeEvent<HTMLInputElement>) => void
   onSample: (slug: string) => void
   onCheck: () => void
@@ -539,7 +543,7 @@ function Records({
         </ul>
       )}
 
-      {!locked && !(remembered && evidence.length === 0) && samplePicker}
+      {!locked && !demo && !(remembered && evidence.length === 0) && samplePicker}
 
       <div className="ow-sticky">
         {locked && <p className="ow-fine">{t.checkLocked}</p>}
