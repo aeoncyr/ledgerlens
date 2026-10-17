@@ -9,6 +9,7 @@
   "gemini-3.6-flash"
  ],
  "outcome": "inconsistent",
+ "ownerLed": true,
  "steps": [
   {
    "agent": "intake",

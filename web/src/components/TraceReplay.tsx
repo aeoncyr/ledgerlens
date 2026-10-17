@@ -111,8 +111,10 @@ export default function TraceReplay({
       {finished && ranAs && fileAs && ranAs !== fileAs && (
         <p className="fine replay-differs">
           This run ended <strong>{ranAs}</strong>; the finished file comes from another run on the
-          same records, which ended <strong>{fileAs}</strong>. Readings of handwriting vary a little
-          from run to run, which is why the officer confirms disputed lines and a person decides.
+          same records, which ended <strong>{fileAs}</strong>.{' '}
+          {run.ownerLed
+            ? 'This run was the business owner’s own check: QRIS screenshots an owner sends count as weaker evidence until an officer confirms them on a visit, so the file can be at most partially verified until then.'
+            : 'Readings of handwriting vary a little from run to run, which is why the officer confirms disputed lines and a person decides.'}
         </p>
       )}
     </section>

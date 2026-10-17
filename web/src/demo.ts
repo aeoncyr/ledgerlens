@@ -66,6 +66,8 @@ export type RecordedRun = {
   models: string[]
   // The run's own outcome, e.g. "partially_verified"; it can differ from the published file.
   outcome: string | null
+  // The run was the owner's own check (owner-sent QRIS counts as weaker evidence).
+  ownerLed?: boolean
   steps: RecordedStep[]
 }
 

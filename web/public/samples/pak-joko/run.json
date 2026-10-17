@@ -9,6 +9,7 @@
   "gemini-3.8-flash"
  ],
  "outcome": "partially_verified",
+ "ownerLed": false,
  "steps": [
   {
    "agent": "intake",
@@ -46,34 +47,34 @@
    "state": "done",
    "t": 19.3,
    "detail": {
-    "sampleLabel": "Notebook page 1 · first lines",
     "model": "gemini-3.5-flash-lite",
     "sample": [
      {
-      "confidence": 1.0,
-      "amountText": "Rp 200.000",
-      "kind": "sale",
+      "description": "jahit seragam",
       "dateText": "1/8",
+      "amountText": "Rp 200.000",
       "amountRp": 200000,
-      "description": "jahit seragam"
+      "confidence": 1.0,
+      "kind": "sale"
      },
      {
-      "confidence": 1.0,
-      "amountText": "Rp 270.000",
-      "kind": "sale",
+      "description": "jahit kebaya",
       "dateText": "2/8",
+      "amountText": "Rp 270.000",
       "amountRp": 270000,
-      "description": "jahit kebaya"
+      "confidence": 1.0,
+      "kind": "sale"
      },
      {
-      "confidence": 1.0,
-      "amountText": "15rb",
-      "kind": "receivable",
+      "description": "kasbon Bu Lurah",
       "dateText": null,
+      "amountText": "15rb",
       "amountRp": 15000,
-      "description": "kasbon Bu Lurah"
+      "confidence": 1.0,
+      "kind": "receivable"
      }
-    ]
+    ],
+    "sampleLabel": "Notebook page 1 · first lines"
    }
   },
   {
@@ -88,34 +89,34 @@
    "state": "done",
    "t": 20.0,
    "detail": {
-    "sampleLabel": "Notebook page 4 · first lines",
     "model": "gemini-3.5-flash-lite",
     "sample": [
      {
-      "confidence": 1.0,
-      "amountText": "190rb",
-      "kind": "sale",
+      "description": "1/9 jahit kebaya",
       "dateText": "1/9",
+      "amountText": "190rb",
       "amountRp": 190000,
-      "description": "1/9 jahit kebaya"
+      "confidence": 1.0,
+      "kind": "sale"
      },
      {
-      "confidence": 1.0,
-      "amountText": "50 rb",
-      "kind": "receivable",
+      "description": "kasbon Bu Ratmi",
       "dateText": null,
+      "amountText": "50 rb",
       "amountRp": 50000,
-      "description": "kasbon Bu Ratmi"
+      "confidence": 1.0,
+      "kind": "receivable"
      },
      {
-      "confidence": 1.0,
-      "amountText": "255.000",
-      "kind": "sale",
+      "description": "2/9 jahit seragam",
       "dateText": "2/9",
+      "amountText": "255.000",
       "amountRp": 255000,
-      "description": "2/9 jahit seragam"
+      "confidence": 1.0,
+      "kind": "sale"
      }
-    ]
+    ],
+    "sampleLabel": "Notebook page 4 · first lines"
    }
   },
   {
@@ -130,34 +131,34 @@
    "state": "done",
    "t": 20.6,
    "detail": {
-    "sampleLabel": "Notebook page 2 · first lines",
     "model": "gemini-3.5-flash-lite",
     "sample": [
      {
-      "confidence": 0.98,
-      "amountText": "260rb",
-      "kind": "sale",
+      "description": "ongkos jahit",
       "dateText": "11/8",
+      "amountText": "260rb",
       "amountRp": 260000,
-      "description": "ongkos jahit"
+      "confidence": 0.98,
+      "kind": "sale"
      },
      {
-      "confidence": 0.98,
-      "amountText": "25 rb",
-      "kind": "receivable",
+      "description": "kasbon Bu Lurah",
       "dateText": null,
+      "amountText": "25 rb",
       "amountRp": 25000,
-      "description": "kasbon Bu Lurah"
+      "confidence": 0.98,
+      "kind": "receivable"
      },
      {
-      "confidence": 0.98,
-      "amountText": "305 rb",
-      "kind": "sale",
+      "description": "jahit seragam",
       "dateText": "12/8",
+      "amountText": "305 rb",
       "amountRp": 305000,
-      "description": "jahit seragam"
+      "confidence": 0.98,
+      "kind": "sale"
      }
-    ]
+    ],
+    "sampleLabel": "Notebook page 2 · first lines"
    }
   },
   {
@@ -172,34 +173,34 @@
    "state": "done",
    "t": 29.0,
    "detail": {
-    "sampleLabel": "Notebook page 6 · first lines",
     "model": "gemini-3.5-flash-lite",
     "sample": [
      {
-      "confidence": 1.0,
-      "amountText": "315 rb",
-      "kind": "sale",
+      "description": "21/9 permak celana",
       "dateText": "21/9",
+      "amountText": "315 rb",
       "amountRp": 315000,
-      "description": "21/9 permak celana"
+      "confidence": 1.0,
+      "kind": "sale"
      },
      {
-      "confidence": 1.0,
-      "amountText": "Rp 300.000",
-      "kind": "sale",
+      "description": "22/9 permak celana",
       "dateText": "22/9",
+      "amountText": "Rp 300.000",
       "amountRp": 300000,
-      "description": "22/9 permak celana"
+      "confidence": 1.0,
+      "kind": "sale"
      },
      {
-      "confidence": 1.0,
-      "amountText": "15.000",
-      "kind": "receivable",
+      "description": "kasbon Mas Dimas",
       "dateText": null,
+      "amountText": "15.000",
       "amountRp": 15000,
-      "description": "kasbon Mas Dimas"
+      "confidence": 1.0,
+      "kind": "receivable"
      }
-    ]
+    ],
+    "sampleLabel": "Notebook page 6 · first lines"
    }
   },
   {
@@ -229,34 +230,34 @@
    "state": "done",
    "t": 33.7,
    "detail": {
-    "sampleLabel": "Notebook page 5 · first lines",
     "model": "gemini-3.5-flash-lite",
     "sample": [
      {
-      "confidence": 0.98,
-      "amountText": "290.000",
-      "kind": "sale",
+      "description": "11/9 jahit kebaya",
       "dateText": "11/9",
+      "amountText": "290.000",
       "amountRp": 290000,
-      "description": "11/9 jahit kebaya"
+      "confidence": 0.98,
+      "kind": "sale"
      },
      {
-      "confidence": 0.98,
-      "amountText": "Rp 320.000",
-      "kind": "sale",
+      "description": "12/9 jahit seragam",
       "dateText": "12/9",
+      "amountText": "Rp 320.000",
       "amountRp": 320000,
-      "description": "12/9 jahit seragam"
+      "confidence": 0.98,
+      "kind": "sale"
      },
      {
-      "confidence": 0.98,
-      "amountText": "845 rb",
-      "kind": "purchase",
+      "description": "beli kain",
       "dateText": null,
+      "amountText": "845 rb",
       "amountRp": 845000,
-      "description": "beli kain"
+      "confidence": 0.98,
+      "kind": "purchase"
      }
-    ]
+    ],
+    "sampleLabel": "Notebook page 5 · first lines"
    }
   },
   {

@@ -8,6 +8,7 @@
   "gemini-3.8-flash"
  ],
  "outcome": "partially_verified",
+ "ownerLed": true,
  "steps": [
   {
    "agent": "intake",
@@ -45,34 +46,34 @@
    "state": "done",
    "t": 7.3,
    "detail": {
-    "sampleLabel": "Notebook page 4 · first lines",
     "model": "gemini-3.5-flash-lite",
     "sample": [
      {
+      "description": "jual",
       "confidence": 0.95,
       "amountText": "590rb",
-      "kind": "sale",
-      "dateText": "1/9",
       "amountRp": 590000,
-      "description": "jual"
+      "dateText": "1/9",
+      "kind": "sale"
      },
      {
+      "description": "laku",
       "confidence": 0.95,
       "amountText": "605.000",
-      "kind": "sale",
-      "dateText": "2/9",
       "amountRp": 605000,
-      "description": "laku"
+      "dateText": "2/9",
+      "kind": "sale"
      },
      {
+      "description": "laku",
       "confidence": 0.95,
       "amountText": "Rp 660.000",
-      "kind": "sale",
-      "dateText": "3/9",
       "amountRp": 660000,
-      "description": "laku"
+      "dateText": "3/9",
+      "kind": "sale"
      }
-    ]
+    ],
+    "sampleLabel": "Notebook page 4 · first lines"
    }
   },
   {
@@ -87,34 +88,34 @@
    "state": "done",
    "t": 7.5,
    "detail": {
-    "sampleLabel": "Notebook page 1 · first lines",
     "model": "gemini-3.5-flash-lite",
     "sample": [
      {
+      "description": "Sabtu pasar",
       "confidence": 1.0,
       "amountText": "2,3jt",
-      "kind": "sale",
-      "dateText": "1/8",
       "amountRp": 2300000,
-      "description": "Sabtu pasar"
+      "dateText": "1/8",
+      "kind": "sale"
      },
      {
+      "description": "kasbon Pak Ujang",
       "confidence": 1.0,
       "amountText": "20.000",
-      "kind": "receivable",
-      "dateText": null,
       "amountRp": 20000,
-      "description": "kasbon Pak Ujang"
+      "dateText": null,
+      "kind": "receivable"
      },
      {
+      "description": "jual + pulsa",
       "confidence": 1.0,
       "amountText": "Rp 680.000",
-      "kind": "sale",
-      "dateText": "2/8",
       "amountRp": 680000,
-      "description": "jual + pulsa"
+      "dateText": "2/8",
+      "kind": "sale"
      }
-    ]
+    ],
+    "sampleLabel": "Notebook page 1 · first lines"
    }
   },
   {
@@ -129,34 +130,34 @@
    "state": "done",
    "t": 8.4,
    "detail": {
-    "sampleLabel": "Notebook page 2 · first lines",
     "model": "gemini-3.5-flash-lite",
     "sample": [
      {
+      "description": "jual",
       "confidence": 0.95,
       "amountText": "615 rb",
-      "kind": "sale",
-      "dateText": "11/8",
       "amountRp": 615000,
-      "description": "jual"
+      "dateText": "11/8",
+      "kind": "sale"
      },
      {
+      "description": "jual + pulsa",
       "confidence": 0.95,
       "amountText": "545.000",
-      "kind": "sale",
-      "dateText": "12/8",
       "amountRp": 545000,
-      "description": "jual + pulsa"
+      "dateText": "12/8",
+      "kind": "sale"
      },
      {
+      "description": "kulakan minyak",
       "confidence": 0.95,
       "amountText": "4,7 jt",
-      "kind": "purchase",
-      "dateText": null,
       "amountRp": 4700000,
-      "description": "kulakan minyak"
+      "dateText": null,
+      "kind": "purchase"
      }
-    ]
+    ],
+    "sampleLabel": "Notebook page 2 · first lines"
    }
   },
   {
@@ -171,34 +172,34 @@
    "state": "done",
    "t": 13.5,
    "detail": {
-    "sampleLabel": "Notebook page 3 · first lines",
     "model": "gemini-3.5-flash-lite",
     "sample": [
      {
+      "description": "jual sembako",
       "confidence": 0.95,
       "amountText": "485 rb",
-      "kind": "sale",
-      "dateText": "21/8",
       "amountRp": 485000,
-      "description": "jual sembako"
+      "dateText": "21/8",
+      "kind": "sale"
      },
      {
+      "description": "Sabtu pasar",
       "confidence": 0.95,
       "amountText": "2,2 jt",
-      "kind": "sale",
-      "dateText": "22/8",
       "amountRp": 2200000,
-      "description": "Sabtu pasar"
+      "dateText": "22/8",
+      "kind": "sale"
      },
      {
+      "description": "kasbon Bu Tini",
       "confidence": 0.95,
       "amountText": "15rb",
-      "kind": "receivable",
-      "dateText": null,
       "amountRp": 15000,
-      "description": "kasbon Bu Tini"
+      "dateText": null,
+      "kind": "receivable"
      }
-    ]
+    ],
+    "sampleLabel": "Notebook page 3 · first lines"
    }
   },
   {
@@ -228,34 +229,34 @@
    "state": "done",
    "t": 15.2,
    "detail": {
-    "sampleLabel": "Notebook page 5 · first lines",
     "model": "gemini-3.5-flash-lite",
     "sample": [
      {
+      "description": "11/9 jual",
       "confidence": 0.95,
       "amountText": "500rb",
-      "kind": "sale",
-      "dateText": "11/9",
       "amountRp": 500000,
-      "description": "11/9 jual"
+      "dateText": "11/9",
+      "kind": "sale"
      },
      {
+      "description": "12/9 Sabtu pasar",
       "confidence": 0.95,
       "amountText": "2,2 jt",
-      "kind": "sale",
-      "dateText": "12/9",
       "amountRp": 2200000,
-      "description": "12/9 Sabtu pasar"
+      "dateText": "12/9",
+      "kind": "sale"
      },
      {
+      "description": "belanja agen beras",
       "confidence": 0.95,
       "amountText": "4,8jt",
-      "kind": "purchase",
-      "dateText": null,
       "amountRp": 4800000,
-      "description": "belanja agen beras"
+      "dateText": null,
+      "kind": "purchase"
      }
-    ]
+    ],
+    "sampleLabel": "Notebook page 5 · first lines"
    }
   },
   {
@@ -402,34 +403,34 @@
    "state": "done",
    "t": 39.8,
    "detail": {
-    "sampleLabel": "Notebook page 6 · first lines",
     "model": "gemini-3.5-flash-lite",
     "sample": [
      {
+      "description": "jual sembako",
       "confidence": 1.0,
       "amountText": "Rp 595.000",
-      "kind": "sale",
-      "dateText": "21/9",
       "amountRp": 595000,
-      "description": "jual sembako"
+      "dateText": "21/9",
+      "kind": "sale"
      },
      {
+      "description": "laku",
       "confidence": 1.0,
       "amountText": "575 rb",
-      "kind": "sale",
-      "dateText": "22/9",
       "amountRp": 575000,
-      "description": "laku"
+      "dateText": "22/9",
+      "kind": "sale"
      },
      {
+      "description": "jual + pulsa",
       "confidence": 1.0,
       "amountText": "535rb",
-      "kind": "sale",
-      "dateText": "23/9",
       "amountRp": 535000,
-      "description": "jual + pulsa"
+      "dateText": "23/9",
+      "kind": "sale"
      }
-    ]
+    ],
+    "sampleLabel": "Notebook page 6 · first lines"
    }
   },
   {

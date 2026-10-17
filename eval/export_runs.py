@@ -70,9 +70,12 @@ def best_runs(
         filter=firestore.FieldFilter("business.alias", "in", list(samples))
     )
     for application in query.stream():
-        slug, assessment = samples[application.to_dict()["business"]["alias"]]
+        data = application.to_dict()
+        slug, assessment = samples[data["business"]["alias"]]
         for snapshot in application.reference.collection("runs").stream():
             run = snapshot.to_dict()
+            # A file the owner started counts the QRIS screenshots they send as weaker evidence.
+            run["ownerLed"] = bool(data.get("ownerUid"))
             if run.get("state") != "done" or not run.get("steps") or not run.get("startedAt"):
                 continue
             if slug not in best or _rank(run, assessment) > _rank(best[slug][1], assessment):
@@ -99,6 +102,7 @@ def export(run_id: str, run: dict[str, Any]) -> dict[str, Any]:
         "latencyMs": run.get("latencyMs"),
         "models": run.get("models") or [],
         "outcome": outcome(run),
+        "ownerLed": run.get("ownerLed", False),
         "steps": steps,
     }
 
