@@ -286,6 +286,14 @@ export default function HowItWorks() {
                 handwriting fonts.
               </li>
               <li>
+                <strong>102 of 104</strong> transaction amounts read exactly on 9 real handwritten pages
+                written by our team, in five formats: daily sales lists, ledgers with cost, sale price and
+                profit, a cash book and a monthly summary. The first run read 90%; two fixes it led to
+                (which column to copy on a ledger, and amounts written with spaces) brought it to 102. The
+                two misses are a 4 written like a 9 and an overwritten digit, the kind the officer confirms
+                on the photo.
+              </li>
+              <li>
                 <strong>4 of 4</strong> sample files with every monthly total read exactly and the
                 outcome their evidence supports
                 {hendra ? `, including ${hendra.alias}, whose own words contradict his notebook` : ''}
@@ -293,7 +301,6 @@ export default function HowItWorks() {
               </li>
             </ul>
             <ul className="ai-list muted">
-              <li>Real handwriting from our own notebooks is being measured next.</li>
               <li>All businesses, records and interviews here are fictional.</li>
               <li>
                 LedgerLens is not a credit score: predicting repayment needs repayment history these

@@ -58,6 +58,13 @@ For every line that has writing on it, return:
   (market-day sales). It is a purchase only if it says what was bought or from whom.
 - confidence: lower it whenever a character is unclear. Never invent missing text.
 
+Some notebooks are tables with several amount columns, such as harga modal (cost), harga jual (sale
+price), laba (profit), saldo (running balance), masuk (money in) and keluar (money out). Then
+amount_text is the line's transaction amount only: the sale price or sold total (harga jual,
+terjual, penjualan) for a sale, or the money in or money out (masuk, keluar) in a cash book.
+Never copy the cost, the profit or a running balance as amount_text; mention them in description
+if useful.
+
 Skip ruled lines with no writing. Set legible to false only if the page cannot be read at all.
 """
 

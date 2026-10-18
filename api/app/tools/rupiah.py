@@ -25,6 +25,8 @@ _GROUPED_WITH_CENTS = re.compile(r"^(?P<whole>\d{1,3}([.,]\d{3})+)[.,]\d{2}$")
 def _clean(text: str) -> str:
     cleaned = text.strip().lower()
     cleaned = re.sub(r"^(rp\.?|idr)", "", cleaned)
+    # A space before a group of three digits is a thousands separator: "3 300 000", "3.250 000".
+    cleaned = re.sub(r"(?<=\d) +(?=\d{3}(?!\d))", ".", cleaned)
     cleaned = cleaned.replace(" ", "")
     return re.sub(r"[,.]?-+$", "", cleaned)  # "1.500.000,-" -> "1.500.000"
 

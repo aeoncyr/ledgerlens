@@ -4318,3 +4318,25 @@ textarea:focus {
     white-space: nowrap;
   }
 }
+
+/* The landing page's measured results: four figures, two by two on mid-size screens. */
+.stats.stats-four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 1000px) {
+  .stats.stats-four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .stats.stats-four {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.stats.stats-four dd {
+  font-size: clamp(32px, 2.9vw, 44px);
+  white-space: nowrap;
+}

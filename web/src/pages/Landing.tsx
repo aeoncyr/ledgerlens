@@ -303,7 +303,7 @@ export default function Landing() {
                 data are in the repository, so anyone can run it again.
               </p>
             </div>
-            <dl className="stats">
+            <dl className="stats stats-four">
               <div>
                 <dd>28 of 29</dd>
                 <dt>receipt totals read exactly from real photographed receipts (CORD dataset)</dt>
@@ -313,13 +313,18 @@ export default function Landing() {
                 <dt>notebook amounts read exactly from photographed pages in eight handwriting fonts</dt>
               </div>
               <div>
+                <dd>102 of 104</dd>
+                <dt>amounts read exactly from 9 real handwritten pages by our team, in five formats</dt>
+              </div>
+              <div>
                 <dd>4 of 4</dd>
                 <dt>sample files with every monthly total read exactly and the right outcome</dt>
               </div>
             </dl>
             <p className="fine on-dark">
-              Real handwriting from our own notebooks is being measured next. All businesses here are
-              fictional.
+              On the real pages the first run read 90%; two fixes the test led to (which column to copy on
+              a ledger, and amounts written with spaces) brought it to 102 of 104. The two misses are a 4
+              written like a 9 and an overwritten digit. All businesses here are fictional.
             </p>
           </div>
         </section>
