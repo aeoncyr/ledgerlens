@@ -164,31 +164,31 @@ All screenshots are of the deployed prototype, with fictional businesses.
 
 <table>
   <tr>
-    <td width="33%" valign="top"><img src="assets/screens/owner-home.png" alt="The owner's home page: Show a lender what your notebook already proves, with three steps and a Start my file button"><br><sub><b>Start a file.</b> Three steps, no account or password, and sample businesses to try.</sub></td>
-    <td width="33%" valign="top"><img src="assets/screens/owner-summary.png" alt="The owner's summary for Warung Makan Hendra: what we could confirm, what's still missing and three tips"><br><sub><b>A summary for the owner.</b> What was confirmed, what is still missing and how to make the file stronger.</sub></td>
-    <td width="33%" valign="top"><img src="assets/screens/owner-share.png" alt="Share with a lender: a share link, Copy link and Send on WhatsApp buttons, an 8-character code and Stop sharing"><br><sub><b>Share with one lender.</b> A link or a code, also via WhatsApp, and sharing can be stopped at any time.</sub></td>
+    <td width="33%" valign="top"><img src="assets/screens/owner-home.png" alt="The owner's home page in the business owner app: Show a lender what your notebook already proves, with how it works"><br><sub><b>Start a file.</b> No account or password; English by default, Bahasa Indonesia with one tap.</sub></td>
+    <td width="33%" valign="top"><img src="assets/screens/owner-summary.png" alt="The owner's summary: what we could confirm, what's still missing and three tips to make the file stronger"><br><sub><b>A summary for the owner.</b> What was confirmed, what is still missing and how to make the file stronger.</sub></td>
+    <td width="33%" valign="top"><img src="assets/screens/owner-offer.png" alt="Your loan offer: a letter from the lender, the monthly instalment of Rp 860.664, the loan, term, rate and total, with Accept the offer"><br><sub><b>The lender's answer comes back.</b> A letter in English or Bahasa, an offer computed by code, and one tap to accept.</sub></td>
   </tr>
 </table>
 
-**The lender's side**, in the officer app:
+**The lender's side**, in the officer app and the published sample files:
 
 <table>
   <tr>
-    <td width="50%"><img src="assets/screens/evidence.png" alt="Evidence step with an evidence-strength meter and a sample business's records"><br><sub><b>Collect the evidence.</b> Each kind of evidence is marked hard, medium or soft, and the strength meter explains what the file can prove. A sample business's records can be added in one click.</sub></td>
-    <td width="50%"><img src="assets/screens/live-trace.png" alt="Live trace of the readers working in parallel"><br><sub><b>Watch the analysis.</b> Each reader reports what it read as it finishes, streamed live through Firestore.</sub></td>
+    <td width="50%"><img src="assets/screens/live-trace.png" alt="The agent trace: notebook and receipt readers finishing in parallel, each with its Gemini model and a sample of its structured output"><br><sub><b>Watch the agents work.</b> Each reader reports what it read, with its model and a sample of its structured output; sample files replay a real recorded run.</sub></td>
+    <td width="50%"><img src="assets/screens/credit-file.png" alt="Credit file for Warung Makan Hendra marked Inconsistent, with the revenue range and no instalment suggested"><br><sub><b>The credit file.</b> Warung Makan Hendra's notebook claims 5.6 times what its supplier purchases support, so the file is marked Inconsistent and no instalment is suggested.</sub></td>
   </tr>
   <tr>
-    <td><img src="assets/screens/credit-file.png" alt="Credit file for Warung Makan Hendra marked Inconsistent"><br><sub><b>The credit file.</b> Warung Makan Hendra's notebook claims 5.6 times what its supplier purchases support, so the file is marked Inconsistent and no instalment is suggested.</sub></td>
     <td><img src="assets/screens/evidence-viewer.png" alt="Evidence viewer showing a notebook photo beside the extracted lines, with the cited line highlighted"><br><sub><b>Every citation opens the evidence.</b> The photographed page sits beside what the reader extracted, with the cited line highlighted.</sub></td>
+    <td><img src="assets/screens/fraud-caught.png" alt="A material finding for Toko Baju Bu Wati: the 22 QRIS transactions sum to Rp 4.400.000, contradicting the printed total of Rp 9.400.000"><br><sub><b>An edited screenshot, caught.</b> Bu Wati's QRIS payments add up to Rp 4.400.000, not the Rp 9.400.000 printed on the screenshot, so only the payments count.</sub></td>
   </tr>
   <tr>
-    <td><img src="assets/screens/follow-up.png" alt="A question for the owner in Bahasa Indonesia with the owner's answer typed in"><br><sub><b>Questions for the owner.</b> The officer reads the question in Bahasa, types the answer and re-checks the file.</sub></td>
-    <td><img src="assets/screens/decision.png" alt="Owner summary in Bahasa Indonesia and the recorded decision"><br><sub><b>A person decides.</b> The owner gets a summary in Bahasa; the officer's decision and reason go into the audit log.</sub></td>
+    <td><img src="assets/screens/decision.png" alt="A decision: approve, the officer agrees with LedgerLens, signed off by a second person, the offer and the letter sent to the owner, who accepted"><br><sub><b>A person decides, and a second signs off.</b> The offer is computed by code, the officer says whether they agree with LedgerLens, and the letter goes to the owner.</sub></td>
+    <td><img src="assets/screens/pilot.png" alt="The pilot dashboard: files, median times, officer agreement, outcomes, what the checks caught and records most often missing"><br><sub><b>Ready for a pilot.</b> A dashboard counts what happened on the lender's own files: outcomes, findings caught, times and agreement.</sub></td>
   </tr>
 </table>
 
 <p align="center">
-  <img src="assets/screens/landing-phone.png" width="240" alt="The landing page at phone width, with the I run a business and I'm a loan officer doors"><br>
+  <img src="assets/screens/landing-phone.png" width="240" alt="The landing page at phone width, with the Business owner app and Officer app buttons and the two doors"><br>
   <sub>Both sides work at phone width: owners use their own phones, and officers work in the field.</sub>
 </p>
 
@@ -204,11 +204,16 @@ flowchart LR
     R -- "reads evidence" --> S
     R -- "writes progress and results" --> F[("Firestore<br/>Jakarta")]
     F -- "live updates" --> B
+    R -- "decision events (signed)" --> X["The lender's tools<br/>Google Sheets or any webhook"]
+    B -. hand-off links .-> W["WhatsApp, Google Calendar,<br/>CSV, JSON and a printed memo"]
 ```
 
 When the owner or the officer starts a check, the whole pipeline runs inside that one Cloud Run request. Each
 agent writes its progress to Firestore as it goes, and the app listens to that document, so either side
 watches every step finish live. Browsers can only read from Firestore; every write goes through the API.
+After a decision, the API sends each event (recommended, signed off, offer accepted, condition met) to the
+lender's own Google Sheet or webhook, signed and checked against an allow-list of public addresses, and the app
+offers WhatsApp messages, calendar events and exports at every hand-off.
 
 ### Two sides and the handover
 
@@ -304,7 +309,7 @@ flowchart LR
 | Calculations | Plain Python with unit tests | Every number in the memo |
 | Database | Firestore (Native mode, Jakarta) | Application data, audit log, live progress |
 | Security | A service account for Google Cloud; the Gemini API key held only in Cloud Run's settings; Firestore and Storage rules | No secrets in this repository; only the backend writes results |
-| Deploy and CI | `gcloud run deploy`, Firebase CLI, GitHub Actions for lint, tests and build | Repeatable deploys and checks on every pull request |
+| Deploy and CI | `gcloud run deploy`, Firebase CLI, GitHub Actions for lint, 312 API tests and the build, plus a live-site check every six hours | Repeatable deploys, checks on every pull request, and an alert if the live site breaks during judging |
 | Quality | Our evaluation scripts on synthetic files and a public receipt dataset | Measured accuracy, not claims |
 
 We call the Gemini API directly with the Google Gen AI SDK rather than through an agent framework, which
@@ -320,7 +325,13 @@ keeps each agent a small, testable function with one prompt and one output schem
   link, and then by one lender only. The owner can stop sharing at any time from their phone.
 - **Each side sees only its part.** The API and the Firestore security rules enforce access: the owner reads
   their own file, evidence, progress and summary, while the lender's findings, memo and audit log are for the
-  officer only.
+  officer only. The [Trust and data](https://ledger-lens-511708.web.app/trust) page sets out what runs where
+  today, what changes before real data, and a model card for each agent.
+- **The owner sees who opened their file and can delete it.** A timeline shows when a lender opened or
+  decided the file, without staff names or notes, and "Delete my file" removes every record, photo and share
+  link, as Indonesia's personal data protection law (UU PDP) expects.
+- **Four eyes on every approval and decline.** A second person at the lender signs a recommendation off
+  through a link; nobody can sign off their own decision on a real file.
 - **No personal identifiers.** We store a business alias, never an owner's legal name or national ID number.
 - **Where data lives.** Records are stored in Google Cloud's Jakarta region and photos and voice notes in the
   United States.
@@ -416,20 +427,23 @@ shorthand and photo quality, and results on the team's own handwritten pages wil
 ```
 web/                React + Vite + TypeScript app (landing page, sample files, owner app, officer app)
   src/pages/owner/    the business owner's side: home, new file, consent, records, summary and sharing
-  src/pages/officer/  new application, consent, evidence, analysis, shared files and the credit file
+  src/pages/officer/  applications, evidence, the credit file, the decision and sign-off, pilot dashboard,
+                      lender settings and integrations
   public/samples/     the published sample files and their evidence photos
 api/                Python 3.12 FastAPI app and the agent pipeline
   app/agents/         one module per agent: its prompt and output schema
   app/analysis/       the pipeline that runs the agents and the code between them
   app/tools/          rupiah parsing, cash flow, policy and the fact table, in plain Python
-  app/routers/        HTTP routes under /api
+  app/routers/        HTTP routes under /api: applications, analysis, decisions, sharing, invites, policy,
+                      exports, pilot, demo stories
+  app/demo_samples/   finished sample files that judge mode copies, so a demo needs no analysis
   scripts/            evaluation and sample runners
   tests/              offline tests (Gemini, Firestore and Auth are faked)
 eval/               synthetic data generators and evaluation notes
 data/synthetic/     synthetic notebook pages with their true amounts
-data/samples/       three complete fictional sample files with their true figures
+data/samples/       four complete fictional sample files with their true figures
 assets/screens/     screenshots used in this README
-.github/workflows/  CI for the API and the web app
+.github/workflows/  CI for the API and the web app, and a live-site check every six hours
 firebase.json       Hosting (with the /api rewrite to Cloud Run), Firestore and Storage settings
 ```
 
