@@ -27,12 +27,16 @@ from app.tools.rupiah import parse_rupiah
         ("75.000,00", 75_000),
         ("IDR 610.000", 610_000),
         ("500", 500),
+        # Spaces as thousands separators, alone or mixed with dots, as written on real pages.
+        ("3 300 000", 3_300_000),
+        ("3.250 000", 3_250_000),
+        ("Rp 1 250 000", 1_250_000),
     ],
 )
 def test_parses_notebook_shorthand(text, expected):
     assert parse_rupiah(text) == expected
 
 
-@pytest.mark.parametrize("text", [None, "", "abc", "1,2", "1.2.3jt", "jt", "12/9"])
+@pytest.mark.parametrize("text", [None, "", "abc", "1,2", "1.2.3jt", "jt", "12/9", "500.0000"])
 def test_returns_none_when_not_an_amount(text):
     assert parse_rupiah(text) is None
