@@ -4335,3 +4335,8 @@ textarea:focus {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.stats.stats-four dd {
+  font-size: clamp(32px, 2.9vw, 44px);
+  white-space: nowrap;
+}
