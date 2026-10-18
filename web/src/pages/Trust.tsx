@@ -139,7 +139,7 @@ const CARDS: Card[] = [
     guardrail:
       'Each page is read twice with different instructions and the readings are compared. Amounts stay as text; code turns them into rupiah.',
     limits:
-      'Measured only on synthetic pages in eight handwriting fonts (162 of 162 amounts exact). Real handwriting is being measured next. Crossed-out corrections caused the earlier misses.',
+      '162 of 162 amounts exact on synthetic pages in eight handwriting fonts, and 102 of 104 on 9 real handwritten pages from our team (90% before two fixes the test led to). Misses come from ambiguous digits and overwritten or crossed-out corrections. Not yet tested on pages from real business owners.',
     human: 'Lines where the two readings disagree go to the officer to confirm on the photo.',
   },
   {

@@ -355,7 +355,7 @@ keeps each agent a small, testable function with one prompt and one output schem
 | Receipt reader | First 30 receipts of the CORD test split: real photos from Indonesian shops and restaurants | Total paid read exactly on 28 of 29 labelled receipts (97%); 69 of 69 item amounts found |
 | Notebook reader | 9 synthetic pages from 3 fictional businesses in 8 handwriting fonts, photographed with tilt, blur and uneven light | 162 of 162 amounts read exactly with the better prompt variant (the other read 160; both misses were crossed-out corrections, since fixed) |
 | Whole pipeline | 4 sample credit files, two months each: 6 notebook pages, 8 receipts and, where the business has them, 2 QRIS screenshots and a 30-second owner interview in Bahasa Indonesia | Every monthly notebook, QRIS and receipt total read exactly, and each file got the outcome its evidence supports (below) |
-| Real handwriting | Pages written and photographed by our team | In progress |
+| Real handwriting | 9 pages written and photographed by our team, 104 transaction amounts in five formats: daily sales lists, ledgers with cost, sale price, profit and balance, a cash book and a monthly summary | 102 of 104 read exactly (98%) with the better prompt variant. The first run read 90%: on multi-column ledgers the reader sometimes copied the cost instead of the sale price, and our parser missed amounts written with spaces; both were fixed. The two misses are a 4 written like a 9 and an overwritten digit |
 
 The four sample files:
 
@@ -387,7 +387,10 @@ To reproduce these results (see [`eval/README.md`](eval/README.md) and [`api/REA
 
 The one receipt miss was a receipt that prints a single summary amount, which the reader filed as the
 subtotal rather than the total. The synthetic pages are fonts, not real handwriting: they test layout,
-shorthand and photo quality, and results on the team's own handwritten pages will be added when they are in.
+shorthand and photo quality. The real pages add what fonts can't: slips of the pen, a digit written over, and
+five different layouts. Each real page was scored against a line-by-line answer key, written before the reader
+saw the page and checked by the team; a tenth page, a blurred printed accounting journal, was left out because its
+amounts could not be read with certainty. The photos stay private; only the result is published.
 
 ## Roadmap
 
@@ -407,7 +410,7 @@ shorthand and photo quality, and results on the team's own handwritten pages wil
 - [x] A stress test, other debts including online loans, "delete my file" for owners, and a sample whose
   edited QRIS screenshot is caught
 - [x] Judge mode: the whole story in one browser on a demo copy, and replays of real agent traces
-- [ ] Real handwriting test on the team's own pages
+- [x] Real handwriting test on the team's own pages (102 of 104 amounts)
 - [ ] Submission: deck, demo video and the live prototype kept up for judging
 
 **After the hackathon**
